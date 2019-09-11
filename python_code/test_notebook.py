@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[20]:
 
 
 import pandas as pd
@@ -78,8 +74,6 @@ def switch_group(datum):
         return 1
 
 
-# In[24]:
-
 
 path = "d:data\Pleiades_Hartman.csv"
 # path = "/home/edoodson/Documents/spin_down/data/Pleiades_Hartman.csv"
@@ -95,10 +89,6 @@ ax1.set(ylim = (0,20))
 ax1.scatter([star.mass for star in star_list], [star.period for star in star_list], c=[star.weight_fast for star in star_list], cmap = "coolwarm")
 ax1.plot([star.mass for star in star_list], [star.predict_fast for star in star_list], color = "red")
 ax1.plot([star.mass for star in star_list], [star.predict_slow for star in star_list])
-
-
-# In[25]:
-
 
 
 for i in range(1):
@@ -124,9 +114,6 @@ ax1.set(ylim = (0,20))
 ax1.scatter([star.mass for star in star_list], [star.period for star in star_list], c=[star.weight_slow for star in star_list], cmap = "coolwarm")
 ax1.plot([star.mass for star in star_list], [star.predict_fast for star in star_list] )
 ax1.plot([star.mass for star in star_list], [star.predict_slow for star in star_list])
-
-
-# In[ ]:
 
 
 
