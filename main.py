@@ -47,6 +47,9 @@ class Line:
     def predicted_value(self, star):
         return calculate_line(self.slope, star, self.intercept)
 
+    # def calculate_ser(self, star_list):
+    #     return [(self.predicted_value(star) - star.period)**2 / ()**2 for star in star_list]
+
 
 def calculate_line(m, x, c):
     return np.add(np.dot(m, x), c)
@@ -84,7 +87,7 @@ def get_lines(star_list):
 def plot_data(star_list, line_list, figure="figure", axes="ax"):
     figure, ax = plt.subplots(1, figsize=(10, 8))
     ax.invert_xaxis()
-
+    ax.set(ylim=(0, 15))
     ax.scatter(
         [star.mass for star in star_list if star.group == 0],
         [star.period for star in star_list if star.group == 0],
@@ -93,6 +96,7 @@ def plot_data(star_list, line_list, figure="figure", axes="ax"):
     ax.plot(
         [star.mass for star in star_list],
         [line_list[0].predicted_value(star.mass) for star in star_list],
+        color="green",
     )
     ax.scatter(
         [star.mass for star in star_list if star.group == 1],
@@ -102,10 +106,33 @@ def plot_data(star_list, line_list, figure="figure", axes="ax"):
     ax.plot(
         [star.mass for star in star_list],
         [line_list[1].predicted_value(star.mass) for star in star_list],
+        color="red",
     )
     pass
 
 
+def calculate_ser(line_list, star_list):
+    return [
+        (line_list[1].predicted_value(star.mass) - star.period) ** 2
+        / (line_list[0].predicted_value(star.mass) - star.period) ** 2
+        for star in star_list
+    ]
+
+
+def calculate_weight_slow(line_list, star_list):
+    # line_list = np.array(line_list)
+    # star_list = np.array(star_list)
+    return np.divide(1, np.add(1, calculate_ser(line_list, star_list)))
+    # return 1 / (1 + calculate_ser(line_list, star_list))
+
+
+def calculate_weight_fast(line_list, star_list):
+    # line_list = np.array(line_list)
+    # star_list = np.array(star_list)
+    return np.divide(1, np.add(1, np.divide(1, calculate_ser(line_list, star_list))))
+
+
+#%% INITIAL TEST FIT
 path = "d:data\Pleiades_Hartman.csv"
 # path = "/home/edoodson/Documents/spin_down/data/Pleiades_Hartman.csv"
 
@@ -118,7 +145,14 @@ for star in star_list:
 # initialisation of lines
 line_list = get_lines(star_list)
 
-
 plot_data(star_list, line_list, figure1, ax1)
 
 #%%
+print(calculate_weight_slow(line_list, star_list))
+
+plt.scatter(
+    [star.mass for star in star_list],
+    [star.period for star in star_list],
+    c=calculate_weight_fast(line_list, star_list),
+    cmap="coolwarm",
+)
