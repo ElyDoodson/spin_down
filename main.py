@@ -91,22 +91,22 @@ def plot_data(star_list, line_list, figure="figure", axes="ax"):
     ax.scatter(
         [star.mass for star in star_list if star.group == 0],
         [star.period for star in star_list if star.group == 0],
-        color="green",
+        color="red",
     )
     ax.plot(
         [star.mass for star in star_list],
         [line_list[0].predicted_value(star.mass) for star in star_list],
-        color="green",
+        color="red",
     )
     ax.scatter(
         [star.mass for star in star_list if star.group == 1],
         [star.period for star in star_list if star.group == 1],
-        color="red",
+        color="blue",
     )
     ax.plot(
         [star.mass for star in star_list],
         [line_list[1].predicted_value(star.mass) for star in star_list],
-        color="red",
+        color="blue",
     )
     pass
 
@@ -132,6 +132,19 @@ def calculate_weight_fast(line_list, star_list):
     return np.divide(1, np.add(1, np.divide(1, calculate_ser(line_list, star_list))))
 
 
+def calculate_fitness(line_list, star_list):
+    tot = 0
+
+    w_f = calculate_weight_fast(line_list, star_list)
+    w_s = calculate_weight_slow(line_list, star_list)
+    for i, star in enumerate(star_list):
+        if star.group == 0:
+            tot += (line_list[0].predicted_value(star.mass) - star.period) ** 2 * w_f[i]
+        else:
+            tot += (line_list[1].predicted_value(star.mass) - star.period) ** 2 * w_s[i]
+    return tot
+
+
 #%% INITIAL TEST FIT
 path = "d:data\Pleiades_Hartman.csv"
 # path = "/home/edoodson/Documents/spin_down/data/Pleiades_Hartman.csv"
@@ -148,11 +161,17 @@ line_list = get_lines(star_list)
 plot_data(star_list, line_list, figure1, ax1)
 
 #%%
-print(calculate_weight_slow(line_list, star_list))
-
-plt.scatter(
+figure1, ax1 = plt.subplots(1, figsize=(10, 8))
+ax1.invert_xaxis()
+ax1.scatter(
     [star.mass for star in star_list],
     [star.period for star in star_list],
     c=calculate_weight_fast(line_list, star_list),
     cmap="coolwarm",
 )
+
+
+#%%
+
+
+#%%
