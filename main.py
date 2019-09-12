@@ -145,6 +145,13 @@ def calculate_fitness(line_list, star_list):
     return tot
 
 
+def switch_group(val):
+    if val == 0:
+        return 1
+    else:
+        return 0
+
+
 #%% INITIAL TEST FIT
 path = "d:data\Pleiades_Hartman.csv"
 # path = "/home/edoodson/Documents/spin_down/data/Pleiades_Hartman.csv"
@@ -173,5 +180,36 @@ ax1.scatter(
 
 #%%
 
+print("fitness=", calculate_fitness(line_list, star_list))
+star_list[69].group = 0
 
+line_list[0].updateforstars_average(star_list)
+line_list[1].updateforstars_true(star_list)
+
+print("new fit", calculate_fitness(line_list, star_list))
+
+star_list[69].group = 1
+#%%
+points_switched = []
+runs = 100
+for i in range(runs):
+    print(i * (runs / 100), "% Done")
+    for i, star in enumerate(star_list):
+
+        initial_fit = calculate_fitness(line_list, star_list)
+        # print("i_fit=", initial_fit, "i_group=",  star.group)
+        star.group = switch_group(star.group)
+
+        line_list[0].updateforstars_average(star_list)
+        line_list[1].updateforstars_true(star_list)
+
+        final_fit = calculate_fitness(line_list, star_list)
+        # print("f_fit=", final_fit, "f_group=", star.group )
+        if final_fit > initial_fit:
+            star.group = switch_group(star.group)
+        else:
+            # print("Star switched")
+            points_switched.append(i)
+
+plot_data(star_list, line_list)
 #%%
