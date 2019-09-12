@@ -191,9 +191,9 @@ print("new fit", calculate_fitness(line_list, star_list))
 star_list[69].group = 1
 #%%
 points_switched = []
-runs = 100
+runs = 10
 for i in range(runs):
-    print(i * (runs / 100), "% Done")
+    print(i  / runs, "% Done")
     for i, star in enumerate(star_list):
 
         initial_fit = calculate_fitness(line_list, star_list)
