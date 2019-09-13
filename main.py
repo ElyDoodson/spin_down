@@ -14,6 +14,35 @@ class Star:
     def set_initial_group(self):
         self.group = 1 if self.period >= calculate_line(-5, self.mass, 7) else 0
 
+    def update_group(self, line_list):
+        dist_slow = (line_list[1].predicted_value(self.mass) - self.period) ** 2
+        dist_fast = (line_list[0].predicted_value(self.mass) - self.period) ** 2
+
+        self.group = 1 if min(dist_fast, dist_slow) == dist_slow else 0
+
+    def calculate_weight_s(self, line_list):
+        return 1 / (
+            1
+            + calculate_ser(
+                line_list[1].predicted_value(self),
+                line_list[0].predicted_value(self),
+                self.period,
+            )
+        )
+
+    def calculate_weight_f(self, line_list):
+        return 1 / (
+            1
+            + (
+                1
+                / calculate_ser(
+                    line_list[1].predicted_value(self),
+                    line_list[0].predicted_value(self),
+                    self.period,
+                )
+            )
+        )
+
 
 class Line:
     def __init__(self, slope, intercept):
@@ -46,6 +75,10 @@ class Line:
 
     def predicted_value(self, star):
         return calculate_line(self.slope, star, self.intercept)
+
+
+def calculate_ser(predict_y1, predict_y0, y):
+    return (predict_y1 - y) ** 2 / (predict_y0 - y) ** 2
 
 
 def calculate_line(m, x, c):
@@ -105,9 +138,10 @@ def plot_data(star_list, line_list, figure="figure", axes="ax"):
         [line_list[1].predicted_value(star.mass) for star in star_list],
         color="blue",
     )
+    figure
 
 
-def calculate_ser(line_list, star_list):
+def calculate_ser2(line_list, star_list):
     return [
         (line_list[1].predicted_value(star.mass) - star.period) ** 2
         / (line_list[0].predicted_value(star.mass) - star.period) ** 2
@@ -116,11 +150,11 @@ def calculate_ser(line_list, star_list):
 
 
 def calculate_weight_slow(line_list, star_list):
-    return np.divide(1, np.add(1, calculate_ser(line_list, star_list)))
+    return np.divide(1, np.add(1, calculate_ser2(line_list, star_list)))
 
 
 def calculate_weight_fast(line_list, star_list):
-    return np.divide(1, np.add(1, np.divide(1, calculate_ser(line_list, star_list))))
+    return np.divide(1, np.add(1, np.divide(1, calculate_ser2(line_list, star_list))))
 
 
 def calculate_fitness(line_list, star_list):
@@ -154,8 +188,9 @@ for star in star_list:
     star.set_initial_group()
 
 # initialisation of lines
-line_list = get_lines(star_list)
+# line_list = get_lines(star_list)
 
+plot_data(star_list, line_list)
 
 # -6.99247391456971 11.866198098140732
 # 0.17567270713813296 1.2806533526705661
@@ -163,6 +198,11 @@ line_list = [
     Line(0.000000, 1.2806533526705661),
     Line(-6.99247391456971, 11.866198098140732),
 ]
+
+for star in star_list:
+    star.update_group(line_list)
+
+# print([star.group for star in star_list])
 
 plot_data(star_list, line_list)
 
