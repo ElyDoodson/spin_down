@@ -12,7 +12,7 @@ class Star:
         self.mass = mass
 
     def set_initial_group(self):
-        self.group = 1 if self.period >= calculate_line(0, self.mass, 7) else 0
+        self.group = 1 if self.period >= calculate_line(-5, self.mass, 7) else 0
 
 
 class Line:
@@ -46,9 +46,6 @@ class Line:
 
     def predicted_value(self, star):
         return calculate_line(self.slope, star, self.intercept)
-
-    # def calculate_ser(self, star_list):
-    #     return [(self.predicted_value(star) - star.period)**2 / ()**2 for star in star_list]
 
 
 def calculate_line(m, x, c):
@@ -165,7 +162,15 @@ for star in star_list:
 # initialisation of lines
 line_list = get_lines(star_list)
 
-plot_data(star_list, line_list, figure1, ax1)
+
+# -6.99247391456971 11.866198098140732
+# 0.17567270713813296 1.2806533526705661
+line_list = [
+    Line(0.000000, 1.2806533526705661),
+    Line(-6.99247391456971, 11.866198098140732),
+]
+
+plot_data(star_list, line_list)
 
 #%%
 figure1, ax1 = plt.subplots(1, figsize=(10, 8))
@@ -178,22 +183,38 @@ ax1.scatter(
 )
 
 
-#%%
+#%% MOVING ONE STAR
+star_num = 300
+for star in star_list:
+    star.set_initial_group()
+    
+line_list[0].updateforstars_average(star_list)
+line_list[1].updateforstars_true(star_list)
 
 print("fitness=", calculate_fitness(line_list, star_list))
-star_list[69].group = 0
+star_list[star_num].group = switch_group(star_list[star_num].group)
 
 line_list[0].updateforstars_average(star_list)
 line_list[1].updateforstars_true(star_list)
 
 print("new fit", calculate_fitness(line_list, star_list))
 
-star_list[69].group = 1
+plot_data(star_list, line_list)
+plt.scatter(
+    star_list[star_num].mass,
+    star_list[star_num].period,
+    marker="x",
+    color="white",
+    s=60,
+)
+star_list[star_num].group = switch_group(star_list[star_num].group)
+
 #%%
 points_switched = []
-runs = 10
+runs = 1
 for i in range(runs):
-    print(i  / runs, "% Done")
+    print(i * (100 / runs), "% Done")
+
     for i, star in enumerate(star_list):
 
         initial_fit = calculate_fitness(line_list, star_list)
@@ -212,4 +233,14 @@ for i in range(runs):
             points_switched.append(i)
 
 plot_data(star_list, line_list)
+#%%
+figure1, ax1 = plt.subplots(1, figsize=(10, 8))
+ax1.invert_xaxis()
+ax1.scatter(
+    [star.mass for star in star_list],
+    [star.period for star in star_list],
+    c=calculate_weight_fast(line_list, star_list),
+    cmap="coolwarm",
+)
+
 #%%
