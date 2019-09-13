@@ -24,8 +24,8 @@ class Star:
         return 1 / (
             1
             + calculate_ser(
-                line_list[1].predicted_value(self),
-                line_list[0].predicted_value(self),
+                line_list[1].predicted_value(self.mass),
+                line_list[0].predicted_value(self.mass),
                 self.period,
             )
         )
@@ -36,8 +36,8 @@ class Star:
             + (
                 1
                 / calculate_ser(
-                    line_list[1].predicted_value(self),
-                    line_list[0].predicted_value(self),
+                    line_list[1].predicted_value(self.mass),
+                    line_list[0].predicted_value(self.mass),
                     self.period,
                 )
             )
@@ -49,7 +49,7 @@ class Line:
         self.slope = slope
         self.intercept = intercept
 
-    def updatefor_slowstars(self, star_list):
+    def updatefor_slowstars(self, star_list, weight_list=[1]):
         """
         this updates the slope of a line for the true slope and intercept
         """
@@ -167,14 +167,16 @@ def calculate_fitness(line_list, star_list):
             tot += (line_list[0].predicted_value(star.mass) - star.period) ** 2 * w_f[i]
         else:
             tot += (line_list[1].predicted_value(star.mass) - star.period) ** 2 * w_s[i]
-    return tot
 
 
-def switch_group(val):
-    if val == 0:
-        return 1
-    else:
-        return 0
+#     return tot
+
+
+# def switch_group(val):
+#     if val == 0:
+#         return 1
+#     else:
+#         return 0
 
 
 #%% INITIAL TEST FIT
@@ -188,7 +190,7 @@ for star in star_list:
     star.set_initial_group()
 
 # initialisation of lines
-# line_list = get_lines(star_list)
+line_list = get_lines(star_list)
 
 plot_data(star_list, line_list)
 
@@ -202,8 +204,6 @@ line_list = [
 for star in star_list:
     star.update_group(line_list)
 
-# print([star.group for star in star_list])
-
 plot_data(star_list, line_list)
 
 #%%
@@ -212,69 +212,99 @@ ax1.invert_xaxis()
 ax1.scatter(
     [star.mass for star in star_list],
     [star.period for star in star_list],
-    c=calculate_weight_fast(line_list, star_list),
+    c=[star.calculate_weight_f(line_list) for star in star_list],
     cmap="coolwarm",
 )
+
+ax1.plot(
+    [star.mass for star in star_list],
+    [line_list[1].predicted_value(star.mass) for star in star_list],
+    color="blue",
+)
+ax1.plot(
+    [star.mass for star in star_list],
+    [line_list[0].predicted_value(star.mass) for star in star_list],
+    color="red",
+)
+
+#%%
+
+
+from sklearn.linear_model import LinearRegression
+
+lrs2 = LinearRegression()
+lrs2.fit(
+    [[star.mass] for star in star_list if star.group == 1],
+    [star.period for star in star_list if star.group == 1],
+    sample_weight=[
+        star.calculate_weight_s(line_list) for star in star_list if star.group == 1
+    ],
+)
+# f_av =np.sum(yf)/len(yf)
+# lrf2 = LinearRegression()
+# lrf2.fit(xb, yb, sample_weight=Wf.reshape(Wf.shape[0]))
+
+lrs2.predict([[star.mass] for star in star_list])
 
 
 #%% MOVING ONE STAR
-star_num = 300
-for star in star_list:
-    star.set_initial_group()
+# star_num = 300
+# for star in star_list:
+#     star.set_initial_group()
 
-line_list[0].updatefor_faststars(star_list)
-line_list[1].updatefor_slowstars(star_list)
+# line_list[0].updatefor_faststars(star_list)
+# line_list[1].updatefor_slowstars(star_list)
 
-print("fitness=", calculate_fitness(line_list, star_list))
-star_list[star_num].group = switch_group(star_list[star_num].group)
+# print("fitness=", calculate_fitness(line_list, star_list))
+# star_list[star_num].group = switch_group(star_list[star_num].group)
 
-line_list[0].updatefor_faststars(star_list)
-line_list[1].updatefor_slowstars(star_list)
+# line_list[0].updatefor_faststars(star_list)
+# line_list[1].updatefor_slowstars(star_list)
 
-print("new fit", calculate_fitness(line_list, star_list))
+# print("new fit", calculate_fitness(line_list, star_list))
 
-plot_data(star_list, line_list)
-plt.scatter(
-    star_list[star_num].mass,
-    star_list[star_num].period,
-    marker="x",
-    color="white",
-    s=60,
-)
-star_list[star_num].group = switch_group(star_list[star_num].group)
+# plot_data(star_list, line_list)
+# plt.scatter(
+#     star_list[star_num].mass,
+#     star_list[star_num].period,
+#     marker="x",
+#     color="white",
+#     s=60,
+# )
+# star_list[star_num].group = switch_group(star_list[star_num].group)
 
 #%%
-points_switched = []
-runs = 1
-for i in range(runs):
-    print(i * (100 / runs), "% Done")
+# points_switched = []
+# runs = 1
+# for i in range(runs):
+#     print(i * (100 / runs), "% Done")
 
-    for i, star in enumerate(star_list):
+#     for i, star in enumerate(star_list):
 
-        initial_fit = calculate_fitness(line_list, star_list)
-        # print("i_fit=", initial_fit, "i_group=",  star.group)
-        star.group = switch_group(star.group)
+#         initial_fit = calculate_fitness(line_list, star_list)
+#         # print("i_fit=", initial_fit, "i_group=",  star.group)
+#         star.group = switch_group(star.group)
 
-        line_list[0].updatefor_faststars(star_list)
-        line_list[1].updatefor_slowstars(star_list)
+#         line_list[0].updatefor_faststars(star_list)
+#         line_list[1].updatefor_slowstars(star_list)
 
-        final_fit = calculate_fitness(line_list, star_list)
-        # print("f_fit=", final_fit, "f_group=", star.group )
-        if final_fit > initial_fit:
-            star.group = switch_group(star.group)
-        else:
-            # print("Star switched")
-            points_switched.append(i)
+#         final_fit = calculate_fitness(line_list, star_list)
+#         # print("f_fit=", final_fit, "f_group=", star.group )
+#         if final_fit > initial_fit:
+#             star.group = switch_group(star.group)
+#         else:
+#             # print("Star switched")
+#             points_switched.append(i)
 
-plot_data(star_list, line_list)
+# plot_data(star_list, line_list)
 #%%
-figure1, ax1 = plt.subplots(1, figsize=(10, 8))
-ax1.invert_xaxis()
-ax1.scatter(
-    [star.mass for star in star_list],
-    [star.period for star in star_list],
-    c=calculate_weight_fast(line_list, star_list),
-    cmap="coolwarm",
-)
+# figure1, ax1 = plt.subplots(1, figsize=(10, 8))
+# ax1.invert_xaxis()
+# ax1.scatter(
+#     [star.mass for star in star_list],
+#     [star.period for star in star_list],
+#     c=calculate_weight_fast(line_list, star_list),
+#     cmap="coolwarm",
+# )
 
 #%%
