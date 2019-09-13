@@ -20,7 +20,7 @@ class Line:
         self.slope = slope
         self.intercept = intercept
 
-    def updateforstars_true(self, star_list):
+    def updatefor_slowstars(self, star_list):
         """
         this updates the slope of a line for the true slope and intercept
         """
@@ -31,7 +31,7 @@ class Line:
         self.slope = slope_s
         self.intercept = intercept_s
 
-    def updateforstars_average(self, star_list):
+    def updatefor_faststars(self, star_list):
         """
         This updates the slope of the line using the average of the data.
         Effectively fixing the slope at 0 and only changing its intercept
@@ -105,7 +105,6 @@ def plot_data(star_list, line_list, figure="figure", axes="ax"):
         [line_list[1].predicted_value(star.mass) for star in star_list],
         color="blue",
     )
-    pass
 
 
 def calculate_ser(line_list, star_list):
@@ -117,15 +116,10 @@ def calculate_ser(line_list, star_list):
 
 
 def calculate_weight_slow(line_list, star_list):
-    # line_list = np.array(line_list)
-    # star_list = np.array(star_list)
     return np.divide(1, np.add(1, calculate_ser(line_list, star_list)))
-    # return 1 / (1 + calculate_ser(line_list, star_list))
 
 
 def calculate_weight_fast(line_list, star_list):
-    # line_list = np.array(line_list)
-    # star_list = np.array(star_list)
     return np.divide(1, np.add(1, np.divide(1, calculate_ser(line_list, star_list))))
 
 
@@ -187,15 +181,15 @@ ax1.scatter(
 star_num = 300
 for star in star_list:
     star.set_initial_group()
-    
-line_list[0].updateforstars_average(star_list)
-line_list[1].updateforstars_true(star_list)
+
+line_list[0].updatefor_faststars(star_list)
+line_list[1].updatefor_slowstars(star_list)
 
 print("fitness=", calculate_fitness(line_list, star_list))
 star_list[star_num].group = switch_group(star_list[star_num].group)
 
-line_list[0].updateforstars_average(star_list)
-line_list[1].updateforstars_true(star_list)
+line_list[0].updatefor_faststars(star_list)
+line_list[1].updatefor_slowstars(star_list)
 
 print("new fit", calculate_fitness(line_list, star_list))
 
@@ -221,8 +215,8 @@ for i in range(runs):
         # print("i_fit=", initial_fit, "i_group=",  star.group)
         star.group = switch_group(star.group)
 
-        line_list[0].updateforstars_average(star_list)
-        line_list[1].updateforstars_true(star_list)
+        line_list[0].updatefor_faststars(star_list)
+        line_list[1].updatefor_slowstars(star_list)
 
         final_fit = calculate_fitness(line_list, star_list)
         # print("f_fit=", final_fit, "f_group=", star.group )
