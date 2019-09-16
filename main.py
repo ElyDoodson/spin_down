@@ -50,15 +50,19 @@ class Line:
         self.slope = slope
         self.intercept = intercept
 
-    def updatefor_slowstars(self, star_list, weight_list=1):
+    def updatefor_slowstars(self, star_list):
         """
         this updates the slope of a line for the true slope and intercept
         """
         lrs = LinearRegression()
         lrs.fit(
-            [star.mass for star in star_list if star.group == 1],
+            [[star.mass] for star in star_list if star.group == 1],
             [star.period for star in star_list if star.group == 1],
-            sample_weight=weight_list,
+            sample_weight=[
+                star.calculate_weight_s(line_list)
+                for star in star_list
+                if star.group == 1
+            ],
         )
         self.slope = lrs.coef_
         self.intercept = lrs.intercept_
@@ -69,16 +73,20 @@ class Line:
         # self.slope = slope_s
         # self.intercept = intercept_s
 
-    def updatefor_faststars(self, star_list, weight_list):
+    def updatefor_faststars(self, star_list):
         """
         This updates the slope of the line using the average of the data.
         Effectively fixing the slope at 0 and only changing its intercept
         """
         lrf = LinearRegression()
         lrf.fit(
-            [star.mass for star in star_list if star.group == 0],
+            [[star.mass] for star in star_list if star.group == 0],
             [star.period for star in star_list if star.group == 0],
-            sample_weight=weight_list,
+            sample_weight=[
+                star.calculate_weight_f(line_list)
+                for star in star_list
+                if star.group == 0
+            ],
         )
         self.slope = np.array([0])
         self.intercept = lrf.intercept_
@@ -247,75 +255,5 @@ ax1.plot(
 #%%
 
 
-# print(line_list[0].slope, line_list[0].intercept)
-# line_list[0].updatefor_faststars(
-#     star_list,
-#     weight_list=np.array([star.calculate_weight_f(line_list) for star in star_list]),
-# )
-# [star.calculate_weight_f(line_list) for star in star_list]
-
-
-
-
-#%% MOVING ONE STAR
-# star_num = 300
-
-# for star in star_list:
-#     star.set_initial_group()
-
-# line_list[0].updatefor_faststars(star_list)
-# line_list[1].updatefor_slowstars(star_list)
-
-# print("fitness=", calculate_fitness(line_list, star_list))
-# star_list[star_num].group = switch_group(star_list[star_num].group)
-
-# line_list[0].updatefor_faststars(star_list)
-# line_list[1].updatefor_slowstars(star_list)
-
-# print("new fit", calculate_fitness(line_list, star_list))
-
-# plot_data(star_list, line_list)
-# plt.scatter(
-#     star_list[star_num].mass,
-#     star_list[star_num].period,
-#     marker="x",
-#     color="white",
-#     s=60,
-# )
-# star_list[star_num].group = switch_group(star_list[star_num].group)
-
-#%%
-# points_switched = []
-# runs = 1
-# for i in range(runs):
-#     print(i * (100 / runs), "% Done")
-
-#     for i, star in enumerate(star_list):
-
-#         initial_fit = calculate_fitness(line_list, star_list)
-#         # print("i_fit=", initial_fit, "i_group=",  star.group)
-#         star.group = switch_group(star.group)
-
-#         line_list[0].updatefor_faststars(star_list)
-#         line_list[1].updatefor_slowstars(star_list)
-
-#         final_fit = calculate_fitness(line_list, star_list)
-#         # print("f_fit=", final_fit, "f_group=", star.group )
-#         if final_fit > initial_fit:
-#             star.group = switch_group(star.group)
-#         else:
-#             # print("Star switched")
-#             points_switched.append(i)
-
-# plot_data(star_list, line_list)
-#%%
-# figure1, ax1 = plt.subplots(1, figsize=(10, 8))
-# ax1.invert_xaxis()
-# ax1.scatter(
-#     [star.mass for star in star_list],
-#     [star.period for star in star_list],
-#     c=calculate_weight_fast(line_list, star_list),
-#     cmap="coolwarm",
-# )
-
-#%%
+print(line_list[0].slope, line_list[0].intercept)
+line_list[0].updatefor_faststars(star_list)
