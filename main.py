@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from os import listdir
 from scipy.stats import linregress
+from sklearn.linear_model import LinearRegression
 
 
 class Star:
@@ -49,29 +50,46 @@ class Line:
         self.slope = slope
         self.intercept = intercept
 
-    def updatefor_slowstars(self, star_list, weight_list=[1]):
+    def updatefor_slowstars(self, star_list, weight_list=1):
         """
         this updates the slope of a line for the true slope and intercept
         """
-        slope_s, intercept_s = linregress(
+        lrs = LinearRegression()
+        lrs.fit(
             [star.mass for star in star_list if star.group == 1],
             [star.period for star in star_list if star.group == 1],
-        )[:2]
-        self.slope = slope_s
-        self.intercept = intercept_s
+            sample_weight=weight_list,
+        )
+        self.slope = lrs.coef_
+        self.intercept = lrs.intercept_
+        # slope_s, intercept_s = linregress(
+        #     [star.mass for star in star_list if star.group == 1],
+        #     [star.period for star in star_list if star.group == 1],
+        # )[:2]
+        # self.slope = slope_s
+        # self.intercept = intercept_s
 
-    def updatefor_faststars(self, star_list):
+    def updatefor_faststars(self, star_list, weight_list):
         """
         This updates the slope of the line using the average of the data.
         Effectively fixing the slope at 0 and only changing its intercept
         """
-        slope_f, intercept_f = (
-            0,
-            np.sum([star.period for star in star_list if star.group == 0])
-            / len([star.group for star in star_list if star.group == 0]),
+        lrf = LinearRegression()
+        lrf.fit(
+            [star.mass for star in star_list if star.group == 0],
+            [star.period for star in star_list if star.group == 0],
+            sample_weight=weight_list,
         )
-        self.slope = slope_f
-        self.intercept = intercept_f
+        self.slope = np.array([0])
+        self.intercept = lrf.intercept_
+
+        # slope_f, intercept_f = (
+        #     0,
+        #     np.sum([star.period for star in star_list if star.group == 0])
+        #     / len([star.group for star in star_list if star.group == 0]),
+        # )
+        # self.slope = slope_f
+        # self.intercept = intercept_f
 
     def predicted_value(self, star):
         return calculate_line(self.slope, star, self.intercept)
@@ -168,15 +186,14 @@ def calculate_fitness(line_list, star_list):
         else:
             tot += (line_list[1].predicted_value(star.mass) - star.period) ** 2 * w_s[i]
 
+    return tot
 
-#     return tot
 
-
-# def switch_group(val):
-#     if val == 0:
-#         return 1
-#     else:
-#         return 0
+def switch_group(val):
+    if val == 0:
+        return 1
+    else:
+        return 0
 
 
 #%% INITIAL TEST FIT
@@ -230,25 +247,19 @@ ax1.plot(
 #%%
 
 
-from sklearn.linear_model import LinearRegression
+# print(line_list[0].slope, line_list[0].intercept)
+# line_list[0].updatefor_faststars(
+#     star_list,
+#     weight_list=np.array([star.calculate_weight_f(line_list) for star in star_list]),
+# )
+# [star.calculate_weight_f(line_list) for star in star_list]
 
-lrs2 = LinearRegression()
-lrs2.fit(
-    [[star.mass] for star in star_list if star.group == 1],
-    [star.period for star in star_list if star.group == 1],
-    sample_weight=[
-        star.calculate_weight_s(line_list) for star in star_list if star.group == 1
-    ],
-)
-# f_av =np.sum(yf)/len(yf)
-# lrf2 = LinearRegression()
-# lrf2.fit(xb, yb, sample_weight=Wf.reshape(Wf.shape[0]))
 
-lrs2.predict([[star.mass] for star in star_list])
 
 
 #%% MOVING ONE STAR
 # star_num = 300
+
 # for star in star_list:
 #     star.set_initial_group()
 
