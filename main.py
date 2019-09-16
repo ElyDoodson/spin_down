@@ -165,7 +165,7 @@ def get_data(location):
 
 
 def plot_data(star_list, line_list, figure="figure", axes="ax"):
-    figure, ax = plt.subplots(1, figsize=(10, 8))
+    figure, ax = plt.subplots(1, figsize=(8, 6))
     ax.invert_xaxis()
     ax.set(ylim=(0, 15))
     ax.scatter(
@@ -243,9 +243,11 @@ def update_slow_line(star_list, line_list):
     """
     linreg = LinearRegression()
     linreg.fit(
-        [star.mass for star in star_list if star.group == 1],
+        [[star.mass] for star in star_list if star.group == 1],
         [star.period for star in star_list if star.group == 1],
-        sample_weight=[star.calculate_weight_s(line_list) for star in star_list],
+        sample_weight=[
+            star.calculate_weight_s(line_list) for star in star_list if star.group == 1
+        ],
     )
     slope = linreg.coef_[0]
     intercept = linreg.intercept_
@@ -268,11 +270,13 @@ def update_fast_line(star_list, line_list):
     """
     linreg = LinearRegression()
     linreg.fit(
-        [star.mass for star in star_list if star.group == 0],
+        [[star.mass] for star in star_list if star.group == 0],
         [star.period for star in star_list if star.group == 0],
-        sample_weight=[star.calculate_weight_f(line_list) for star in star_list],
+        sample_weight=[
+            star.calculate_weight_f(line_list) for star in star_list if star.group == 0
+        ],
     )
-    slope = linreg.coef_[0]
+    slope = 0  # linreg.coef_[0]
     intercept = linreg.intercept_
 
     return [slope, intercept]
@@ -290,7 +294,7 @@ star_list = get_data(path)
 #     Line(0.000000, 1.2806533526705661),
 #     Line(-6.99247391456971, 11.866198098140732),
 # ]
-line_list = [[0.000000, 1.2806533526705661], [-6.99247391456971, 11.866198098140732]]
+line_list = [[0.000000, 2.2806533526705661], [-6.99247391456971, 11.866198098140732]]
 
 for star in star_list:
     star.update_group(line_list)
@@ -319,12 +323,21 @@ ax1.plot(
 )
 
 #%%
-line_list[0] = update_slow_line(star_list, line_list)
+print(line_list[0])
+plot_data(star_list, line_list)
+
+line_list[0] = update_fast_line(star_list, line_list)
+line_list[1] = update_slow_line(star_list, line_list)
+
+print(line_list[0])
+plot_data(star_list, line_list)
+
+
+for star in star_list:
+    star.update_group(line_list)
+
 
 #%%
-lr = LinearRegression()
-lr.fit(
-    [star.mass for star in star_list if star.group == 0],
-    [star.period for star in star_list if star.group== 0],
-    [star.calculate_weight_s(line_list) for star in star_list if star.group == 0]
-)
+
+
+#
