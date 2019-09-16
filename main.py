@@ -1,4 +1,4 @@
-#%%
+#%% MODULE IMPORTING
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,14 +6,14 @@ from os import listdir
 from scipy.stats import linregress
 from sklearn.linear_model import LinearRegression
 
-
+#%% FUNCTION INITIALISATION
 class Star:
     def __init__(self, period, mass):
         self.period = period
         self.mass = mass
 
-    def set_initial_group(self):
-        self.group = 1 if self.period >= calculate_line(-5, self.mass, 7) else 0
+    # def set_initial_group(self):
+    #     self.group = 1 if self.period >= calculate_line(-5, self.mass, 7) else 0
 
     def update_group(self, line_list):
         # dist_slow = (line_list[1].predicted_value(self.mass) - self.period) ** 2
@@ -69,62 +69,62 @@ class Star:
         return calculate_line(line_list[0][0], self.mass, line_list[0][1])
 
 
-class Line:
-    def __init__(self, slope, intercept):
-        self.slope = slope
-        self.intercept = intercept
+# class Line:
+#     def __init__(self, slope, intercept):
+#         self.slope = slope
+#         self.intercept = intercept
 
-    def updatefor_slowstars(self, star_list):
-        """
-        this updates the slope of a line for the true slope and intercept
-        """
-        lrs = LinearRegression()
-        lrs.fit(
-            [[star.mass] for star in star_list if star.group == 1],
-            [star.period for star in star_list if star.group == 1],
-            sample_weight=[
-                star.calculate_weight_s(line_list)
-                for star in star_list
-                if star.group == 1
-            ],
-        )
-        self.slope = lrs.coef_
-        self.intercept = lrs.intercept_
-        # slope_s, intercept_s = linregress(
-        #     [star.mass for star in star_list if star.group == 1],
-        #     [star.period for star in star_list if star.group == 1],
-        # )[:2]
-        # self.slope = slope_s
-        # self.intercept = intercept_s
+#     def updatefor_slowstars(self, star_list):
+#         """
+#         this updates the slope of a line for the true slope and intercept
+#         """
+#         lrs = LinearRegression()
+#         lrs.fit(
+#             [[star.mass] for star in star_list if star.group == 1],
+#             [star.period for star in star_list if star.group == 1],
+#             sample_weight=[
+#                 star.calculate_weight_s(line_list)
+#                 for star in star_list
+#                 if star.group == 1
+#             ],
+#         )
+#         self.slope = lrs.coef_
+#         self.intercept = lrs.intercept_
+#         # slope_s, intercept_s = linregress(
+#         #     [star.mass for star in star_list if star.group == 1],
+#         #     [star.period for star in star_list if star.group == 1],
+#         # )[:2]
+#         # self.slope = slope_s
+#         # self.intercept = intercept_s
 
-    def updatefor_faststars(self, star_list):
-        """
-        This updates the slope of the line using the average of the data.
-        Effectively fixing the slope at 0 and only changing its intercept
-        """
-        lrf = LinearRegression()
-        lrf.fit(
-            [[star.mass] for star in star_list if star.group == 0],
-            [star.period for star in star_list if star.group == 0],
-            sample_weight=[
-                star.calculate_weight_f(line_list)
-                for star in star_list
-                if star.group == 0
-            ],
-        )
-        self.slope = np.array([0])
-        self.intercept = lrf.intercept_
+#     def updatefor_faststars(self, star_list):
+#         """
+#         This updates the slope of the line using the average of the data.
+#         Effectively fixing the slope at 0 and only changing its intercept
+#         """
+#         lrf = LinearRegression()
+#         lrf.fit(
+#             [[star.mass] for star in star_list if star.group == 0],
+#             [star.period for star in star_list if star.group == 0],
+#             sample_weight=[
+#                 star.calculate_weight_f(line_list)
+#                 for star in star_list
+#                 if star.group == 0
+#             ],
+#         )
+#         self.slope = np.array([0])
+#         self.intercept = lrf.intercept_
 
-        # slope_f, intercept_f = (
-        #     0,
-        #     np.sum([star.period for star in star_list if star.group == 0])
-        #     / len([star.group for star in star_list if star.group == 0]),
-        # )
-        # self.slope = slope_f
-        # self.intercept = intercept_f
+#         # slope_f, intercept_f = (
+#         #     0,
+#         #     np.sum([star.period for star in star_list if star.group == 0])
+#         #     / len([star.group for star in star_list if star.group == 0]),
+#         # )
+#         # self.slope = slope_f
+#         # self.intercept = intercept_f
 
-    def predicted_value(self, star):
-        return calculate_line(self.slope, star, self.intercept)
+#     def predicted_value(self, star):
+#         return calculate_line(self.slope, star, self.intercept)
 
 
 def calculate_ser(predict_y1, predict_y0, y):
@@ -147,21 +147,21 @@ def get_data(location):
     return [Star(period, mass) for mass, period in zip(mass, period)]
 
 
-def get_lines(star_list):
-    """
-    Takes in list of star objects and finds the initial lines
-    """
-    slope_s, intercept_s = linregress(
-        [star.mass for star in star_list if star.group == 1],
-        [star.period for star in star_list if star.group == 1],
-    )[:2]
-    slope_f, intercept_f = (
-        0,
-        np.sum([star.period for star in star_list if star.group == 0])
-        / len([star.group for star in star_list if star.group == 0]),
-    )
+# def get_lines(star_list):
+#     """
+#     Takes in list of star objects and finds the initial lines
+#     """
+#     slope_s, intercept_s = linregress(
+#         [star.mass for star in star_list if star.group == 1],
+#         [star.period for star in star_list if star.group == 1],
+#     )[:2]
+#     slope_f, intercept_f = (
+#         0,
+#         np.sum([star.period for star in star_list if star.group == 0])
+#         / len([star.group for star in star_list if star.group == 0]),
+#     )
 
-    return [Line(slope_f, intercept_f), Line(slope_s, intercept_s)]
+#     return [Line(slope_f, intercept_f), Line(slope_s, intercept_s)]
 
 
 def plot_data(star_list, line_list, figure="figure", axes="ax"):
@@ -228,7 +228,57 @@ def switch_group(val):
         return 0
 
 
-#%% INITIAL TEST FIT
+def update_slow_line(star_list, line_list):
+    """
+    Calculates slope and intercept of the SLOW line, taking into account
+    the weightings of the points compared to the other line, the further away
+    the point from the line, the less it affects the fit.
+    Inputs
+        star_list: List of Star objects, seperate this input list into group
+            one or group zero
+
+    Retuns
+        slope: slope of the slow line
+        intercept: intercept of the slow line
+    """
+    linreg = LinearRegression()
+    linreg.fit(
+        [star.mass for star in star_list if star.group == 1],
+        [star.period for star in star_list if star.group == 1],
+        sample_weight=[star.calculate_weight_s(line_list) for star in star_list],
+    )
+    slope = linreg.coef_[0]
+    intercept = linreg.intercept_
+
+    return [slope, intercept]
+
+
+def update_fast_line(star_list, line_list):
+    """
+    Calculates slope and intercept of the FAST line, taking into account
+    the weightings of the points compared to the other line, the further away
+    the point from the line, the less it affects the fit.
+    Inputs
+        star_list: List of Star objects, seperate this input list into group
+            one or group zero
+
+    Retuns
+        slope: slope of the slow line
+        intercept: intercept of the slow line
+    """
+    linreg = LinearRegression()
+    linreg.fit(
+        [star.mass for star in star_list if star.group == 0],
+        [star.period for star in star_list if star.group == 0],
+        sample_weight=[star.calculate_weight_f(line_list) for star in star_list],
+    )
+    slope = linreg.coef_[0]
+    intercept = linreg.intercept_
+
+    return [slope, intercept]
+
+
+#%% DATA INITIALISATION AND PLOTING
 path = "d:data\Pleiades_Hartman.csv"
 # path = "/home/edoodson/Documents/spin_down/data/Pleiades_Hartman.csv"
 
@@ -236,10 +286,10 @@ path = "d:data\Pleiades_Hartman.csv"
 star_list = get_data(path)
 # -6.99247391456971 11.866198098140732
 # 0.17567270713813296 1.2806533526705661
-line_list = [
-    Line(0.000000, 1.2806533526705661),
-    Line(-6.99247391456971, 11.866198098140732),
-]
+# line_list = [
+#     Line(0.000000, 1.2806533526705661),
+#     Line(-6.99247391456971, 11.866198098140732),
+# ]
 line_list = [[0.000000, 1.2806533526705661], [-6.99247391456971, 11.866198098140732]]
 
 for star in star_list:
@@ -269,4 +319,12 @@ ax1.plot(
 )
 
 #%%
+line_list[0] = update_slow_line(star_list, line_list)
 
+#%%
+lr = LinearRegression()
+lr.fit(
+    [star.mass for star in star_list if star.group == 0],
+    [star.period for star in star_list if star.group== 0],
+    [star.calculate_weight_s(line_list) for star in star_list if star.group == 0]
+)
