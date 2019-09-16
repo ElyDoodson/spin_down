@@ -16,33 +16,57 @@ class Star:
         self.group = 1 if self.period >= calculate_line(-5, self.mass, 7) else 0
 
     def update_group(self, line_list):
-        dist_slow = (line_list[1].predicted_value(self.mass) - self.period) ** 2
-        dist_fast = (line_list[0].predicted_value(self.mass) - self.period) ** 2
-
+        # dist_slow = (line_list[1].predicted_value(self.mass) - self.period) ** 2
+        # dist_fast = (line_list[0].predicted_value(self.mass) - self.period) ** 2
+        dist_slow = (self.predict_slow(line_list) - self.period) ** 2
+        dist_fast = (self.predict_fast(line_list) - self.period) ** 2
         self.group = 1 if min(dist_fast, dist_slow) == dist_slow else 0
 
     def calculate_weight_s(self, line_list):
+        # return 1 / (
+        #     1
+        #     + calculate_ser(
+        #         line_list[1].predicted_value(self.mass),
+        #         line_list[0].predicted_value(self.mass),
+        #         self.period,
+        #     )
+        # )
         return 1 / (
             1
             + calculate_ser(
-                line_list[1].predicted_value(self.mass),
-                line_list[0].predicted_value(self.mass),
-                self.period,
+                self.predict_slow(line_list), self.predict_fast(line_list), self.period
             )
         )
 
     def calculate_weight_f(self, line_list):
+        # return 1 / (
+        #     1
+        #     + (
+        #         1
+        #         / calculate_ser(
+        #             line_list[1].predicted_value(self.mass),
+        #             line_list[0].predicted_value(self.mass),
+        #             self.period,
+        #         )
+        #     )
+        # )
         return 1 / (
             1
             + (
                 1
                 / calculate_ser(
-                    line_list[1].predicted_value(self.mass),
-                    line_list[0].predicted_value(self.mass),
+                    self.predict_slow(line_list),
+                    self.predict_fast(line_list),
                     self.period,
                 )
             )
         )
+
+    def predict_slow(self, line_list):
+        return calculate_line(line_list[1][0], self.mass, line_list[1][1])
+
+    def predict_fast(self, line_list):
+        return calculate_line(line_list[0][0], self.mass, line_list[0][1])
 
 
 class Line:
@@ -151,7 +175,7 @@ def plot_data(star_list, line_list, figure="figure", axes="ax"):
     )
     ax.plot(
         [star.mass for star in star_list],
-        [line_list[0].predicted_value(star.mass) for star in star_list],
+        [star.predict_fast(line_list) for star in star_list],
         color="red",
     )
     ax.scatter(
@@ -161,40 +185,40 @@ def plot_data(star_list, line_list, figure="figure", axes="ax"):
     )
     ax.plot(
         [star.mass for star in star_list],
-        [line_list[1].predicted_value(star.mass) for star in star_list],
+        [star.predict_slow(line_list) for star in star_list],
         color="blue",
     )
     figure
 
 
-def calculate_ser2(line_list, star_list):
-    return [
-        (line_list[1].predicted_value(star.mass) - star.period) ** 2
-        / (line_list[0].predicted_value(star.mass) - star.period) ** 2
-        for star in star_list
-    ]
+# def calculate_ser2(line_list, star_list):
+#     return [
+#         (line_list[1].predicted_value(star.mass) - star.period) ** 2
+#         / (line_list[0].predicted_value(star.mass) - star.period) ** 2
+#         for star in star_list
+#     ]
 
 
-def calculate_weight_slow(line_list, star_list):
-    return np.divide(1, np.add(1, calculate_ser2(line_list, star_list)))
+# def calculate_weight_slow(line_list, star_list):
+#     return np.divide(1, np.add(1, calculate_ser2(line_list, star_list)))
 
 
-def calculate_weight_fast(line_list, star_list):
-    return np.divide(1, np.add(1, np.divide(1, calculate_ser2(line_list, star_list))))
+# def calculate_weight_fast(line_list, star_list):
+#     return np.divide(1, np.add(1, np.divide(1, calculate_ser2(line_list, star_list))))
 
 
-def calculate_fitness(line_list, star_list):
-    tot = 0
+# def calculate_fitness(line_list, star_list):
+#     tot = 0
 
-    w_f = calculate_weight_fast(line_list, star_list)
-    w_s = calculate_weight_slow(line_list, star_list)
-    for i, star in enumerate(star_list):
-        if star.group == 0:
-            tot += (line_list[0].predicted_value(star.mass) - star.period) ** 2 * w_f[i]
-        else:
-            tot += (line_list[1].predicted_value(star.mass) - star.period) ** 2 * w_s[i]
+#     w_f = calculate_weight_fast(line_list, star_list)
+#     w_s = calculate_weight_slow(line_list, star_list)
+#     for i, star in enumerate(star_list):
+#         if star.group == 0:
+#             tot += (line_list[0].predicted_value(star.mass) - star.period) ** 2 * w_f[i]
+#         else:
+#             tot += (line_list[1].predicted_value(star.mass) - star.period) ** 2 * w_s[i]
 
-    return tot
+#     return tot
 
 
 def switch_group(val):
@@ -210,21 +234,13 @@ path = "d:data\Pleiades_Hartman.csv"
 
 # importation of star objects
 star_list = get_data(path)
-# sets all the initial star groups to an arbitrary line
-for star in star_list:
-    star.set_initial_group()
-
-# initialisation of lines
-line_list = get_lines(star_list)
-
-plot_data(star_list, line_list)
-
 # -6.99247391456971 11.866198098140732
 # 0.17567270713813296 1.2806533526705661
 line_list = [
     Line(0.000000, 1.2806533526705661),
     Line(-6.99247391456971, 11.866198098140732),
 ]
+line_list = [[0.000000, 1.2806533526705661], [-6.99247391456971, 11.866198098140732]]
 
 for star in star_list:
     star.update_group(line_list)
@@ -243,17 +259,14 @@ ax1.scatter(
 
 ax1.plot(
     [star.mass for star in star_list],
-    [line_list[1].predicted_value(star.mass) for star in star_list],
+    [star.predict_slow(line_list) for star in star_list],
     color="blue",
 )
 ax1.plot(
     [star.mass for star in star_list],
-    [line_list[0].predicted_value(star.mass) for star in star_list],
+    [star.predict_fast(line_list) for star in star_list],
     color="red",
 )
 
 #%%
 
-
-print(line_list[0].slope, line_list[0].intercept)
-line_list[0].updatefor_faststars(star_list)
