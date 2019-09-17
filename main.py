@@ -165,13 +165,14 @@ def get_data(location):
 
 
 def plot_data(star_list, line_list, figure="figure", axes="ax"):
-    figure, ax = plt.subplots(1, figsize=(8, 6))
+    figure, ax = plt.subplots(1, figsize=(6, 4))
     ax.invert_xaxis()
     ax.set(ylim=(0, 15))
     ax.scatter(
         [star.mass for star in star_list if star.group == 0],
         [star.period for star in star_list if star.group == 0],
         color="red",
+        marker="x",
     )
     ax.plot(
         [star.mass for star in star_list],
@@ -182,6 +183,7 @@ def plot_data(star_list, line_list, figure="figure", axes="ax"):
         [star.mass for star in star_list if star.group == 1],
         [star.period for star in star_list if star.group == 1],
         color="blue",
+        marker="x",
     )
     ax.plot(
         [star.mass for star in star_list],
@@ -245,9 +247,9 @@ def update_slow_line(star_list, line_list):
     linreg.fit(
         [[star.mass] for star in star_list if star.group == 1],
         [star.period for star in star_list if star.group == 1],
-        sample_weight=[
-            star.calculate_weight_s(line_list) for star in star_list if star.group == 1
-        ],
+        # sample_weight=[
+        #     star.calculate_weight_s(line_list) for star in star_list if star.group == 1
+        # ],
     )
     slope = linreg.coef_[0]
     intercept = linreg.intercept_
@@ -272,9 +274,9 @@ def update_fast_line(star_list, line_list):
     linreg.fit(
         [[star.mass] for star in star_list if star.group == 0],
         [star.period for star in star_list if star.group == 0],
-        sample_weight=[
-            star.calculate_weight_f(line_list) for star in star_list if star.group == 0
-        ],
+        # sample_weight=[
+        #     star.calculate_weight_f(line_list) for star in star_list if star.group == 0
+        # ],
     )
     slope = 0  # linreg.coef_[0]
     intercept = linreg.intercept_
@@ -338,6 +340,3 @@ for star in star_list:
 
 
 #%%
-
-
-#
