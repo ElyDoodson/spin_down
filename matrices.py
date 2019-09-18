@@ -57,8 +57,12 @@ def set_star_group(star_list, slow_linreg, fast_linreg):
 
     """
     for star in star_list:
-        dist_slow = (slow_linreg.predict([[1, star.mass, star.mass ** 2]]) - star.period)**2
-        dist_fast = (fast_linreg.predict([[1, star.mass, star.mass ** 2]]) - star.period)**2
+        dist_slow = (
+            slow_linreg.predict([[1, star.mass, star.mass ** 2]]) - star.period
+        ) ** 2
+        dist_fast = (
+            fast_linreg.predict([[1, star.mass, star.mass ** 2]]) - star.period
+        ) ** 2
 
         # dist_slow = (
         #     predict_value(star.predictors, slow_coefficients) - star.period
@@ -268,12 +272,8 @@ print("Fast coeff =", coefficients_fast)
 
 #%%
 set_star_group(star_list, lrs, lrf)
-sample_weight_slow = calculate_weight(
-    star_list, lrs, lrf, 1, "slow"
-)
-sample_weight_fast = calculate_weight(
-    star_list, lrs, lrf, 0, "fast"
-)
+sample_weight_slow = calculate_weight(star_list, lrs, lrf, 1, "slow")
+sample_weight_fast = calculate_weight(star_list, lrs, lrf, 0, "fast")
 
 coefficients_slow, lrs = calculate_coefficients(
     [star for star in star_list],
@@ -289,56 +289,33 @@ coefficients_fast, lrf = calculate_coefficients(
     sample_weights=sample_weight_fast,
 )
 
-fig, ax = plt.subplots(2, figsize=(8, 6))
-ax[0].invert_xaxis()
-ax[1].invert_xaxis()
-ax[0].set(title="NaN")
-ax[0].scatter(
+fig, ax = plt.subplots(1, figsize=(8, 6))
+ax.invert_xaxis()
+
+ax.set(title="NaN")
+ax.scatter(
     [star.mass for star in star_list if star.group == 1],
     [star.period for star in star_list if star.group == 1],
     marker="x",
     color="blue",
 )
-ax[0].scatter(
+ax.scatter(
     [star.mass for star in star_list if star.group == 0],
     [star.period for star in star_list if star.group == 0],
     marker="x",
     color="red",
 )
-ax[0].plot(
+ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
     lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="blue",
 )
-ax[0].plot(
+ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
     lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="red",
 )
 
-ax[1].scatter(
-    [star.mass for star in star_list if star.group == 1],
-    [star.period for star in star_list if star.group == 1],
-    marker="x",
-    color="blue",
-)
-ax[1].scatter(
-    [star.mass for star in star_list if star.group == 0],
-    [star.period for star in star_list if star.group == 0],
-    marker="x",
-    color="red",
-)
-ax[1].plot(
-    [i for i in np.arange(1.4, 0.2, -0.01)],
-    predict_value(
-        [[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)], coefficients_slow
-    ),
-    color="blue",
-)
-
-
-print("Slow coeff =", coefficients_slow)
-print("Fast coeff =", coefficients_fast)
-
+print()
 
 #%%
