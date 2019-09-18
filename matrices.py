@@ -39,7 +39,7 @@ def set_initial_star_group(star_list, coefficients=[7, -5, 0]):
         )
 
 
-def set_star_group(star_list, slow_coefficients, fast_coefficients):
+def set_star_group(star_list, slow_linreg, fast_linreg):
     """
     Sets the group of the stars in star_list to the closest line
 
@@ -47,23 +47,25 @@ def set_star_group(star_list, slow_coefficients, fast_coefficients):
     -------
         star_list: list
             list of all star objects
-        slow_coefficients: list
-            list of [b0,b1,b2] for slow line
-        fast_coefficients: list
-            lsit of [b0,0,0] for fast line (flat line so only intercept)
-    
+        slow_linreg: LinearRegression() obj
+            object correspoding to the slow regression line
+        fast_linreg: LinearRegression() obj
+            object correspoding to the fast regression line
     Returns
     ------
         None
 
     """
     for star in star_list:
-        dist_slow = (
-            predict_value(star.predictors, slow_coefficients) - star.period
-        ) ** 2
-        dist_fast = (
-            predict_value(star.predictors, fast_coefficients) - star.period
-        ) ** 2
+        dist_slow = (slow_linreg.predict([[1, star.mass, star.mass ** 2]]) - star.period)**2
+        dist_fast = (fast_linreg.predict([[1, star.mass, star.mass ** 2]]) - star.period)**2
+
+        # dist_slow = (
+        #     predict_value(star.predictors, slow_coefficients) - star.period
+        # ) ** 2
+        # dist_fast = (
+        #     predict_value(star.predictors, fast_coefficients) - star.period
+        # ) ** 2
         star.group = 1 if min(dist_fast, dist_slow) == dist_slow else 0
 
 
@@ -133,7 +135,7 @@ def calculate_coefficients(
 #     return (predict_y1 - y) ** 2 / (predict_y0 - y) ** 2
 
 
-def calculate_weight(star_list, coef_slow, coef_fast, selected_group, selected_weight):
+def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weight):
     """
     Takes the star list and calculates the weight of the stars w.r.t 
     the chosen line
@@ -163,10 +165,11 @@ def calculate_weight(star_list, coef_slow, coef_fast, selected_group, selected_w
     star_predictors = [
         star.predictors for star in star_list if star.group == selected_group
     ]
+
     # Calculating square of the residuals
     square_res = np.divide(
-        np.square(predict_value(star_predictors, coef_slow) - star_periods),
-        np.square(predict_value(star_predictors, coef_fast) - star_periods),
+        np.square(lr_slow.predict(star_predictors) - star_periods),
+        np.square(lr_fast.predict(star_predictors) - star_periods),
     )
 
     weight_slow = np.divide(1.0, (1 + square_res))
@@ -219,17 +222,13 @@ ax.plot(
     lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="red",
 )
+print("Slow coeff =", coefficients_slow)
+print("Fast coeff =", coefficients_fast)
 
 
 #%% SET GROUPS TO CLOSEST LINE
-coefficients_slow, lrs = calculate_coefficients(
-    [star for star in star_list], group=1, return_linregg=True
-)
-coefficients_fast, lrf = calculate_coefficients(
-    [star for star in star_list], group=0, return_linregg=True, set_slope=True
-)
 
-set_star_group(star_list, coefficients_slow, coefficients_fast)
+set_star_group(star_list, lrs, lrf)
 
 coefficients_slow, lrs = calculate_coefficients(
     [star for star in star_list], group=1, return_linregg=True
@@ -268,12 +267,12 @@ print("Fast coeff =", coefficients_fast)
 
 
 #%%
-# set_star_group(star_list, coefficients_slow, coefficients_fast)
+set_star_group(star_list, lrs, lrf)
 sample_weight_slow = calculate_weight(
-    star_list, coefficients_slow, coefficients_fast, 1, "slow"
+    star_list, lrs, lrf, 1, "slow"
 )
 sample_weight_fast = calculate_weight(
-    star_list, coefficients_slow, coefficients_fast, 0, "fast"
+    star_list, lrs, lrf, 0, "fast"
 )
 
 coefficients_slow, lrs = calculate_coefficients(
@@ -343,33 +342,3 @@ print("Fast coeff =", coefficients_fast)
 
 
 #%%
-set_star_group(star_list, coefficients_slow, coefficients_fast)
-
-
-fig, ax = plt.subplots(1, figsize=(8, 6))
-ax.invert_xaxis()
-ax.set(title="NaN")
-ax.scatter(
-    [star.mass for star in star_list if star.group == 1],
-    [star.period for star in star_list if star.group == 1],
-    marker="x",
-    color="blue",
-)
-ax.scatter(
-    [star.mass for star in star_list if star.group == 0],
-    [star.period for star in star_list if star.group == 0],
-    marker="x",
-    color="red",
-)
-ax.plot(
-    [i for i in np.arange(1.4, 0.2, -0.01)],
-    lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
-    color="blue",
-)
-ax.plot(
-    [i for i in np.arange(1.4, 0.2, -0.01)],
-    lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
-    color="red",
-)
-print("Slow coeff =", coefficients_slow)
-print("Fast coeff =", coefficients_fast)
