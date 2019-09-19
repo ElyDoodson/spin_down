@@ -117,26 +117,19 @@ def calculate_coefficients(
     """
     lr = LinearRegression()
 
-    if set_slope == True:
-        # sets the coefs to zero
-        lr.coef_ = np.zeros(len(star_objects[0].predictors))
-        lr.intercept_ = sum([star.period for star in star_list if star.group == group]) / len(
-            [star.period for star in star_list if star.group == group]
-        )
-        if return_linregg == True:
-            return np.append(lr.intercept_, lr.coef_[1:]), lr
-
-        elif return_linregg == False:
-            return np.append(lr.intercept_, lr.coef_[1:])
-        # pass
-
     lr.fit(
         [star.predictors for star in star_objects if star.group == group],
         [star.period for star in star_list if star.group == group],
         sample_weights,
     )
 
-    lr.coef_ = lr.coef_ if set_slope == False else np.zeros(len(lr.coef_))
+    if set_slope == True:
+        # sets the coefs to zero
+        lr.coef_ = np.zeros(len(star_objects[0].predictors))
+        lr.intercept_ = np.array(
+            sum([star.period for star in star_list if star.group == group])
+            / len([star.period for star in star_list if star.group == group])
+        )
 
     if return_linregg == True:
         return np.append(lr.intercept_, lr.coef_[1:]), lr
@@ -149,8 +142,9 @@ def calculate_coefficients(
         return None
 
 
-# def calculate_ser(predict_y1, predict_y0, y):
-#     return (predict_y1 - y) ** 2 / (predict_y0 - y) ** 2
+def calculate_ser(predict_y1, predict_y0, y):
+
+    return (predict_y1 - y) ** 2 / (predict_y0 - y) ** 2
 
 
 def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weight):
@@ -176,21 +170,26 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
     -------
         list: list of weights of the selected star group w.r.t the selected line
     """
-    # Calculating recuring values
-    star_periods = np.array(
-        [star.period for star in star_list if star.group == selected_group]
-    )
-    star_predictors = [
-        star.predictors for star in star_list if star.group == selected_group
-    ]
+    if selected_group != 0 or selected_group != 1:
 
+        star_periods = np.array([star.period for star in star_list])
+        star_predictors = [star.predictors for star in star_list]
+
+    if selected_group == 0 or selected_group == 1:
+        # Calculating recuring values
+        star_periods = np.array(
+            [star.period for star in star_list if star.group == selected_group]
+        )
+        star_predictors = [
+            star.predictors for star in star_list if star.group == selected_group
+        ]
     # Calculating square of the residuals
     square_res = np.divide(
-        np.square(lr_slow.predict(star_predictors) - star_periods),
-        np.square(lr_fast.predict(star_predictors) - star_periods),
+        (lr_slow.predict(star_predictors) - star_periods) ** 2,
+        (lr_fast.predict(star_predictors) - star_periods) ** 2,
     )
 
-    weight_slow = np.divide(1.0, (1 + square_res))
+    weight_slow = np.divide(1.0, (np.add(1, square_res)))
     # weight_fast = np.divide(1., (1 + np.divide(1,square_res)))
     if selected_weight == "slow":
         return weight_slow
@@ -252,16 +251,12 @@ ax.scatter(
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-
-    lrs.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
-
+    lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="blue",
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-
-    lrf.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
-
+    lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="red",
 )
 print("Slow coeff =", coefficients_slow)
@@ -296,24 +291,21 @@ ax.scatter(
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-
-    lrs.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
-
+    lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="blue",
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-
-    lrf.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
-
+    lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="red",
 )
 print("Slow coeff =", coefficients_slow)
 print("Fast coeff =", coefficients_fast)
 
 
-#%% USE WEIGHTED FITTING 
+#%% USE WEIGHTED FITTING
 set_star_group(star_list, lrs, lrf)
+
 sample_weight_slow = calculate_weight(star_list, lrs, lrf, 1, "slow")
 sample_weight_fast = calculate_weight(star_list, lrs, lrf, 0, "fast")
 
@@ -349,24 +341,56 @@ ax.scatter(
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-
-    lrs.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
-
+    lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="blue",
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-
-    lrf.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
-
+    lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="red",
 )
 
-print("slow coef = ", lrs.coef_)
-print("fast coef = ", lrf.coef_)
+print("slow coef = ", coefficients_slow)
+print("fast coef = ", coefficients_fast)
 
 #%%
-sample_weight_slow = calculate_weight(star_list, lrs, lrf, 1, "slow")
-sample_weight_fast = calculate_weight(star_list, lrs, lrf, 0, "slow")
 
-print(sample_weight_slow,sample_weight_fast)
+nmbr = 50
+
+fig, ax = plt.subplots(1, figsize=(8, 6))
+ax.invert_xaxis()
+
+# plot_group(star_list, 1, ax)
+ax.set(title="GROUP SPLIT BY LINE 5X + 7")
+
+ax.scatter(
+    [star.mass for star in star_list if star.group == 1],
+    [star.period for star in star_list if star.group == 1],
+    marker="x",
+    color="blue",
+)
+ax.scatter(
+    [star.mass for star in star_list if star.group == 0],
+    [star.period for star in star_list if star.group == 0],
+    marker="x",
+    color="red",
+)
+ax.plot(
+    [i for i in np.arange(1.4, 0.2, -0.01)],
+    lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
+    color="blue",
+)
+ax.plot(
+    [i for i in np.arange(1.4, 0.2, -0.01)],
+    lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
+    color="red",
+)
+ax.scatter(star_list[nmbr].mass, star_list[nmbr].period, marker="x", color="white")
+print(
+    "fast_weight of star selected = ",
+    calculate_weight(star_list, lrs, lrf, "both groups", "fast")[nmbr],
+    "\n",
+    "group = ",
+    star_list[nmbr].group,
+)
+print(["%.2f" % elem for elem in calculate_weight(star_list, lrs, lrf, 0, "fast")])
