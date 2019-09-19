@@ -14,7 +14,6 @@ class Star:
     def __init__(self, period, mass):
         self.period = period
         self.mass = mass
-        self.predictors = np.array([1, mass, mass ** 2])
 
 
 def get_data(location):
@@ -29,14 +28,20 @@ def get_data(location):
     return [Star(period, mass) for mass, period in zip(mass, period)]
 
 
-def set_initial_star_group(star_list, coefficients=[7, -5, 0]):
+def set_initial_star_group(star_list, order):
     """
     
     """
+    coefficients = np.append([5, -5], np.zeros(order - 2))
     for star in star_list:
         star.group = (
             1 if predict_value(star.predictors, coefficients) <= star.period else 0
         )
+
+
+def set_predictor_order(star_list, order):
+    for star in star_list:
+        star.predictors = [star.mass ** i for i in range(order)]
 
 
 def set_star_group(star_list, slow_linreg, fast_linreg):
@@ -57,12 +62,8 @@ def set_star_group(star_list, slow_linreg, fast_linreg):
 
     """
     for star in star_list:
-        dist_slow = (
-            slow_linreg.predict([[1, star.mass, star.mass ** 2]]) - star.period
-        ) ** 2
-        dist_fast = (
-            fast_linreg.predict([[1, star.mass, star.mass ** 2]]) - star.period
-        ) ** 2
+        dist_slow = (slow_linreg.predict([star.predictors]) - star.period) ** 2
+        dist_fast = (fast_linreg.predict([star.predictors]) - star.period) ** 2
 
         # dist_slow = (
         #     predict_value(star.predictors, slow_coefficients) - star.period
@@ -115,6 +116,19 @@ def calculate_coefficients(
     list: [b0,b1,b2] 
     """
     lr = LinearRegression()
+
+    if set_slope == True:
+        # sets the coefs to zero
+        lr.coef_ = np.zeros(len(star_objects[0].predictors))
+        lr.intercept_ = sum([star.period for star in star_list if star.group == group]) / len(
+            [star.period for star in star_list if star.group == group]
+        )
+        if return_linregg == True:
+            return np.append(lr.intercept_, lr.coef_[1:]), lr
+
+        elif return_linregg == False:
+            return np.append(lr.intercept_, lr.coef_[1:])
+        # pass
 
     lr.fit(
         [star.predictors for star in star_objects if star.group == group],
@@ -184,15 +198,33 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
         return 1 - weight_slow
 
 
+def plot_group(star_list, group, axis=ax, subplot_group=0, return_axis=False):
+    if group == 1:
+        colour = "blue"
+    elif group == 0:
+        colour = "red"
+    ax[subplot_group].scatter(
+        [star.mass for star in star_list if star.group == group],
+        [star.period for star in star_list if star.group == group],
+        marker="x",
+        color=colour,
+    )
+
+    return axis if return_axis == True else None
+
+
 #%% DATA INITIALISATION
+
+path = "d:data\Praesepe_K2.csv"
 path = "d:data\Pleiades_Hartman.csv"
 # path = "/home/edoodson/Documents/spin_down/data/Pleiades_Hartman.csv"
 
 star_list = get_data(path)
-set_initial_star_group(star_list)
+set_predictor_order(star_list, 3)
+set_initial_star_group(star_list, 3)
 
 
-#%%
+#%% INITIAL FIT
 coefficients_slow, lrs = calculate_coefficients(
     [star for star in star_list], group=1, return_linregg=True
 )
@@ -203,6 +235,8 @@ coefficients_fast, lrf = calculate_coefficients(
 
 fig, ax = plt.subplots(1, figsize=(8, 6))
 ax.invert_xaxis()
+
+# plot_group(star_list, 1, ax)
 ax.set(title="GROUP SPLIT BY LINE 5X + 7")
 ax.scatter(
     [star.mass for star in star_list if star.group == 1],
@@ -218,12 +252,16 @@ ax.scatter(
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-    lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
+
+    lrs.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
+
     color="blue",
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-    lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
+
+    lrf.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
+
     color="red",
 )
 print("Slow coeff =", coefficients_slow)
@@ -258,19 +296,23 @@ ax.scatter(
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-    lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
+
+    lrs.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
+
     color="blue",
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-    lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
+
+    lrf.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
+
     color="red",
 )
 print("Slow coeff =", coefficients_slow)
 print("Fast coeff =", coefficients_fast)
 
 
-#%%
+#%% USE WEIGHTED FITTING 
 set_star_group(star_list, lrs, lrf)
 sample_weight_slow = calculate_weight(star_list, lrs, lrf, 1, "slow")
 sample_weight_fast = calculate_weight(star_list, lrs, lrf, 0, "fast")
@@ -292,7 +334,7 @@ coefficients_fast, lrf = calculate_coefficients(
 fig, ax = plt.subplots(1, figsize=(8, 6))
 ax.invert_xaxis()
 
-ax.set(title="NaN")
+ax.set(title="WEIGHTED FITTING")
 ax.scatter(
     [star.mass for star in star_list if star.group == 1],
     [star.period for star in star_list if star.group == 1],
@@ -307,15 +349,24 @@ ax.scatter(
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-    lrs.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
+
+    lrs.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
+
     color="blue",
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
-    lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
+
+    lrf.predict([[1, i, i**2] for i in np.arange(1.4, 0.2, -0.01)]),
+
     color="red",
 )
 
-print()
+print("slow coef = ", lrs.coef_)
+print("fast coef = ", lrf.coef_)
 
 #%%
+sample_weight_slow = calculate_weight(star_list, lrs, lrf, 1, "slow")
+sample_weight_fast = calculate_weight(star_list, lrs, lrf, 0, "slow")
+
+print(sample_weight_slow,sample_weight_fast)
