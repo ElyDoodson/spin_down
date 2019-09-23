@@ -93,7 +93,7 @@ def predict_value(star_predictors, line_data):
 
 
 def calculate_coefficients(
-    star_objects, group, sample_weights=1, return_linregg=False, set_slope=False
+    star_objects, group, sample_weights=None, return_linregg=False, set_slope=False
 ):
     """
     Parameters
@@ -125,9 +125,13 @@ def calculate_coefficients(
     if set_slope == True:
         # sets the coefs to zero
         lr.coef_ = np.zeros(len(star_objects[0].predictors))
-        lr.intercept_ = np.array(
-            sum([star.period for star in star_list if star.group == group])
-            / len([star.period for star in star_list if star.group == group])
+        # lr.intercept_ = np.array(
+        #     sum([star.period for star in star_list if star.group == group])
+        #     / len([star.period for star in star_list if star.group == group])
+        # )
+        lr.intercept_ = np.average(
+            [star.period for star in star_list if star.group == group],
+            weights=sample_weights,
         )
 
     if return_linregg == True:
@@ -182,20 +186,10 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
         star_predictors = [
             star.predictors for star in star_list if star.group == selected_group
         ]
+        
     star_predicted_fast = lr_fast.predict(star_predictors)
     star_predicted_slow = lr_slow.predict(star_predictors)
-    # # Calculating square of the residuals
-    # square_res = np.divide(
-    #     (lr_slow.predict(star_predictors) - star_periods) ** 2,
-    #     (lr_fast.predict(star_predictors) - star_periods) ** 2,
-    # )
 
-    # weight_slow = np.divide(1.0, (np.add(1, square_res)))
-    # # weight_fast = np.divide(1., (1 + np.divide(1,square_res)))
-    # if selected_weight == "slow":
-    #     return weight_slow
-    # elif selected_weight == "fast":
-    #     return 1 - weight_slow
     chi = np.divide(
         (star_periods - star_predicted_slow) + (star_periods - star_predicted_fast),
         (star_predicted_slow - star_predicted_fast),
@@ -207,8 +201,8 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
         return 1 - weight_slow
 
 
-def sigmoid(x, steepness=6, offest=0):
-    return np.divide(1, 1 + np.exp(-steepness * x + offest))
+def sigmoid(x, steepness=10, offest=5):
+    return np.divide(1, 1 + np.exp(-(steepness * x + offest)))
 
 
 def calculate_chi(star_list, lr_slow, lr_fast):
@@ -400,16 +394,13 @@ print(
     "group = ",
     star_list[nmbr].group,
 )
-print(["%.2f" % elem for elem in calculate_weight(star_list, lrs, lrf, "both", "fast")])
-print()
+# print(["%.2f" % elem for elem in calculate_weight(star_list, lrs, lrf, "both", "fast")])
 
 #%%
-chi = calculate_chi(star_list, lrs, lrf)
-
-
-plt.plot(sigmoid(chi))
-
-
-# plt.scatter(
-#     np.linspace(-5, 5, 350), sigmoid(np.array([random.uniform(-5,5) for i in range(350)]))
-# )
+print(lrf.intercept_)
+print(
+    np.average(
+        [star.period for star in star_list if star.group == 0],
+        weights=calculate_weight(star_list, lrs, lrf, 0, "fast"),
+    )
+)
