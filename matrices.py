@@ -3,10 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from os import listdir
-
-# from scipy.stats import linregress
 from sklearn.linear_model import LinearRegression
-
 #%%  INITIALISATION OF FUNCTIONS
 
 
@@ -197,20 +194,6 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
         return 1 - weight_slow
 
 
-def plot_group(star_list, group, axis=ax, subplot_group=0, return_axis=False):
-    if group == 1:
-        colour = "blue"
-    elif group == 0:
-        colour = "red"
-    ax[subplot_group].scatter(
-        [star.mass for star in star_list if star.group == group],
-        [star.period for star in star_list if star.group == group],
-        marker="x",
-        color=colour,
-    )
-
-    return axis if return_axis == True else None
-
 
 #%% DATA INITIALISATION
 
@@ -373,7 +356,8 @@ ax.scatter(
     [star.mass for star in star_list if star.group == 0],
     [star.period for star in star_list if star.group == 0],
     marker="x",
-    color="red",
+    c = calculate_weight(star_list, lrs, lrf, 0, "fast"),
+    cmap = "coolwarm"
 )
 ax.plot(
     [i for i in np.arange(1.4, 0.2, -0.01)],
@@ -394,3 +378,12 @@ print(
     star_list[nmbr].group,
 )
 print(["%.2f" % elem for elem in calculate_weight(star_list, lrs, lrf, 0, "fast")])
+
+
+
+# fi2, ax2 = plt.subplots(1, figsize=(8,6))
+# ax2.invert_xaxis()
+# ax2.invert_yaxis()
+# # ax2.set_ylabel(r"$\frac{1}{1 + {\frac{1}{sq\_res}}}$", fontsize=25, rotation = 45)
+# ax2.set_xlabel(r"$\mathsf{Mass}$")
+# ax2.scatter([star.mass for star in star_list if star.group == 0],calculate_weight(star_list, lrs, lrf, 0, "fast"))
