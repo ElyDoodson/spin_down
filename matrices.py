@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from os import listdir
 from sklearn.linear_model import LinearRegression
+import random
 
 #%%  INITIALISATION OF FUNCTIONS
 
@@ -181,19 +182,46 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
         star_predictors = [
             star.predictors for star in star_list if star.group == selected_group
         ]
-    # Calculating square of the residuals
-    square_res = np.divide(
-        (lr_slow.predict(star_predictors) - star_periods) ** 2,
-        (lr_fast.predict(star_predictors) - star_periods) ** 2,
-    )
+    star_predicted_fast = lr_fast.predict(star_predictors)
+    star_predicted_slow = lr_slow.predict(star_predictors)
+    # # Calculating square of the residuals
+    # square_res = np.divide(
+    #     (lr_slow.predict(star_predictors) - star_periods) ** 2,
+    #     (lr_fast.predict(star_predictors) - star_periods) ** 2,
+    # )
 
-    weight_slow = np.divide(1.0, (np.add(1, square_res)))
-    # weight_fast = np.divide(1., (1 + np.divide(1,square_res)))
+    # weight_slow = np.divide(1.0, (np.add(1, square_res)))
+    # # weight_fast = np.divide(1., (1 + np.divide(1,square_res)))
+    # if selected_weight == "slow":
+    #     return weight_slow
+    # elif selected_weight == "fast":
+    #     return 1 - weight_slow
+    chi = np.divide(
+        (star_periods - star_predicted_slow) + (star_periods - star_predicted_fast),
+        (star_predicted_slow - star_predicted_fast),
+    )
+    weight_slow = sigmoid(chi)
     if selected_weight == "slow":
         return weight_slow
     elif selected_weight == "fast":
         return 1 - weight_slow
 
+
+def sigmoid(x, steepness=6, offest=0):
+    return np.divide(1, 1 + np.exp(-steepness * x + offest))
+
+
+def calculate_chi(star_list, lr_slow, lr_fast):
+    star_period = [star.period for star in star_list]
+    star_predictors = [star.predictors for star in star_list]
+
+    star_predict_slow = lr_slow.predict(star_predictors)
+    star_predict_fast = lr_fast.predict(star_predictors)
+
+    return np.divide(
+        (star_period - star_predict_slow) + (star_period - star_predict_fast),
+        (star_predict_slow - star_predict_fast),
+    )
 
 
 #%% DATA INITIALISATION
@@ -339,25 +367,19 @@ print("fast coef = ", coefficients_fast)
 
 #%%
 
-nmbr = 50
+nmbr = 150
 
 fig, ax = plt.subplots(1, figsize=(8, 6))
 ax.invert_xaxis()
 
-# plot_group(star_list, 1, ax)
-ax.set(title="GROUP SPLIT BY LINE 5X + 7")
+ax.set(title="Visualisation of Weights")
 
 ax.scatter(
-    [star.mass for star in star_list if star.group == 1],
-    [star.period for star in star_list if star.group == 1],
+    [star.mass for star in star_list],
+    [star.period for star in star_list],
     marker="x",
-    color="blue",
-)
-ax.scatter(
-    [star.mass for star in star_list if star.group == 0],
-    [star.period for star in star_list if star.group == 0],
-    marker="x",
-    c=calculate_weight(star_list, lrs, lrf, 0, "fast"),
+    # color="red"
+    c=calculate_weight(star_list, lrs, lrf, "both", "fast"),
     cmap="coolwarm",
 )
 ax.plot(
@@ -370,20 +392,24 @@ ax.plot(
     lrf.predict([[1, i, i ** 2] for i in np.arange(1.4, 0.2, -0.01)]),
     color="red",
 )
-ax.scatter(star_list[nmbr].mass, star_list[nmbr].period, marker="x", color="white")
+ax.scatter(star_list[nmbr].mass, star_list[nmbr].period, marker="x", color="green")
 print(
-    "fast_weight of star selected = ",
-    calculate_weight(star_list, lrs, lrf, "both groups", "fast")[nmbr],
+    "slow_weight of star selected = ",
+    calculate_weight(star_list, lrs, lrf, "both groups", "slow")[nmbr],
     "\n",
     "group = ",
     star_list[nmbr].group,
 )
-print(["%.2f" % elem for elem in calculate_weight(star_list, lrs, lrf, 0, "fast")])
+print(["%.2f" % elem for elem in calculate_weight(star_list, lrs, lrf, "both", "fast")])
+print()
+
+#%%
+chi = calculate_chi(star_list, lrs, lrf)
 
 
-# fi2, ax2 = plt.subplots(1, figsize=(8,6))
-# ax2.invert_xaxis()
-# ax2.invert_yaxis()
-# # ax2.set_ylabel(r"$\frac{1}{1 + {\frac{1}{sq\_res}}}$", fontsize=25, rotation = 45)
-# ax2.set_xlabel(r"$\mathsf{Mass}$")
-# ax2.scatter([star.mass for star in star_list if star.group == 0],calculate_weight(star_list, lrs, lrf, 0, "fast"))
+plt.plot(sigmoid(chi))
+
+
+# plt.scatter(
+#     np.linspace(-5, 5, 350), sigmoid(np.array([random.uniform(-5,5) for i in range(350)]))
+# )
