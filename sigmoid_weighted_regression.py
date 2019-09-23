@@ -186,7 +186,7 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
         star_predictors = [
             star.predictors for star in star_list if star.group == selected_group
         ]
-        
+
     star_predicted_fast = lr_fast.predict(star_predictors)
     star_predicted_slow = lr_slow.predict(star_predictors)
 
@@ -194,7 +194,7 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
         (star_periods - star_predicted_slow) + (star_periods - star_predicted_fast),
         (star_predicted_slow - star_predicted_fast),
     )
-    weight_slow = sigmoid(chi)
+    weight_slow = sigmoid(chi) #- sigmoid(chi, steepness= 3, offest= - 7)
     if selected_weight == "slow":
         return weight_slow
     elif selected_weight == "fast":
@@ -202,6 +202,10 @@ def calculate_weight(star_list, lr_slow, lr_fast, selected_group, selected_weigh
 
 
 def sigmoid(x, steepness=10, offest=5):
+    """
+    Takes any range of input and returns a value between 0 and 1 with the distribution 
+    shown at https://www.desmos.com/calculator/r84xmc80id
+    """
     return np.divide(1, 1 + np.exp(-(steepness * x + offest)))
 
 
@@ -356,7 +360,7 @@ ax.plot(
     color="red",
 )
 
-print("slow coef = ", coefficients_slow)
+print("slow coef = ", coefficients_slow, lrs.intercept_)
 print("fast coef = ", coefficients_fast)
 
 #%%
@@ -394,13 +398,5 @@ print(
     "group = ",
     star_list[nmbr].group,
 )
-# print(["%.2f" % elem for elem in calculate_weight(star_list, lrs, lrf, "both", "fast")])
 
 #%%
-print(lrf.intercept_)
-print(
-    np.average(
-        [star.period for star in star_list if star.group == 0],
-        weights=calculate_weight(star_list, lrs, lrf, 0, "fast"),
-    )
-)
