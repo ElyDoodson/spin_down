@@ -91,3 +91,17 @@ fit_vk_mass.fit([[np.average(item)] for item in wright_v_k], wright_mass)
 
 fit_bv_mass = LinearRegression()
 fit_bv_mass.fit([[np.average(item)] for item in wright_b_v], wright_mass)
+#%%
+pm_list = [[] for i in range(len(dict_list))]
+# ALPHA_PER
+# dict_list[0]["data_frames"][0].Prot.to_numpy()
+pm_list[0] = {
+    "Per": [item for item in dict_list[0]["data_frames"][0].Prot.to_numpy()],
+    "Mass": [ item[1] for item in fit_bv_mass.predict(
+        [[item] for item in dict_list[0]["data_frames"][0]["B-V"].to_numpy()]
+    )],
+}
+
+print(len(pm_list[0]["Mass"]))
+
+plt.scatter(pm_list[0]["Mass"], pm_list[0]["Per"])
