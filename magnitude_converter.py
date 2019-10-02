@@ -18,14 +18,10 @@ path = "D:/dev/spin_down/new_data/"
 cluster_list = os.listdir(path)
 files = [os.listdir(path + str(cluster)) for cluster in cluster_list]
 
-
-# dict_list = [{"name": cluster, "data_frame": np.concatenate([pd.read_csv(path + file) for file in files])} for index, cluster in enumerate(cluster_list)]
-
-[file for file in files]
-
 dict_list = [
     {
         "name": cluster_list[i],
+        # "author": file,
         "data_frames": [
             pd.read_csv(
                 filepath_or_buffer=path + cluster_list[i] + "/" + file,
@@ -39,4 +35,5 @@ dict_list = [
     for i, file_list in enumerate(files)
 ]
 
-[datum["data_frames"] for datum in dict_list]
+for index, item in enumerate(dict_list):
+    item.update({"author": files[index][:-4]})
