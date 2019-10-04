@@ -91,17 +91,188 @@ fit_vk_mass.fit([[np.average(item)] for item in wright_v_k], wright_mass)
 
 fit_bv_mass = LinearRegression()
 fit_bv_mass.fit([[np.average(item)] for item in wright_b_v], wright_mass)
-#%%
+#%% ALPHA PER
 pm_list = [[] for i in range(len(dict_list))]
-# ALPHA_PER
-# dict_list[0]["data_frames"][0].Prot.to_numpy()
+
+
 pm_list[0] = {
     "Per": [item for item in dict_list[0]["data_frames"][0].Prot.to_numpy()],
-    "Mass": [ item[1] for item in fit_bv_mass.predict(
-        [[item] for item in dict_list[0]["data_frames"][0]["B-V"].to_numpy()]
-    )],
+    "Mass": [
+        item[1]
+        for item in fit_bv_mass.predict(
+            [[item] for item in dict_list[0]["data_frames"][0]["B-V"].to_numpy()]
+        )
+    ],
 }
 
-print(len(pm_list[0]["Mass"]))
+pm_list[0] = {
+    "Per": dict_list[0]["data_frames"][0].Prot.to_numpy(),
+    "Mass": [
+        item[1]
+        for item in fit_bv_mass.predict(
+            dict_list[0]["data_frames"][0]["B-V"].to_numpy().reshape(-1, 1)
+        )
+    ],
+}
 
-plt.scatter(pm_list[0]["Mass"], pm_list[0]["Per"])
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(title=dict_list[0]["name"], xlim=(1.8, 0.0))
+ax.scatter(pm_list[0]["Mass"], pm_list[0]["Per"])
+
+
+#%% HYADES
+vmag = dict_list[1]["data_frames"][0].Vmag.to_numpy()
+kmag = dict_list[1]["data_frames"][0].Ksmag.to_numpy()
+v_k = vmag - kmag
+period_0 = dict_list[1]["data_frames"][0].Per.to_numpy()[
+    ~np.isnan(dict_list[1]["data_frames"][0].Per.to_numpy())
+][~np.isnan(v_k)]
+v_k = v_k[~np.isnan(v_k)]
+
+
+pm_list[1] = {
+    "Per": np.append(
+        period_0, dict_list[1]["data_frames"][1].IPer.to_numpy()
+    ),  # dict_list[1]["data_frames"][0].Per.to_numpy(),
+    "Mass": np.append(
+        [item[1] for item in fit_vk_mass.predict(v_k.reshape(-1, 1))],
+        dict_list[1]["data_frames"][1].Mass.to_numpy(),
+    ),
+}
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(title=dict_list[1]["name"], xlim=(1.8, 0.0))
+ax.scatter(pm_list[1]["Mass"], pm_list[1]["Per"])
+
+#%% M34
+
+b_v = dict_list[2]["data_frames"][0]["(B-V)0"].to_numpy()
+
+period_0 = dict_list[2]["data_frames"][0].Prot.to_numpy()[~np.isnan(b_v)]
+b_v = b_v[~np.isnan(b_v)]
+pm_list[2] = {
+    "Per": period_0,
+    "Mass": [item[1] for item in fit_bv_mass.predict(b_v.reshape(-1, 1))],
+}
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(title=dict_list[2]["name"], xlim=(1.8, 0.0))
+ax.scatter(pm_list[2]["Mass"], pm_list[2]["Per"])
+
+#%% M35
+# dict_list[3]["data_frames"][0]
+b_v = dict_list[3]["data_frames"][0]["(B-V)0"].to_numpy()
+
+period_0 = dict_list[3]["data_frames"][0].Prot.to_numpy()[~np.isnan(b_v)]
+b_v = b_v[~np.isnan(b_v)]
+
+pm_list[3] = {
+    "Per": period_0,
+    "Mass": [item[1] for item in fit_bv_mass.predict(b_v.reshape(-1, 1))],
+}
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(title=dict_list[3]["name"], xlim=(1.8, 0.0))
+ax.scatter(pm_list[3]["Mass"], pm_list[3]["Per"])
+
+#%% M37
+# dict_list[4]["data_frames"][0].describe()
+pm_list[4] = {
+    "Per": dict_list[4]["data_frames"][0].Per.to_numpy(),
+    "Mass": [
+        item[1]
+        for item in fit_bv_mass.predict(
+            np.subtract(
+                dict_list[4]["data_frames"][0].Bmag.to_numpy(),
+                dict_list[4]["data_frames"][0].Vmag.to_numpy() + 0.2,
+            ).reshape(-1, 1)
+        )
+    ],
+}
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(title=dict_list[4]["name"], xlim=(1.8, 0.0))
+ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
+
+#%% NGC6811
+dict_list[5]["data_frames"][0].describe()
+
+pm_list[5] = {
+    "Per": dict_list[5]["data_frames"][0].Per.to_numpy(),
+    "Mass": [
+        item[1]
+        for item in fit_bv_mass.predict(
+            1.02
+            * np.subtract(
+                dict_list[5]["data_frames"][0].gmag.to_numpy(),
+                dict_list[5]["data_frames"][0].rmag.to_numpy(),
+            ).reshape(-1, 1)
+            + 0.2
+            - 0.1
+        )
+    ],
+}
+
+# len(pm_list[5]["Per"])
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(title=dict_list[5]["name"], xlim=(1.8, 0.0))
+ax.scatter(pm_list[5]["Mass"], pm_list[5]["Per"])
+
+
+#%% PLEIADES
+print(dict_list[6]["data_frames"][1].describe())
+
+pm_list[6] = {
+    "Per": dict_list[6]["data_frames"][1].Prot.to_numpy(),
+    "Mass":[item[1] for item in fit_vk_mass.predict(dict_list[6]["data_frames"][1]["(V-K)0"].to_numpy().reshape(-1,1))],
+}
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+
+
+ax.invert_xaxis()
+ax.set(title=dict_list[6]["name"])#, xlim=(1.8, 0.0))
+ax.scatter(pm_list[6]["Mass"], pm_list[6]["Per"])
+
+#%% PRAESEPE
+print(dict_list[7]["data_frames"][2].describe())
+
+period_2 = dict_list[7]["data_frames"][2].Per.to_numpy()
+
+v_k = dict_list[7]["data_frames"][2]["V-Ks"].to_numpy()[~np.isnan(period_2)]
+period_2 = period_2[~np.isnan(period_2)]
+
+pm_list[7] = {
+    "Per": period_2,
+    "Mass": [item[1] for item in fit_vk_mass.predict(v_k.reshape(-1,1))]
+}
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+
+
+ax.invert_xaxis()
+ax.set(title=dict_list[7]["name"])#, xlim=(1.8, 0.0))
+ax.scatter(pm_list[7]["Mass"], pm_list[7]["Per"])
+
+#%% UPPER SCORPION
+print(len(dict_list[8]["data_frames"][0].Per))
+
+period_0 = dict_list[8]["data_frames"][0].Per.to_numpy()
+
+v_k = dict_list[8]["data_frames"][0]["(V-Ks)0"].to_numpy()[~np.isnan(period_0)]
+
+period_0 = period_0[~np.isnan(period_0)]
+
+period_0 = period_0[~np.isnan(v_k)]
+v_k = v_k[~np.isnan(v_k)]
+
+print(len(v_k))
+pm_list[8] = {
+    "Per": period_0,
+    "Mass": [item[1] for item in fit_vk_mass.predict(v_k.reshape(-1,1))]
+}
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+
+
+ax.invert_xaxis()
+ax.set(title=dict_list[8]["name"])#, xlim=(1.8, 0.0))
+ax.scatter(pm_list[8]["Mass"], pm_list[8]["Per"])

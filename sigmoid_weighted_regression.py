@@ -203,7 +203,7 @@ def calculate_chi(star_list, lr_slow, lr_fast):
 #%% DATA INITIALISATION
 
 path = "d:data\Praesepe_K2.csv"
-path = "D:\dev\spin_down\data\Pleiades_Hartman.csv"
+# path = "D:\dev\spin_down\data\Pleiades_Hartman.csv"
 # path = "/home/edoodson/Documents/spin_down/data/Pleiades_Hartman.csv"
 object_list = get_data(path)
 
