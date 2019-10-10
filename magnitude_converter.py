@@ -22,7 +22,7 @@ path = "D:/dev/spin_down/new_data/"
 
 cluster_list = os.listdir(path)
 files = [os.listdir(path + str(cluster)) for cluster in cluster_list]
-ages = [50, 625.4, 250, 110, 500, 1050, 150, 590, 11]
+ages = [50, 625.4, 13, 250, 110, 500, 130, 210, 150, 40, 1050, 150, 590, 11]
 distances = [185, 47, 470, 1186, 1383, 1107, 130, 177, 145]
 dict_list = [
     {
@@ -37,7 +37,7 @@ dict_list = [
             for file in file_list
         ],
         "age": ages[i],
-        "distance": distances[i],
+        # "distance": distances[i],
     }
     for i, file_list in enumerate(files)
 ]
@@ -218,25 +218,28 @@ dict_item = [item for item in dict_list if item["name"] == "ngc6811"][0]
 dict_item["data_frames"][0].describe()
 
 
+# pm_list = np.append(
+#     pm_list,
+#     {
+#         "Per": dict_item["data_frames"][0].Per.to_numpy(),
+#         "Mass": fit_bv_mass.predict(
+#             convert_order(
+#                 1.02
+#                 * np.subtract(
+#                     dict_item["data_frames"][0].gmag.to_numpy(),
+#                     dict_item["data_frames"][0].rmag.to_numpy(),
+#                 )
+#                 + 0.2
+#                 - 0.1,
+#                 3,
+#             )
+#         ),
+#     },
+# )
 pm_list = np.append(
     pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Per.to_numpy(),
-        "Mass": fit_bv_mass.predict(
-            convert_order(
-                1.02
-                * np.subtract(
-                    dict_item["data_frames"][0].gmag.to_numpy(),
-                    dict_item["data_frames"][0].rmag.to_numpy(),
-                )
-                + 0.2
-                - 0.1,
-                3,
-            )
-        ),
-    },
+    {"Per": dict_item["data_frames"][0].Per, "Mass": dict_item["data_frames"][0].Mass},
 )
-# len(pm_list[5]["Per"])
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[5]["Mass"], pm_list[5]["Per"])
@@ -317,5 +320,3 @@ for index in sorted_age_index:
     ax.scatter(pm_list[index]["Mass"], pm_list[index]["Per"])
 
 #%%
-
-dict_item
