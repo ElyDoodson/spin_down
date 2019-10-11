@@ -4,6 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+
 
 #%% FUNCTIONS
 
@@ -14,6 +16,10 @@ def app_to_abs(app_mag, distance_parsec):
 
 def convert_order(lst, order):
     return np.array([[item ** i for i in range(order)] for item in lst])
+
+
+def bv_to_br(b_v):
+    return 0.4437 * b_v ** 2 + 1.2114 * b_v + 0.194
 
 
 #%%
@@ -91,6 +97,10 @@ wright_mass = [
     [0.09, 0.14],
 ]
 
+# wright et al. 2018
+wright_v_k_18 = np.array([1.42, 1.64, 2.00, 2.54, 3.14, 3.53, 3.88, 4.37, 4.74, 5.14, 5.63])
+wright_mass_18 = np.array([1.17, 1.09, 0.95, 0.83, 0.70, 0.61, 0.50, 0.30, 0.22, 0.18, 0.14])
+fit_vk_mass_18 = LinearRegression().fit(wright_v_k_18[:,np.newaxis], wright_mass_18)
 
 fit_vk_mass = LinearRegression()
 fit_vk_mass.fit(
@@ -104,13 +114,23 @@ fit_bv_mass.fit(
     [np.average(item) for item in wright_mass],
 )
 
+
+b_v = np.linspace(0, 2, 50)
+b_r = bv_to_br(b_v)
+
+b_r = b_r[:, np.newaxis]
+poly = PolynomialFeatures(2)
+x = poly.fit_transform(b_r)
+
+fit_br_bv = LinearRegression().fit(x, b_v)
+
 z = np.linspace(0, 9, 20)
 x = convert_order(z, 3)
-plt.scatter(
-    [np.average(item) for item in wright_v_k],
-    [np.average(item) for item in wright_mass],
-)
-plt.plot(z, fit_vk_mass.predict(x))
+# plt.scatter(
+#     [np.average(item) for item in wright_v_k],
+#     [np.average(item) for item in wright_mass],
+# )
+# plt.plot(z, fit_vk_mass.predict(x))
 
 #%% ALPHA PER
 pm_list = []
@@ -158,6 +178,21 @@ pm_list = np.append(
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[1]["Mass"], pm_list[1]["Per"])
+#%% h_per
+dict_item = [item for item in dict_list if item["name"] == "h_per"][0]
+dict_item["data_frames"][0].describe()
+
+pm_list = np.append(
+    pm_list,
+    {"Per": dict_item["data_frames"][0].Per, "Mass": dict_item["data_frames"][0].Mass},
+)
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+
+
+ax.invert_xaxis()
+ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
+ax.scatter(pm_list[2]["Mass"], pm_list[2]["Per"])
 
 #%% M34
 dict_item = [item for item in dict_list if item["name"] == "m34"][0]
@@ -171,7 +206,7 @@ pm_list = np.append(
 )
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
-ax.scatter(pm_list[2]["Mass"], pm_list[2]["Per"])
+ax.scatter(pm_list[3]["Mass"], pm_list[3]["Per"])
 
 #%% M35
 # dict_item["data_frames"][0]
@@ -187,7 +222,7 @@ pm_list = np.append(
 )
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
-ax.scatter(pm_list[3]["Mass"], pm_list[3]["Per"])
+ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
 
 #%% M37
 # dict_item["data_frames"][0].describe()
@@ -210,7 +245,78 @@ pm_list = np.append(
 )
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
-ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
+ax.scatter(pm_list[5]["Mass"], pm_list[5]["Per"])
+
+#%% m50
+dict_item = [item for item in dict_list if item["name"] == "m50"][0]
+dict_item["data_frames"][0].describe()
+
+pm_list = np.append(
+    pm_list,
+    {"Per": dict_item["data_frames"][0].Per, "Mass": dict_item["data_frames"][0].Mass},
+)
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+
+
+ax.invert_xaxis()
+ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
+ax.scatter(pm_list[6]["Mass"], pm_list[6]["Per"])
+
+#%% ngc2301
+dict_item = [item for item in dict_list if item["name"] == "ngc2301"][0]
+dict_item["data_frames"][0].describe()
+
+b_r = dict_item["data_frames"][0]["B-R"].to_numpy()
+b_v = fit_br_bv.predict(poly.fit_transform(b_r.reshape(-1, 1)))
+
+pm_list = np.append(
+    pm_list,
+    {
+        "Per": dict_item["data_frames"][0].Per,
+        "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
+    },
+)
+fig, ax = plt.subplots(1, figsize=(10, 6))
+
+
+ax.invert_xaxis()
+ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
+ax.scatter(pm_list[7]["Mass"], pm_list[7]["Per"])
+
+#%%  ngc2516
+dict_item = [item for item in dict_list if item["name"] == "ngc2516"][0]
+dict_item["data_frames"][0].describe()
+
+pm_list = np.append(
+    pm_list,
+    {"Per": dict_item["data_frames"][0].Per, "Mass": dict_item["data_frames"][0].Mass},
+)
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+
+
+ax.invert_xaxis()
+ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
+ax.scatter(pm_list[8]["Mass"], pm_list[8]["Per"])
+
+
+#%% ngc2547
+dict_item = [item for item in dict_list if item["name"] == "ngc2547"][0]
+dict_item["data_frames"][0].describe()
+
+
+pm_list = np.append(
+    pm_list,
+    {"Per": dict_item["data_frames"][0].Per, "Mass": dict_item["data_frames"][0].Mass},
+)
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+
+
+ax.invert_xaxis()
+ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
+ax.scatter(pm_list[9]["Mass"], pm_list[9]["Per"])
 
 #%% NGC6811
 dict_item = [item for item in dict_list if item["name"] == "ngc6811"][0]
@@ -242,7 +348,7 @@ pm_list = np.append(
 )
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
-ax.scatter(pm_list[5]["Mass"], pm_list[5]["Per"])
+ax.scatter(pm_list[10]["Mass"], pm_list[10]["Per"])
 
 
 #%% PLEIADES
@@ -264,12 +370,12 @@ fig, ax = plt.subplots(1, figsize=(10, 6))
 
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
-ax.scatter(pm_list[6]["Mass"], pm_list[6]["Per"])
+ax.scatter(pm_list[11]["Mass"], pm_list[11]["Per"])
 
 #%% PRAESEPE
 dict_item = [item for item in dict_list if item["name"] == "praesepe"][0]
 
-print(dict_item["data_frames"][2].describe())
+# print(dict_item["data_frames"][2].describe())
 
 period_2 = dict_item["data_frames"][2].Per.to_numpy()
 
@@ -284,12 +390,12 @@ fig, ax = plt.subplots(1, figsize=(10, 6))
 
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
-ax.scatter(pm_list[7]["Mass"], pm_list[7]["Per"])
+ax.scatter(pm_list[12]["Mass"], pm_list[12]["Per"])
 
 #%% UPPER SCORPION
 dict_item = [item for item in dict_list if item["name"] == "usco"][0]
 
-print(dict_item["data_frames"][0]["(V-Ks)0"].describe())
+# print(dict_item["data_frames"][0]["(V-Ks)0"].describe())
 
 period_0 = dict_item["data_frames"][0].Per.to_numpy()
 
@@ -309,7 +415,10 @@ fig, ax = plt.subplots(1, figsize=(10, 6))
 
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
-ax.scatter(pm_list[8]["Mass"], pm_list[8]["Per"])
+ax.scatter(pm_list[13]["Mass"], pm_list[13]["Per"])
+
+
+
 
 #%%
 for index in sorted_age_index:
@@ -320,3 +429,4 @@ for index in sorted_age_index:
     ax.scatter(pm_list[index]["Mass"], pm_list[index]["Per"])
 
 #%%
+
