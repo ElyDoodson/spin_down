@@ -307,7 +307,7 @@ for index, vmag in enumerate(abs_vmag):
     if vmag >= 9:
         masses.append(abs_v_to_mass(vmag))
     else:
-        masses.append(fit_bv_mass.predict(convert_order([b_v[index]],3)))
+        masses.append(fit_bv_mass.predict(convert_order([b_v[index]], 3)))
 
 pm_list[5] = {
     "Per": dict_item["data_frames"][0].Per.to_numpy(),
@@ -421,14 +421,35 @@ ax.scatter(pm_list[10]["Mass"], pm_list[10]["Per"])
 #%% PLEIADES
 dict_item = [item for item in dict_list if item["name"] == "pleiades"][0]
 
-# print(dict_item["data_frames"][1].describe())
+print(dict_item["data_frames"][1].describe())
 
+
+# pm_list[11] = {
+#     "Per": dict_item["data_frames"][1].Prot.to_numpy(),
+#     "Mass": fit_vk_mass.predict(
+#         convert_order(dict_item["data_frames"][1]["(V-K)0"].to_numpy(), 3)
+#     ),
+#     "Name": dict_item["name"],
+#     "Age": dict_item["age"],
+# }
+
+v_k = dict_item["data_frames"][1]["(V-K)0"].to_numpy()
+app_k = dict_item["data_frames"][1]["Ksmag"].to_numpy()
+
+
+abs_kmag = app_to_abs(app_k, 136.2)
+
+masses = []
+for index, kmag in enumerate(abs_kmag):
+    if kmag >= 5.5:
+        masses.append(abs_k_to_mass(kmag))
+    else:
+
+        masses.append(fit_vk_mass_18.predict([[v_k[index]]]))
 
 pm_list[11] = {
     "Per": dict_item["data_frames"][1].Prot.to_numpy(),
-    "Mass": fit_vk_mass.predict(
-        convert_order(dict_item["data_frames"][1]["(V-K)0"].to_numpy(), 3)
-    ),
+    "Mass": masses,
     "Name": dict_item["name"],
     "Age": dict_item["age"],
 }
@@ -443,7 +464,7 @@ ax.scatter(pm_list[11]["Mass"], pm_list[11]["Per"])
 #%% PRAESEPE
 dict_item = [item for item in dict_list if item["name"] == "praesepe"][0]
 
-# print(dict_item["data_frames"][2].describe())
+print(dict_item["data_frames"][2].describe())
 
 period_2 = dict_item["data_frames"][2].Per.to_numpy()
 
