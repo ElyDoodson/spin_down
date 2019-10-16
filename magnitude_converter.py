@@ -22,6 +22,43 @@ def bv_to_br(b_v):
     return 0.4437 * b_v ** 2 + 1.2114 * b_v + 0.194
 
 
+def abs_v_to_mass(abs_v):
+    c0 = 0.19226
+    c1 = -0.050737
+    c2 = 0.010137
+    c3 = -0.00075399
+    c4 = -1.9858e-05
+    x0 = 13.0
+
+    term2 = c1 * (abs_v - x0)
+    term3 = c2 * ((abs_v - x0) ** 2)
+    term4 = c3 * ((abs_v - x0) ** 3)
+    term5 = c4 * ((abs_v - x0) ** 4)
+    return c0 + term2 + term3 + term4 + term5
+
+
+def abs_k_to_mass(abs_k):
+    c0 = 0.2311
+    c1 = -0.1352
+    c2 = 0.04
+    c3 = 0.0038
+    c4 = -0.0032
+    x0 = 7.5
+
+    term2 = c1 * (abs_k - x0)
+    term3 = c2 * ((abs_k - x0) ** 2)
+    term4 = c3 * ((abs_k - x0) ** 3)
+    term5 = c4 * ((abs_k - x0) ** 4)
+    return c0 + term2 + term3 + term4 + term5
+
+
+rpo = np.linspace(-1, 9, 100)
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.invert_xaxis()
+ax.invert_yaxis()
+
+
+plt.scatter(rpo, abs_k_to_mass(rpo))
 #%%
 
 path = "D:/dev/spin_down/new_data/"
@@ -43,7 +80,6 @@ dict_list = [
             for file in file_list
         ],
         "age": ages[i],
-        # "distance": distances[i],
     }
     for i, file_list in enumerate(files)
 ]
@@ -135,21 +171,22 @@ x = convert_order(z, 3)
 # )
 # plt.plot(z, fit_vk_mass.predict(x))
 
+# plt.scatter(fit_br_bv.predict(poly.fit_transform(b_v[:, np.newaxis])), b_v)
 #%% ALPHA PER
-pm_list = []
+pm_list = [" "] * len(dict_list)
 dict_item = [item for item in dict_list if item["name"] == "alpha_per"][0]
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Prot.to_numpy(),
-        "Mass": fit_bv_mass.predict(
-            convert_order(dict_item["data_frames"][0]["B-V"].to_numpy(), 3)
-        ),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+period = dict_item["data_frames"][0].Prot.to_numpy()
+pm_list[0] = {
+    "Per": dict_item["data_frames"][0].Prot.to_numpy(),
+    "Mass": fit_bv_mass.predict(
+        convert_order(dict_item["data_frames"][0]["B-V"].to_numpy(), 3)
+    ),
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[0]["Mass"], pm_list[0]["Per"])
@@ -167,20 +204,18 @@ period_0 = dict_item["data_frames"][0].Per.to_numpy()[
 v_k = v_k[~np.isnan(v_k)]
 
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": np.append(
-            period_0, dict_item["data_frames"][1].IPer.to_numpy()
-        ),  # dict_item["data_frames"][0].Per.to_numpy(),
-        "Mass": np.append(
-            fit_vk_mass.predict(convert_order(v_k, 3)),
-            dict_item["data_frames"][1].Mass.to_numpy(),
-        ),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[1] = {
+    "Per": np.append(
+        period_0, dict_item["data_frames"][1].IPer.to_numpy()
+    ),  # dict_item["data_frames"][0].Per.to_numpy(),
+    "Mass": np.append(
+        fit_vk_mass.predict(convert_order(v_k, 3)),
+        dict_item["data_frames"][1].Mass.to_numpy(),
+    ),
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
@@ -189,15 +224,13 @@ ax.scatter(pm_list[1]["Mass"], pm_list[1]["Per"])
 dict_item = [item for item in dict_list if item["name"] == "h_per"][0]
 dict_item["data_frames"][0].describe()
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Per,
-        "Mass": dict_item["data_frames"][0].Mass,
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[2] = {
+    "Per": dict_item["data_frames"][0].Per,
+    "Mass": dict_item["data_frames"][0].Mass,
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
@@ -213,15 +246,13 @@ b_v = dict_item["data_frames"][0]["(B-V)0"].to_numpy()
 
 period_0 = dict_item["data_frames"][0].Prot.to_numpy()[~np.isnan(b_v)]
 b_v = b_v[~np.isnan(b_v)]
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": period_0,
-        "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[3] = {
+    "Per": period_0,
+    "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[3]["Mass"], pm_list[3]["Per"])
@@ -235,15 +266,13 @@ b_v = dict_item["data_frames"][0]["(B-V)0"].to_numpy()
 period_0 = dict_item["data_frames"][0].Prot.to_numpy()[~np.isnan(b_v)]
 b_v = b_v[~np.isnan(b_v)]
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": period_0,
-        "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[4] = {
+    "Per": period_0,
+    "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
@@ -252,23 +281,21 @@ ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
 # dict_item["data_frames"][0].describe()
 dict_item = [item for item in dict_list if item["name"] == "m37"][0]
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Per.to_numpy(),
-        "Mass": fit_bv_mass.predict(
-            convert_order(
-                np.subtract(
-                    dict_item["data_frames"][0].Bmag.to_numpy(),
-                    dict_item["data_frames"][0].Vmag.to_numpy() + 0.2,
-                ),
-                3,
-            )
-        ),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[5] = {
+    "Per": dict_item["data_frames"][0].Per.to_numpy(),
+    "Mass": fit_bv_mass.predict(
+        convert_order(
+            np.subtract(
+                dict_item["data_frames"][0].Bmag.to_numpy(),
+                dict_item["data_frames"][0].Vmag.to_numpy() + 0.2,
+            ),
+            3,
+        )
+    ),
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[5]["Mass"], pm_list[5]["Per"])
@@ -277,15 +304,13 @@ ax.scatter(pm_list[5]["Mass"], pm_list[5]["Per"])
 dict_item = [item for item in dict_list if item["name"] == "m50"][0]
 dict_item["data_frames"][0].describe()
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Per,
-        "Mass": dict_item["data_frames"][0].Mass,
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[6] = {
+    "Per": dict_item["data_frames"][0].Per,
+    "Mass": dict_item["data_frames"][0].Mass,
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
@@ -301,15 +326,13 @@ dict_item["data_frames"][0].describe()
 b_r = dict_item["data_frames"][0]["B-R"].to_numpy()
 b_v = fit_br_bv.predict(poly.fit_transform(b_r.reshape(-1, 1)))
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Per,
-        "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[7] = {
+    "Per": dict_item["data_frames"][0].Per,
+    "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
 
@@ -321,15 +344,13 @@ ax.scatter(pm_list[7]["Mass"], pm_list[7]["Per"])
 dict_item = [item for item in dict_list if item["name"] == "ngc2516"][0]
 dict_item["data_frames"][0].describe()
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Per,
-        "Mass": dict_item["data_frames"][0].Mass,
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[8] = {
+    "Per": dict_item["data_frames"][0].Per,
+    "Mass": dict_item["data_frames"][0].Mass,
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
@@ -344,15 +365,13 @@ dict_item = [item for item in dict_list if item["name"] == "ngc2547"][0]
 dict_item["data_frames"][0].describe()
 
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Per,
-        "Mass": dict_item["data_frames"][0].Mass,
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[9] = {
+    "Per": dict_item["data_frames"][0].Per,
+    "Mass": dict_item["data_frames"][0].Mass,
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
@@ -367,33 +386,13 @@ dict_item = [item for item in dict_list if item["name"] == "ngc6811"][0]
 dict_item["data_frames"][0].describe()
 
 
-# pm_list = np.append(
-#     pm_list,
-#     {
-#         "Per": dict_item["data_frames"][0].Per.to_numpy(),
-#         "Mass": fit_bv_mass.predict(
-#             convert_order(
-#                 1.02
-#                 * np.subtract(
-#                     dict_item["data_frames"][0].gmag.to_numpy(),
-#                     dict_item["data_frames"][0].rmag.to_numpy(),
-#                 )
-#                 + 0.2
-#                 - 0.1,
-#                 3,
-#             )
-#         ),
-#     },
-# )
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][0].Per,
-        "Mass": dict_item["data_frames"][0].Mass,
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[10] = {
+    "Per": dict_item["data_frames"][0].Per,
+    "Mass": dict_item["data_frames"][0].Mass,
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[10]["Mass"], pm_list[10]["Per"])
@@ -404,17 +403,15 @@ dict_item = [item for item in dict_list if item["name"] == "pleiades"][0]
 
 # print(dict_item["data_frames"][1].describe())
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": dict_item["data_frames"][1].Prot.to_numpy(),
-        "Mass": fit_vk_mass.predict(
-            convert_order(dict_item["data_frames"][1]["(V-K)0"].to_numpy(), 3)
-        ),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[11] = {
+    "Per": dict_item["data_frames"][1].Prot.to_numpy(),
+    "Mass": fit_vk_mass.predict(
+        convert_order(dict_item["data_frames"][1]["(V-K)0"].to_numpy(), 3)
+    ),
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
 
@@ -430,17 +427,44 @@ dict_item = [item for item in dict_list if item["name"] == "praesepe"][0]
 period_2 = dict_item["data_frames"][2].Per.to_numpy()
 
 v_k = dict_item["data_frames"][2]["V-Ks"].to_numpy()[~np.isnan(period_2)]
+app_k = dict_item["data_frames"][2]["Ksmag"].to_numpy()[~np.isnan(period_2)]
 period_2 = period_2[~np.isnan(period_2)]
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": period_2,
-        "Mass": fit_vk_mass.predict(convert_order(v_k, 3)),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+
+abs_kmag = app_to_abs(app_k, 177)
+masses = []
+for index, kmag in enumerate(abs_kmag):
+    if kmag <= 6:
+        masses.append(abs_k_to_mass(kmag))
+    else:
+        changed_v_k = PolynomialFeatures(2).fit_transform([[v_k[index]]])
+        masses.append(fit_vk_mass.predict(changed_v_k)[0])
+
+pm_list[12] = {
+    "Per": period_2,
+    "Mass": masses,
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
+# pm_list = np.append(
+#     pm_list,
+#     {
+#         "Per": period_2,
+#         "Mass": fit_vk_mass.predict(convert_order(v_k, 3)),
+#         "Name": dict_item["name"],
+#         "Age": dict_item["age"],
+#     },
+# )
+# pm_list = np.append(
+#     pm_list,
+#     {
+#         "Per": period_2,
+#         "Mass": fit_vk_mass_18.predict(v_k[:,np.newaxis] - 0.2),
+#         "Name": dict_item["name"],
+#         "Age": dict_item["age"],
+#     },
+# )
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
 
@@ -463,15 +487,13 @@ period_0 = period_0[~np.isnan(v_k)]
 v_k = v_k[~np.isnan(v_k)]
 
 
-pm_list = np.append(
-    pm_list,
-    {
-        "Per": period_0,
-        "Mass": fit_vk_mass.predict(convert_order(v_k, 3)),
-        "Name": dict_item["name"],
-        "Age": dict_item["age"],
-    },
-)
+pm_list[13] = {
+    "Per": period_0,
+    "Mass": fit_vk_mass.predict(convert_order(v_k, 3)),
+    "Name": dict_item["name"],
+    "Age": dict_item["age"],
+}
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
 
@@ -484,6 +506,8 @@ ax.scatter(pm_list[13]["Mass"], pm_list[13]["Per"])
 sorted_age_index = np.argsort([item["Age"] for item in pm_list])
 fig, ax = plt.subplots(4, 4, figsize=(24, 16))
 
+pm_list = np.array(pm_list)
+
 for num, data in enumerate(pm_list[sorted_age_index]):
     mass = data["Mass"]
     period = data["Per"]
@@ -493,9 +517,15 @@ for num, data in enumerate(pm_list[sorted_age_index]):
 
     ax[r][c].invert_xaxis()
 
-    ax[r][c].plot(mass, period, linestyle="none", marker="x", label=data["Name"] + " " + str(data["Age"]))
+    ax[r][c].plot(
+        mass,
+        period,
+        linestyle="none",
+        marker="x",
+        label=data["Name"] + " " + str(data["Age"]),
+    )
     ax[r][c].legend()
-    ax[r][c].set( xlim=(1.7, 0.0), ylim=(-2, 40.0))# ylim = (0, 100), yscale = "log",)
+    ax[r][c].set(xlim=(1.7, 0.0), ylim=(-2, 40.0))  # ylim = (0, 100), yscale = "log",)
 
 
 #%%
