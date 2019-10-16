@@ -269,9 +269,18 @@ b_v = dict_item["data_frames"][0]["(B-V)0"].to_numpy()
 period_0 = dict_item["data_frames"][0].Prot.to_numpy()[~np.isnan(b_v)]
 b_v = b_v[~np.isnan(b_v)]
 
+# pm_list[4] = {
+#     "Per": period_0,
+#     "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
+#     "Name": dict_item["name"],
+#     "Age": dict_item["age"],
+# }
+
+v_k = fit_bv_vk.predict(b_v[:,np.newaxis])
+
 pm_list[4] = {
     "Per": period_0,
-    "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
+    "Mass": fit_vk_mass_18.predict(v_k[:,np.newaxis]),
     "Name": dict_item["name"],
     "Age": dict_item["age"],
 }
