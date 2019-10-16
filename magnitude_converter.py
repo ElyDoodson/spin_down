@@ -403,6 +403,8 @@ dict_item = [item for item in dict_list if item["name"] == "pleiades"][0]
 
 # print(dict_item["data_frames"][1].describe())
 
+
+
 pm_list[11] = {
     "Per": dict_item["data_frames"][1].Prot.to_numpy(),
     "Mass": fit_vk_mass.predict(
@@ -432,13 +434,23 @@ period_2 = period_2[~np.isnan(period_2)]
 
 
 abs_kmag = app_to_abs(app_k, 177)
+
+# masses = []
+
+# for index, kmag in enumerate(abs_kmag):
+#     if kmag >= 5.5:
+#         masses.append(abs_k_to_mass(kmag))
+#     else:
+#         changed_v_k = PolynomialFeatures(2).fit_transform([[v_k[index]]])
+#         masses.append(fit_vk_mass.predict(changed_v_k)[0])
+
 masses = []
 for index, kmag in enumerate(abs_kmag):
-    if kmag <= 6:
+    if kmag >= 5.5:
         masses.append(abs_k_to_mass(kmag))
     else:
-        changed_v_k = PolynomialFeatures(2).fit_transform([[v_k[index]]])
-        masses.append(fit_vk_mass.predict(changed_v_k)[0])
+        
+        masses.append(fit_vk_mass_18.predict([[v_k[index]]]))
 
 pm_list[12] = {
     "Per": period_2,
