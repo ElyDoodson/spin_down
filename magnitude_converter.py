@@ -94,6 +94,9 @@ color_chart = pd.read_csv("D:/dev/spin_down/colour_chart.csv", comment="#", sep=
 fit_vk_bv = LinearRegression()
 fit_vk_bv.fit(color_chart.V_KS.to_numpy().reshape(-1, 1), color_chart.B_V.to_numpy())
 
+fit_bv_vk = LinearRegression()
+fit_bv_vk.fit(color_chart.B_V.to_numpy().reshape(-1, 1),  color_chart.V_KS.to_numpy())
+
 # VALUES FROM Wright et al. 2011
 wright_v_k = [
     [1.14, 1.48],
