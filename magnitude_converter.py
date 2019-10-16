@@ -281,17 +281,37 @@ ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
 # dict_item["data_frames"][0].describe()
 dict_item = [item for item in dict_list if item["name"] == "m37"][0]
 
+# pm_list[5] = {
+#     "Per": dict_item["data_frames"][0].Per.to_numpy(),
+#     "Mass": fit_bv_mass.predict(
+#         convert_order(
+#             np.subtract(
+#                 dict_item["data_frames"][0].Bmag.to_numpy(),
+#                 dict_item["data_frames"][0].Vmag.to_numpy() + 0.2,
+#             ),
+#             3,
+#         )
+#     ),
+#     "Name": dict_item["name"],
+#     "Age": dict_item["age"],
+# }
+abs_vmag = app_to_abs(dict_item["data_frames"][0].Vmag.to_numpy(), 1383)
+
+b_v = np.subtract(
+    dict_item["data_frames"][0].Bmag.to_numpy(),
+    dict_item["data_frames"][0].Vmag.to_numpy() + 0.2,
+)
+
+masses = []
+for index, vmag in enumerate(abs_vmag):
+    if vmag >= 9:
+        masses.append(abs_v_to_mass(vmag))
+    else:
+        masses.append(fit_bv_mass.predict(convert_order([b_v[index]],3)))
+
 pm_list[5] = {
     "Per": dict_item["data_frames"][0].Per.to_numpy(),
-    "Mass": fit_bv_mass.predict(
-        convert_order(
-            np.subtract(
-                dict_item["data_frames"][0].Bmag.to_numpy(),
-                dict_item["data_frames"][0].Vmag.to_numpy() + 0.2,
-            ),
-            3,
-        )
-    ),
+    "Mass": masses,
     "Name": dict_item["name"],
     "Age": dict_item["age"],
 }
@@ -404,7 +424,6 @@ dict_item = [item for item in dict_list if item["name"] == "pleiades"][0]
 # print(dict_item["data_frames"][1].describe())
 
 
-
 pm_list[11] = {
     "Per": dict_item["data_frames"][1].Prot.to_numpy(),
     "Mass": fit_vk_mass.predict(
@@ -449,7 +468,7 @@ for index, kmag in enumerate(abs_kmag):
     if kmag >= 5.5:
         masses.append(abs_k_to_mass(kmag))
     else:
-        
+
         masses.append(fit_vk_mass_18.predict([[v_k[index]]]))
 
 pm_list[12] = {
