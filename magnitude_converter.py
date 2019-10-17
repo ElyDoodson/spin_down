@@ -269,13 +269,6 @@ b_v = dict_item["data_frames"][0]["(B-V)0"].to_numpy()
 period_0 = dict_item["data_frames"][0].Prot.to_numpy()[~np.isnan(b_v)]
 b_v = b_v[~np.isnan(b_v)]
 
-# pm_list[4] = {
-#     "Per": period_0,
-#     "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
-#     "Name": dict_item["name"],
-#     "Age": dict_item["age"],
-# }
-
 dict_item_ngc2516 = [item for item in dict_list if item["name"] == "ngc2516"][0]
 v_k = fit_bv_vk.predict(b_v[:, np.newaxis])
 
@@ -297,20 +290,7 @@ ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
 # dict_item["data_frames"][0].describe()
 dict_item = [item for item in dict_list if item["name"] == "m37"][0]
 
-# pm_list[5] = {
-#     "Per": dict_item["data_frames"][0].Per.to_numpy(),
-#     "Mass": fit_bv_mass.predict(
-#         convert_order(
-#             np.subtract(
-#                 dict_item["data_frames"][0].Bmag.to_numpy(),
-#                 dict_item["data_frames"][0].Vmag.to_numpy() + 0.2,
-#             ),
-#             3,
-#         )
-#     ),
-#     "Name": dict_item["name"],
-#     "Age": dict_item["age"],
-# }
+
 abs_vmag = app_to_abs(dict_item["data_frames"][0].Vmag.to_numpy(), 1383)
 
 b_v = np.subtract(
@@ -439,15 +419,6 @@ dict_item = [item for item in dict_list if item["name"] == "pleiades"][0]
 print(dict_item["data_frames"][1].describe())
 
 
-# pm_list[11] = {
-#     "Per": dict_item["data_frames"][1].Prot.to_numpy(),
-#     "Mass": fit_vk_mass.predict(
-#         convert_order(dict_item["data_frames"][1]["(V-K)0"].to_numpy(), 3)
-#     ),
-#     "Name": dict_item["name"],
-#     "Age": dict_item["age"],
-# }
-
 v_k = dict_item["data_frames"][1]["(V-K)0"].to_numpy()
 app_k = dict_item["data_frames"][1]["Ksmag"].to_numpy()
 
@@ -490,15 +461,6 @@ period_2 = period_2[~np.isnan(period_2)]
 
 abs_kmag = app_to_abs(app_k, 177)
 
-# masses = []
-
-# for index, kmag in enumerate(abs_kmag):
-#     if kmag >= 5.5:
-#         masses.append(abs_k_to_mass(kmag))
-#     else:
-#         changed_v_k = PolynomialFeatures(2).fit_transform([[v_k[index]]])
-#         masses.append(fit_vk_mass.predict(changed_v_k)[0])
-
 masses = []
 for index, kmag in enumerate(abs_kmag):
     if kmag >= 5:
@@ -513,24 +475,6 @@ pm_list[12] = {
     "Age": dict_item["age"],
 }
 
-# pm_list = np.append(
-#     pm_list,
-#     {
-#         "Per": period_2,
-#         "Mass": fit_vk_mass.predict(convert_order(v_k, 3)),
-#         "Name": dict_item["name"],
-#         "Age": dict_item["age"],
-#     },
-# )
-# pm_list = np.append(
-#     pm_list,
-#     {
-#         "Per": period_2,
-#         "Mass": fit_vk_mass_18.predict(v_k[:,np.newaxis] - 0.2),
-#         "Name": dict_item["name"],
-#         "Age": dict_item["age"],
-#     },
-# )
 fig, ax = plt.subplots(1, figsize=(10, 6))
 
 
