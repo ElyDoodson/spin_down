@@ -95,7 +95,7 @@ fit_vk_bv = LinearRegression()
 fit_vk_bv.fit(color_chart.V_KS.to_numpy().reshape(-1, 1), color_chart.B_V.to_numpy())
 
 fit_bv_vk = LinearRegression()
-fit_bv_vk.fit(color_chart.B_V.to_numpy().reshape(-1, 1),  color_chart.V_KS.to_numpy())
+fit_bv_vk.fit(color_chart.B_V.to_numpy().reshape(-1, 1), color_chart.V_KS.to_numpy())
 
 # VALUES FROM Wright et al. 2011
 wright_v_k = [
@@ -276,17 +276,21 @@ b_v = b_v[~np.isnan(b_v)]
 #     "Age": dict_item["age"],
 # }
 
-v_k = fit_bv_vk.predict(b_v[:,np.newaxis])
+dict_item_ngc2516 = [item for item in dict_list if item["name"] == "ngc2516"][0]
+v_k = fit_bv_vk.predict(b_v[:, np.newaxis])
 
 pm_list[4] = {
-    "Per": period_0,
-    "Mass": fit_vk_mass_18.predict(v_k[:,np.newaxis]),
+    "Per": np.append(period_0, dict_item_ngc2516["data_frames"][0].Per),
+    "Mass": np.append(
+        fit_vk_mass_18.predict(v_k[:, np.newaxis]),
+        dict_item_ngc2516["data_frames"][0].Mass,
+    ),
     "Name": dict_item["name"],
     "Age": dict_item["age"],
 }
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
+ax.set(title=dict_item["name"] + "+" + dict_item_ngc2516["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
 
 #%% M37
@@ -374,8 +378,7 @@ ax.scatter(pm_list[7]["Mass"], pm_list[7]["Per"])
 
 #%%  ngc2516
 dict_item = [item for item in dict_list if item["name"] == "ngc2516"][0]
-dict_item["data_frames"][0].describe()
-
+print(dict_item["data_frames"][0].describe())
 pm_list[8] = {
     "Per": dict_item["data_frames"][0].Per,
     "Mass": dict_item["data_frames"][0].Mass,
@@ -498,10 +501,9 @@ abs_kmag = app_to_abs(app_k, 177)
 
 masses = []
 for index, kmag in enumerate(abs_kmag):
-    if kmag >= 5.5:
+    if kmag >= 5:
         masses.append(abs_k_to_mass(kmag))
     else:
-
         masses.append(fit_vk_mass_18.predict([[v_k[index]]]))
 
 pm_list[12] = {
