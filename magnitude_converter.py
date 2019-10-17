@@ -283,34 +283,67 @@ pm_list[4] = {
 }
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-ax.set(title=dict_item["name"] + "+" + dict_item_ngc2516["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
+ax.set(
+    title=dict_item["name"] + "+" + dict_item_ngc2516["name"],
+    xlim=(1.8, 0.0),
+    ylim=(-2, 35),
+)
 ax.scatter(pm_list[4]["Mass"], pm_list[4]["Per"])
 
 #%% M37
-# dict_item["data_frames"][0].describe()
+# dict_item = [item for item in dict_list if item["name"] == "m37"][0]
+# print(dict_item["data_frames"][0].describe())
+
+# abs_vmag = app_to_abs(dict_item["data_frames"][1].Vmag.to_numpy(), 1383)
+
+# b_v = np.subtract(
+#     dict_item["data_frames"][1].Bmag.to_numpy(),
+#     dict_item["data_frames"][1].Vmag.to_numpy() + 0.2,
+# )
+
+# masses = []
+# for index, vmag in enumerate(abs_vmag):
+#     if vmag >= 9:
+#         masses.append(abs_v_to_mass(vmag))
+#     else:
+#         masses.append(fit_bv_mass.predict(convert_order([b_v[index]], 3)))
+
+# pm_list[5] = {
+#     "Per": dict_item["data_frames"][1].Per.to_numpy(),
+#     "Mass": masses,
+#     "Name": dict_item["name"],
+#     "Age": dict_item["age"],
+# }
 dict_item = [item for item in dict_list if item["name"] == "m37"][0]
 
 
-abs_vmag = app_to_abs(dict_item["data_frames"][0].Vmag.to_numpy(), 1383)
+period_0 = dict_item["data_frames"][0].Per.to_numpy()
+vmag = dict_item["data_frames"][0].Vmag.to_numpy()[~np.isnan(period_0)]
+b_v = dict_item["data_frames"][0]["B-V"].to_numpy()[~np.isnan(period_0)]
 
-b_v = np.subtract(
-    dict_item["data_frames"][0].Bmag.to_numpy(),
-    dict_item["data_frames"][0].Vmag.to_numpy() + 0.2,
-)
 
+period_0 = dict_item["data_frames"][0].Per.to_numpy()[~np.isnan(period_0)]
+period_0 = period_0[~np.isnan(vmag)]
+b_v = b_v[~np.isnan(vmag)]
+vmag = vmag[~np.isnan(vmag)]
+
+
+abs_vmag = app_to_abs(vmag, 1383)
 masses = []
 for index, vmag in enumerate(abs_vmag):
-    if vmag >= 9:
+    if vmag >= 10:
         masses.append(abs_v_to_mass(vmag))
     else:
         masses.append(fit_bv_mass.predict(convert_order([b_v[index]], 3)))
 
+
 pm_list[5] = {
-    "Per": dict_item["data_frames"][0].Per.to_numpy(),
-    "Mass": masses,
+    "Per": period_0,
+    "Mass": masses ,#fit_vk_mass_18.predict(fit_bv_vk.predict(b_v[:,np.newaxis])[:,np.newaxis]),
     "Name": dict_item["name"],
-    "Age": dict_item["age"],
+    "Age": dict_item["age"]
 }
+
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
@@ -485,7 +518,7 @@ ax.scatter(pm_list[12]["Mass"], pm_list[12]["Per"])
 #%% UPPER SCORPION
 dict_item = [item for item in dict_list if item["name"] == "usco"][0]
 
-# print(dict_item["data_frames"][0]["(V-Ks)0"].describe())
+print(dict_item["data_frames"][0].describe())
 
 period_0 = dict_item["data_frames"][0].Per.to_numpy()
 
@@ -532,8 +565,11 @@ for num, data in enumerate(pm_list[sorted_age_index]):
         period,
         linestyle="none",
         marker="x",
-        label=data["Name"] + " " + str(data["Age"]),
+        label=data["Name"]
+        + " "
+        + str(data["Age"])# if data["Name"] != "m35" else " + ngc2516"),
     )
+
     ax[r][c].legend()
     ax[r][c].set(xlim=(1.7, 0.0), ylim=(-2, 40.0))  # ylim = (0, 100), yscale = "log",)
 
