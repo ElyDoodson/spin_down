@@ -5,11 +5,7 @@ import matplotlib.pyplot as plt
 import os
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
-
-
 #%% FUNCTIONS
-
-
 def app_to_abs(app_mag, distance_parsec):
     return app_mag - (5 * np.log10(distance_parsec)) + 5
 
@@ -50,17 +46,7 @@ def abs_k_to_mass(abs_k):
     term4 = c3 * ((abs_k - x0) ** 3)
     term5 = c4 * ((abs_k - x0) ** 4)
     return c0 + term2 + term3 + term4 + term5
-
-
-rpo = np.linspace(-1, 9, 100)
-fig, ax = plt.subplots(1, figsize=(10, 6))
-ax.invert_xaxis()
-ax.invert_yaxis()
-
-
-plt.scatter(rpo, abs_k_to_mass(rpo))
 #%%
-
 path = "D:/dev/spin_down/new_data/"
 
 cluster_list = os.listdir(path)
@@ -142,6 +128,26 @@ wright_v_k_18 = np.array(
 wright_mass_18 = np.array(
     [1.17, 1.09, 0.95, 0.83, 0.70, 0.61, 0.50, 0.30, 0.22, 0.18, 0.14]
 )
+#%%
+wright_v_k_18 = np.array(wright_v_k_18)
+wright_mass_18 = np.array(wright_mass_18)
+
+degree = 2
+poly = PolynomialFeatures(degree)
+fit_vk_mass_18_poly = LinearRegression().fit(
+    poly.fit_transform(wright_v_k_18[:, np.newaxis]), wright_mass_18
+)
+# plt.scatter(wright_v_k_18, wright_mass_18)
+
+
+# test_x = np.linspace(0, 6, 50)
+# plt.plot(
+#     test_x,
+#     fit_vk_mass_18_poly.predict(poly.fit_transform(test_x[:, np.newaxis])),
+# )
+
+
+#%%
 fit_vk_mass_18 = LinearRegression().fit(wright_v_k_18[:, np.newaxis], wright_mass_18)
 
 fit_vk_mass = LinearRegression()
@@ -193,8 +199,6 @@ pm_list[0] = {
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[0]["Mass"], pm_list[0]["Per"])
-
-
 #%% HYADES
 dict_item = [item for item in dict_list if item["name"] == "hyades"][0]
 
@@ -223,6 +227,7 @@ pm_list[1] = {
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[1]["Mass"], pm_list[1]["Per"])
+
 #%% h_per
 dict_item = [item for item in dict_list if item["name"] == "h_per"][0]
 dict_item["data_frames"][0].describe()
@@ -236,8 +241,6 @@ pm_list[2] = {
 
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-
-
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[2]["Mass"], pm_list[2]["Per"])
@@ -249,9 +252,18 @@ b_v = dict_item["data_frames"][0]["(B-V)0"].to_numpy()
 
 period_0 = dict_item["data_frames"][0].Prot.to_numpy()[~np.isnan(b_v)]
 b_v = b_v[~np.isnan(b_v)]
+# pm_list[3] = {
+#     "Per": period_0,
+#     "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
+#     "Name": dict_item["name"],
+#     "Age": dict_item["age"],
+# }
+
 pm_list[3] = {
     "Per": period_0,
-    "Mass": fit_bv_mass.predict(convert_order(b_v, 3)),
+    "Mass": fit_vk_mass_18.predict(
+        fit_bv_vk.predict(b_v[:, np.newaxis])[:, np.newaxis]
+    ),
     "Name": dict_item["name"],
     "Age": dict_item["age"],
 }
@@ -339,9 +351,9 @@ for index, vmag in enumerate(abs_vmag):
 
 pm_list[5] = {
     "Per": period_0,
-    "Mass": masses ,#fit_vk_mass_18.predict(fit_bv_vk.predict(b_v[:,np.newaxis])[:,np.newaxis]),
+    "Mass": masses,  # fit_vk_mass_18.predict(fit_bv_vk.predict(b_v[:,np.newaxis])[:,np.newaxis]),
     "Name": dict_item["name"],
-    "Age": dict_item["age"]
+    "Age": dict_item["age"],
 }
 
 
@@ -362,8 +374,6 @@ pm_list[6] = {
 
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-
-
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[6]["Mass"], pm_list[6]["Per"])
@@ -383,8 +393,6 @@ pm_list[7] = {
 }
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-
-
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[7]["Mass"], pm_list[7]["Per"])
@@ -401,8 +409,6 @@ pm_list[8] = {
 
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-
-
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[8]["Mass"], pm_list[8]["Per"])
@@ -422,8 +428,6 @@ pm_list[9] = {
 
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-
-
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[9]["Mass"], pm_list[9]["Per"])
@@ -474,8 +478,6 @@ pm_list[11] = {
 }
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-
-
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[11]["Mass"], pm_list[11]["Per"])
@@ -494,6 +496,7 @@ period_2 = period_2[~np.isnan(period_2)]
 
 abs_kmag = app_to_abs(app_k, 177)
 
+
 masses = []
 for index, kmag in enumerate(abs_kmag):
     if kmag >= 5:
@@ -508,9 +511,16 @@ pm_list[12] = {
     "Age": dict_item["age"],
 }
 
+# pm_list[12] = {
+#     "Per": period_2,
+#     "Mass": fit_vk_mass_18_poly.predict(
+#         PolynomialFeatures(degree).fit_transform(v_k[:, np.newaxis])
+#     ),
+#     "Name": dict_item["name"],
+#     "Age": dict_item["age"],
+# }
+
 fig, ax = plt.subplots(1, figsize=(10, 6))
-
-
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[12]["Mass"], pm_list[12]["Per"])
@@ -538,8 +548,6 @@ pm_list[13] = {
 }
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-
-
 ax.invert_xaxis()
 ax.set(title=dict_item["name"], xlim=(1.8, 0.0), ylim=(-2, 35))
 ax.scatter(pm_list[13]["Mass"], pm_list[13]["Per"])
@@ -567,7 +575,7 @@ for num, data in enumerate(pm_list[sorted_age_index]):
         marker="x",
         label=data["Name"]
         + " "
-        + str(data["Age"])# if data["Name"] != "m35" else " + ngc2516"),
+        + str(data["Age"] if data["Name"] != "m35" else " + ngc2516"),
     )
 
     ax[r][c].legend()
