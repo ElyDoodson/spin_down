@@ -17,6 +17,93 @@ def abs_to_app(abs_mag, distance_parsec, extinction=0):
     return abs_mag - (5 * np.log10(distance_parsec)) + 5 - extinction
 
 
+def make_mass_list(mass_data, threshold=0.006):
+    """
+    Takes a list of masses that increase step-like and returns the value of the steps.
+    E.g. [0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.25, 0.25, 0.3] -> [0.1, 0.2, 0.25, 0.3]
+
+    parameters
+    --------------
+        mass_list:  array-like
+            b
+    """
+    mass_list = []
+    initial_mass = 0
+    for mass in mass_data:
+        if abs(initial_mass - mass) >= threshold:
+            mass_list.append(mass)
+        initial_mass = mass
+    return mass_list
+
+
+def make_bool_list(mass_step, mass_dataframe, threshold=0.006):
+    return [
+        True if abs(star_mass - mass_step) <= threshold else False
+        for star_mass in mass_dataframe
+    ]
+
+
+def make_bool_mask(mass_dataframe, threshold=0.006):
+    return [
+        make_bool_list(mass_item, mass_dataframe, threshold)
+        for mass_item in make_mass_list(mass_dataframe, threshold)
+    ]
+
+
+def segment_dataframe(data_frame, mask):
+    """
+    Separates a given DataFrame into a list given by a boolean mask.
+    e.g. df.index =  1, 2, 3  mask =[T,F,F],[F,T,F],[F,F,T] -> [[df.1], [df.2], [df.3]]
+    """
+    return [data_frame[boolean] for boolean in mask]
+
+
+def return_age_range(data_frame_list, cluster_age, age_range):
+    cluster_age = cluster_age * 10 ** 6
+    age_range = age_range * 10 ** 6
+    return [
+        data_frame[
+            (data_frame["star_age"] <= cluster_age + age_range)
+            & (data_frame["star_age"] >= cluster_age - age_range)
+        ]
+        for data_frame in data_frame_list
+    ]
+
+
+def _(photometry_df_lst, mag_name, mag_value):
+    lst = []
+    for df in photometry_df_lst:
+        if len(df) >= 2:
+            lst.append(
+                pd.concat(
+                    [
+                        df[
+                            df[mag_name] == df[df[mag_name] > mag_value][mag_name].min()
+                        ],
+                        df[
+                            df[mag_name] == df[df[mag_name] < mag_value][mag_name].max()
+                        ],
+                    ]
+                )
+            )
+        elif len(df) == 1:
+            lst.append(df)
+        elif len(df) == 0:
+            lst.append(None)
+    return lst
+
+
+#     return [
+#         pd.concat(
+#             [
+#                 df[df[mag_name] == df[df[mag_name] > mag_value][mag_name].min()],
+#                 df[df[mag_name] == df[df[mag_name] < mag_value][mag_name].max()],
+#             ]
+#         ) if (len(df) >= 2)
+#         for df in photometry_df_lst ]
+# else df if (len(df) ==1) else None if (len(df) == 0)
+
+
 #%% READING AND ASSIGNING FIT FILES
 filename1 = "new_MIST_data/MIST_V1.2_feh0_afe0.fits"
 data1 = Table.read(filename1, format="fits")
@@ -65,7 +152,11 @@ photometry_df = pd.concat(
         for booleans in bool_list
     ]
 )
+# x = [[1,2], [1,2], [1]]
 
+# [ex if len(ex) >= 2 for ex in x]
+# l = [[1,0], [2], [3], [4], [5]]
+# ["yes" if len(v) == 1 else "no" if len(v) == 2 else "idle" for len(v) in l]
 #%% CLUSTER DATA IMPORTED
 # file_path = "D:/dev/spin_down/new_data/m50/irwin_2009.tsv"
 # cluster = pd.read_csv(file_path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -95,15 +186,42 @@ cluster_mass = [
 ]
 
 fig, ax = plt.subplots(1, figsize=(11.5, 7))
+ax.invert_xaxis()
 ax.scatter(
-    photometry_df["2MASS_Ks"],
-    features.star_mass[photometry_df["2MASS_Ks"].index.to_list()],
+    cluster_mass,
+    app_to_abs(cluster.Ksmag.to_numpy(), distance, extinction),
+    c="green",
+    label="Clsuter Data",
 )
-
-ax.scatter(app_to_abs(cluster.Ksmag.to_numpy(), distance, extinction), cluster_mass)
+ax.scatter(
+    features.star_mass[photometry_df["2MASS_Ks"].index.to_list()],
+    photometry_df["2MASS_Ks"],
+    marker="x",
+    c="white",
+    s=10,
+    label="MIST data",
+)
+ax.legend()
+ax.set(xlabel="Mass (M_Solar)", ylabel="Abs K Magnitude (mag)")
 
 
 fig, ax = plt.subplots(1, figsize=(11.5, 7))
 ax.invert_xaxis()
-ax.scatter(cluster_mass, cluster.Per.to_numpy())
+ax.set(title="Praesepe", xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.scatter(cluster_mass, cluster.Per.to_numpy(), c="green")
+
 #%%
+segmented_df = segment_dataframe(features, make_bool_mask(features["star_mass"]))
+
+df = photometry.iloc[return_age_range(segmented_df, 790, 50)[7].index]
+# df[df["2MASS_Ks"] > 6.027]["2MASS_Ks"].min()
+# df[df["2MASS_Ks"] == df[df["2MASS_Ks"] < 6.027]["2MASS_Ks"].max()]
+
+_(
+    [photometry.iloc[item.index] for item in return_age_range(segmented_df, 790, 50)],
+    "2MASS_Ks",
+    6.027,
+)[8]
+
+# string = "2MASS_Ks"
+# df[string]
