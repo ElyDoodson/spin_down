@@ -6,6 +6,7 @@ from os import listdir
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import random
+from sklearn.model_selection import cross_val_score
 
 #%%  INITIALISATION OF FUNCTIONS
 
@@ -202,8 +203,8 @@ def calculate_chi(star_list, lr_slow, lr_fast):
 
 #%% DATA INITIALISATION
 
-path = "d:data\Praesepe_K2.csv"
-# path = "D:\dev\spin_down\data\Pleiades_Hartman.csv"
+# path = "d:data\Praesepe_K2.csv"
+path = "D:\dev\spin_down\data\Pleiades_Hartman.csv"
 # path = "/home/edoodson/Documents/spin_down/data/Pleiades_Hartman.csv"
 object_list = get_data(path)
 
@@ -216,8 +217,10 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 star_list = [Star(y, x) for x, y in zip(X_train, y_train)]
 star_list_test = [Star(y, x) for x, y in zip(X_test, y_test)]
+star_list = object_list
+
 #%%
-order = 3
+order = 5
 set_predictor_order(star_list, order)
 set_initial_star_group(star_list, order)
 
@@ -355,71 +358,113 @@ print(
     star_list[nmbr].group,
 )
 
-#%%
-lrs.predict([star_list[0].predictors])
 
 #%%
-fig, ax2 = plt.subplots(1, figsize=(9, 6))
-ax2.set(
-    title="Visualisation of Weights",
-    xlabel="Polynomial Order",
-    ylabel="Sum of Residuals",
-)
+# fig, ax2 = plt.subplots(1, figsize=(9, 6))
+# ax2.set(
+#     title="Visualisation of Weights",
+#     xlabel="Polynomial Order",
+#     ylabel="Sum of Residuals",
+# )
 
-for order in range(2, 20, 1):
-    set_predictor_order(star_list, order)
-    set_initial_star_group(star_list, order)
+# for order in range(2, 20, 1):
+#     set_predictor_order(star_list, order)
+#     set_initial_star_group(star_list, order)
 
-    line_predictors = [
-        [q ** i for i in range(order)] for q in np.linspace(1.4, 0.2, 100)
-    ]
-    line_mass = [item[1] for item in line_predictors]
+#     line_predictors = [
+#         [q ** i for i in range(order)] for q in np.linspace(1.4, 0.2, 100)
+#     ]
+#     line_mass = [item[1] for item in line_predictors]
+
+#     coefficients_slow, lrs = calculate_coefficients(
+#         [star for star in star_list], group=1
+#     )
+#     coefficients_fast, lrf = calculate_coefficients(
+#         [star for star in star_list], group=0, set_slope=True
+#     )
+
+#     for i in range(30):
+#         set_star_group(star_list, lrs, lrf)
+
+#         sample_weight_slow = calculate_weight(star_list, lrs, lrf, 1, "slow")
+#         sample_weight_fast = calculate_weight(star_list, lrs, lrf, 0, "fast")
+
+#         coefficients_slow, lrs = calculate_coefficients(
+#             [star for star in star_list], group=1, sample_weights=sample_weight_slow
+#         )
+#         coefficients_fast, lrf = calculate_coefficients(
+#             [star for star in star_list],
+#             group=0,
+#             set_slope=True,
+#             sample_weights=sample_weight_fast,
+#         )
+#     # fig, ax = plt.subplots(1, figsize=(9, 6))
+#     # ax.set(ylim=(-1, 15), xlim=(1.6, 0), title="Visualisation of Weights")
+
+#     # ax.scatter(
+#     #     [star.mass for star in star_list],
+#     #     [star.period for star in star_list],
+#     #     marker="x",
+#     #     c=calculate_weight(star_list, lrs, lrf, "both", "fast"),
+#     #     cmap="coolwarm",
+#     # )
+#     # ax.plot(line_mass, lrf.predict(line_predictors), color="red")
+#     # ax.plot(line_mass, lrs.predict(line_predictors), color="blue")
+
+#     set_predictor_order(star_list_test, order)
+#     set_star_group(star_list_test, lrs, lrf)
+#     L = np.sum(
+#         [
+#             (star.period - lrs.predict([star.predictors])) ** 2
+#             for star in star_list_test
+#             if star.group == 1
+#         ]
+#     )
+
+#     ax2.scatter(order, L, color="white")
+#     print(order)
+#%%
+all_stars = star_list
+
+for order in range(2, 7):
+    # order = 20
+    set_predictor_order(all_stars, order)
+    set_initial_star_group(all_stars, order)
 
     coefficients_slow, lrs = calculate_coefficients(
-        [star for star in star_list], group=1
+        [star for star in all_stars], group=1
     )
+
     coefficients_fast, lrf = calculate_coefficients(
-        [star for star in star_list], group=0, set_slope=True
+        [star for star in all_stars], group=0, set_slope=True
     )
-
+    # sample_weight_slow = calculate_weight(all_stars, lrs, lrf, 1, "slow")
+    # sample_weight_fast = calculate_weight(all_stars, lrs, lrf, 0, "fast")
     for i in range(30):
-        set_star_group(star_list, lrs, lrf)
+        set_star_group(all_stars, lrs, lrf)
 
-        sample_weight_slow = calculate_weight(star_list, lrs, lrf, 1, "slow")
-        sample_weight_fast = calculate_weight(star_list, lrs, lrf, 0, "fast")
+        sample_weight_slow = calculate_weight(all_stars, lrs, lrf, 1, "slow")
+        sample_weight_fast = calculate_weight(all_stars, lrs, lrf, 0, "fast")
 
         coefficients_slow, lrs = calculate_coefficients(
-            [star for star in star_list], group=1, sample_weights=sample_weight_slow
+            [star for star in all_stars], group=1, sample_weights=sample_weight_slow
         )
         coefficients_fast, lrf = calculate_coefficients(
-            [star for star in star_list],
+            [star for star in all_stars],
             group=0,
             set_slope=True,
             sample_weights=sample_weight_fast,
         )
-    # fig, ax = plt.subplots(1, figsize=(9, 6))
-    # ax.set(ylim=(-1, 15), xlim=(1.6, 0), title="Visualisation of Weights")
-
-    # ax.scatter(
-    #     [star.mass for star in star_list],
-    #     [star.period for star in star_list],
-    #     marker="x",
-    #     c=calculate_weight(star_list, lrs, lrf, "both", "fast"),
-    #     cmap="coolwarm",
-    # )
-    # ax.plot(line_mass, lrf.predict(line_predictors), color="red")
-    # ax.plot(line_mass, lrs.predict(line_predictors), color="blue")
-
-    set_predictor_order(star_list_test, order)
-    set_star_group(star_list_test, lrs, lrf)
-    L = np.sum(
-        [
-            (star.period - lrs.predict([star.predictors])) ** 2
-            for star in star_list_test
-            if star.group == 1
-        ]
+    X = [star.predictors for star in all_stars if star.group == 1]
+    y = [star.period for star in all_stars if star.group == 1]
+    lr = LinearRegression()
+    scores = cross_val_score(
+        lr,
+        X,
+        y,
+        cv=10,
+        fit_params={"sample_weight": sample_weight_slow},
+        scoring="neg_mean_squared_error",
     )
-
-    ax2.scatter(order, L, color="white")
-    print(order)
-#%%
+    plt.scatter(order, np.sqrt(-scores).mean(), c="green", marker="x")
+    # print( "Score = %0.2f (+/- %0.2f)" % (np.sqrt(-scores).mean(),  np.sqrt(-scores).std()))
