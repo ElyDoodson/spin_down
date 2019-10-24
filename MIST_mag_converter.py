@@ -70,7 +70,7 @@ def return_age_range(data_frame_list, cluster_age, age_range):
     ]
 
 
-def _(photometry_df_lst, mag_name, mag_value):
+def return_magnitude_df(photometry_df_lst, mag_name, mag_value):
     lst = []
     for df in photometry_df_lst:
         if len(df) >= 2:
@@ -93,17 +93,6 @@ def _(photometry_df_lst, mag_name, mag_value):
     return lst
 
 
-#     return [
-#         pd.concat(
-#             [
-#                 df[df[mag_name] == df[df[mag_name] > mag_value][mag_name].min()],
-#                 df[df[mag_name] == df[df[mag_name] < mag_value][mag_name].max()],
-#             ]
-#         ) if (len(df) >= 2)
-#         for df in photometry_df_lst ]
-# else df if (len(df) ==1) else None if (len(df) == 0)
-
-
 #%% READING AND ASSIGNING FIT FILES
 filename1 = "new_MIST_data/MIST_V1.2_feh0_afe0.fits"
 data1 = Table.read(filename1, format="fits")
@@ -118,8 +107,8 @@ photometry = data2.to_pandas()
 # list(photometry.columns.values)
 
 #%% LIMITING TO <1.4SOL_MASS
-photometry = photometry[features["star_mass"] <= 1.4]
-features = features[features["star_mass"] <= 1.4]
+photometry = photometry[features["star_mass"] <= 1.7]
+features = features[features["star_mass"] <= 1.7]
 # features.describe()
 
 #%% MASS LIST
@@ -191,7 +180,7 @@ ax.scatter(
     cluster_mass,
     app_to_abs(cluster.Ksmag.to_numpy(), distance, extinction),
     c="green",
-    label="Clsuter Data",
+    label="Cluster Data",
 )
 ax.scatter(
     features.star_mass[photometry_df["2MASS_Ks"].index.to_list()],
@@ -213,15 +202,114 @@ ax.scatter(cluster_mass, cluster.Per.to_numpy(), c="green")
 #%%
 segmented_df = segment_dataframe(features, make_bool_mask(features["star_mass"]))
 
-df = photometry.iloc[return_age_range(segmented_df, 790, 50)[7].index]
+df = photometry.iloc[return_age_range(segmented_df, 790, 100)[2].index]
 # df[df["2MASS_Ks"] > 6.027]["2MASS_Ks"].min()
 # df[df["2MASS_Ks"] == df[df["2MASS_Ks"] < 6.027]["2MASS_Ks"].max()]
 
-_(
-    [photometry.iloc[item.index] for item in return_age_range(segmented_df, 790, 50)],
-    "2MASS_Ks",
-    6.027,
-)[8]
+# features.iloc[pd.concat(return_magnitude_df(
+#     [photometry.iloc[item.index] for item in return_age_range(segmented_df, 790, 50)],
+#     "2MASS_Ks",
+#     6.027,
+# )).index]
 
-# string = "2MASS_Ks"
-# df[string]
+
+#%%
+age = 790 * 10 ** 6
+age_err = 150 * 10 ** 6
+
+df = photometry.iloc[
+    features[
+        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
+    ].index
+]
+
+
+def one_above_below(df, mag_name, mag_value):
+    return pd.concat(
+        [
+            df[df[mag_name] == df[df[mag_name] > mag_value][mag_name].min()],
+            df[df[mag_name] == df[df[mag_name] < mag_value][mag_name].max()],
+        ]
+    )
+
+
+display(one_above_below(df, "2MASS_Ks", 9))
+display(features.iloc[one_above_below(df, "2MASS_Ks", 9).index])
+
+x = one_above_below(df, "2MASS_Ks", 9)["2MASS_Ks"].to_numpy()
+index = x.argsort()
+x = x[index]
+y = features.iloc[one_above_below(df, "2MASS_Ks", 9).index].star_mass.to_numpy()[index]
+
+np.interp(9, x, y)
+#%%
+mass = []
+for kmag in cluster.Ksmag.to_numpy():
+    # kmag = star.Ksmag
+    abs_kmag = app_to_abs(kmag, 184, 0.027)
+
+    x = one_above_below(df, "2MASS_Ks", abs_kmag)["2MASS_Ks"].to_numpy()
+    index = x.argsort()
+    x = x[index]
+    y = features.iloc[
+        one_above_below(df, "2MASS_Ks", abs_kmag).index
+    ].star_mass.to_numpy()[index]
+    mass.append(np.interp(abs_kmag, x, y))
+
+fig, ax = plt.subplots(1, figsize=(11.5, 7))
+ax.invert_xaxis()
+ax.set(title="Praesepe", xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.scatter(mass, cluster.Per.to_numpy(), color="green")
+
+#%%
+fig, ax = plt.subplots(1, figsize=(11.5, 7))
+ax.set(xlabel="Stellar Age (Yrs)", ylabel="Kmag")
+ax.plot(
+    segmented_df[0]
+    .loc[
+        (segmented_df[0].star_age >= 6 * 10 ** 6)
+        & (segmented_df[0].star_age <= 10 * 10 ** 8)
+    ]
+    .star_age,
+    photometry.iloc[
+        segmented_df[0]
+        .loc[
+            (segmented_df[0].star_age >= 6 * 10 ** 6)
+            & (segmented_df[0].star_age <= 10 * 10 ** 8)
+        ]
+        .index
+    ]["2MASS_Ks"],
+    label="Mass = 0.10 M_Solar",
+)
+
+ax.plot(
+    segmented_df[1]
+    .loc[
+        (segmented_df[1].star_age >= 6 * 10 ** 6)
+        & (segmented_df[1].star_age <= 10 * 10 ** 8)
+    ]
+    .star_age,
+    photometry.iloc[
+        segmented_df[1]
+        .loc[
+            (segmented_df[1].star_age >= 6 * 10 ** 6)
+            & (segmented_df[1].star_age <= 10 * 10 ** 8)
+        ]
+        .index
+    ]["2MASS_Ks"],
+    label="Mass = 0.15 M_Solar",
+)
+
+fake_kmag = np.linspace(6.5, 9.5, 100)
+
+ax.plot([6e8] * len(fake_kmag), fake_kmag, linestyle="--", label="Lower bound")
+ax.plot([10e8] * len(fake_kmag), fake_kmag, linestyle="--", label="Upper bound")
+ax.legend()
+#%%
+
+dictionary = {
+    "hyades": {"age": 50, "data": [1, 2]},
+    "h_per": {"age": 150, "data": [3, 4]},
+}
+
+dictionary
