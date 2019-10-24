@@ -423,9 +423,10 @@ print(
 
 #     ax2.scatter(order, L, color="white")
 #     print(order)
-#%%
+#%% CROSS VALIDATION
 all_stars = star_list
 
+fig, ax = plt.subplots(1, figsize=(11.5, 7))
 for order in range(2, 7):
     # order = 20
     set_predictor_order(all_stars, order)
@@ -438,8 +439,7 @@ for order in range(2, 7):
     coefficients_fast, lrf = calculate_coefficients(
         [star for star in all_stars], group=0, set_slope=True
     )
-    # sample_weight_slow = calculate_weight(all_stars, lrs, lrf, 1, "slow")
-    # sample_weight_fast = calculate_weight(all_stars, lrs, lrf, 0, "fast")
+
     for i in range(30):
         set_star_group(all_stars, lrs, lrf)
 
@@ -466,5 +466,8 @@ for order in range(2, 7):
         fit_params={"sample_weight": sample_weight_slow},
         scoring="neg_mean_squared_error",
     )
-    plt.scatter(order, np.sqrt(-scores).mean(), c="green", marker="x")
+
+    ax.set(xlabel = "Polynomial Degree", ylabel = "CV Score (RMSE)")
+    ax.scatter(order, np.sqrt(-scores).mean(), c="green", marker="x")
+    
     # print( "Score = %0.2f (+/- %0.2f)" % (np.sqrt(-scores).mean(),  np.sqrt(-scores).std()))
