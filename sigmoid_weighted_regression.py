@@ -467,7 +467,7 @@ for order in range(2, 7):
         scoring="neg_mean_squared_error",
     )
 
-    ax.set(xlabel = "Polynomial Degree", ylabel = "CV Score (RMSE)")
+    ax.set(xlabel="Polynomial Degree", ylabel="CV Score (RMSE)")
     ax.scatter(order, np.sqrt(-scores).mean(), c="green", marker="x")
-    
+
     # print( "Score = %0.2f (+/- %0.2f)" % (np.sqrt(-scores).mean(),  np.sqrt(-scores).std()))
