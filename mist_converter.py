@@ -67,12 +67,43 @@ features = features[features["star_mass"] <= 2.0]
 path = "D:/dev/spin_down/new_data/"
 cluster_list = os.listdir(path)
 files = [os.listdir(path + str(cluster)) for cluster in cluster_list]
-
-#%%
 cluster_dict = {}
+
+#%% Hyades
+name = "hyades"
+age = 600 * 10 ** 6
+age_err = 150 * 10 ** 6
+dist = 47  
+reddening = 0.0
+path = "D:/dev/spin_down/new_data/hyades/douglas_2016.tsv"
+
+
+data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
+# mag_str = "2MASS_Ks"
+
+# df = photometry.iloc[
+#     features[
+#         (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
+#     ].index
+# ]
+
+# abs_mags = app_to_abs(data.Ksmag.to_numpy(), dist, reddening)
+
+# mass = mist_mass_interpolate(df, features, abs_mags, "2MASS_Ks")
+mass = data.Mass.to_numpy()
+fig, ax = plt.subplots(1, figsize=(11.5, 7))
+ax.invert_xaxis()
+ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.scatter(mass, data.K2Per.to_numpy(), color="green")
+
+data_dict = {"Per": data.K2Per.to_numpy(), "Mass": mass}
+data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass"])
+current_dict = {"age": age, "data_frame": data_frame}
+cluster_dict.update({name: current_dict})
+
 #%% PRAESEPE
 name = "praesepe"
-age = 790* 10 ** 6
+age = 790 * 10 ** 6
 age_err = 150 * 10 ** 6
 dist = 184
 reddening = 0.027
@@ -98,6 +129,37 @@ ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, data.Per.to_numpy(), color="green")
 
 data_dict = {"Per": data.Per.to_numpy(), "Mass": mass}
-data_frame = pd.DataFrame(data_dict , columns=["Per", "Mass"])
+data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass"])
+current_dict = {"age": age, "data_frame": data_frame}
+cluster_dict.update({name: current_dict})
+#%% TEMPLATE
+name = ..........
+age = ..........
+age_err = 150*10**6
+dist = ............
+reddening =...........
+path = "D:/dev/spin_down/new_data/" + "..............."
+
+
+data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
+mag_str = .............
+
+df = photometry.iloc[
+    features[
+        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
+    ].index
+]
+
+abs_mags = app_to_abs(data...........to_numpy(), dist, reddening)
+
+mass = mist_mass_interpolate(df, features, abs_mags, "2MASS_Ks")
+
+fig, ax = plt.subplots(1, figsize=(11.5, 7))
+ax.invert_xaxis()
+ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.scatter(mass, data.Per.to_numpy(), color="green")
+
+data_dict = {"Per": data.Per.to_numpy(), "Mass": mass}
+data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass"])
 current_dict = {"age": age, "data_frame": data_frame}
 cluster_dict.update({name: current_dict})
