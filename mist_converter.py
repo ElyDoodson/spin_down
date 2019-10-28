@@ -276,7 +276,7 @@ print(
 abs_mags = app_to_abs(data.Vmag.to_numpy(), dist, reddening)
 
 period = data.Per.to_numpy()
-mass = mist_mass_interpolate(df, features, abs_mags, mag_str) 
+mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 
 fig, ax = plt.subplots(1, figsize=(11.5, 7))
 ax.invert_xaxis()
@@ -630,7 +630,7 @@ ax.scatter(
     label="m37",
     marker="x",
     s=1.5,
-    alpha = 0.5
+    alpha=0.5,
 )
 ax.scatter(
     cluster_dict["praesepe"]["data_frame"].Mass,
@@ -647,7 +647,6 @@ ax.scatter(
     label="ngc6811",
     marker="x",
     s=2,
-
 )
 # ax.scatter(
 #     cluster_dict["pleiades"]["data_frame"].Mass,
@@ -658,6 +657,11 @@ ax.scatter(
 #     s=2,
 # )
 ax.legend()
+#%% Create CSV Files
+for name in cluster_list:
+    path = "D:/dev/spin_down/mistmade_data/" + name + "_pm.csv"
+    cluster_dict[name]["data_frame"].to_csv(path_or_buf=path, index=False, sep="\t")
+
 
 #%% TEMPLATE
 """
