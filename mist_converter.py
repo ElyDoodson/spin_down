@@ -258,11 +258,11 @@ path = "D:/dev/spin_down/new_data/" + "m37/chang_2015.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
-mag_str = "SDSS_r"
+mag_str = "Bessell_V"
 
 # removing nan rows
 data = data[~np.isnan(data.Per)]
-data = data[~np.isnan(data.rmag)]
+data = data[~np.isnan(data.Vmag)]
 
 df = photometry.iloc[
     features[
@@ -273,10 +273,10 @@ print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
 )
-abs_mags = app_to_abs(data.rmag.to_numpy(), dist, reddening)
+abs_mags = app_to_abs(data.Vmag.to_numpy(), dist, reddening)
 
 period = data.Per.to_numpy()
-mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
+mass = mist_mass_interpolate(df, features, abs_mags, mag_str) 
 
 fig, ax = plt.subplots(1, figsize=(11.5, 7))
 ax.invert_xaxis()
@@ -519,6 +519,11 @@ path = "D:/dev/spin_down/new_data/praesepe/rebull_2017.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "2MASS_Ks"
 
+# removing nan rows
+data = data[~np.isnan(data.Per)]
+data = data[~np.isnan(data.Ksmag)]
+
+
 df = photometry.iloc[
     features[
         (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
@@ -589,7 +594,9 @@ fig, ax = plt.subplots(4, 4, sharex=True, sharey=True, figsize=(24, 16))
 fig.subplots_adjust(wspace=0.03, hspace=0.05)
 
 cluster_list = np.array(cluster_list)
-sorted_list = cluster_list[np.argsort([cluster_dict[name]["age"]/1e6 for name in cluster_list])]
+sorted_list = cluster_list[
+    np.argsort([cluster_dict[name]["age"] / 1e6 for name in cluster_list])
+]
 
 for num, data in enumerate(sorted_list):
     mass = cluster_dict[data]["data_frame"]["Mass"]
@@ -606,10 +613,51 @@ for num, data in enumerate(sorted_list):
         linestyle="none",
         marker="x",
         label=("%s %iMYrs") % (data, cluster_dict[data]["age"] / 1e6),
+        markersize=1.5,
     )
 
     ax[r][c].legend()
     ax[r][c].set(xlim=(2, 0.0), ylim=(-2, 40.0))  # ylim = (0, 100), yscale = "log",)
+#%% Comparing Clsuters
+fig, ax = plt.subplots(1, figsize=(11.5, 7))
+ax.invert_xaxis()
+ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+
+ax.scatter(
+    cluster_dict["m37"]["data_frame"].Mass,
+    cluster_dict["m37"]["data_frame"].Per,
+    color="yellow",
+    label="m37",
+    marker="x",
+    s=1.5,
+    alpha = 0.5
+)
+ax.scatter(
+    cluster_dict["praesepe"]["data_frame"].Mass,
+    cluster_dict["praesepe"]["data_frame"].Per,
+    color="green",
+    label="praesepe",
+    marker="x",
+    s=2,
+)
+ax.scatter(
+    cluster_dict["ngc6811"]["data_frame"].Mass,
+    cluster_dict["ngc6811"]["data_frame"].Per,
+    color="blue",
+    label="ngc6811",
+    marker="x",
+    s=2,
+
+)
+# ax.scatter(
+#     cluster_dict["pleiades"]["data_frame"].Mass,
+#     cluster_dict["pleiades"]["data_frame"].Per,
+#     color="white",
+#     label="pleiades",
+#     marker="x",
+#     s=2,
+# )
+ax.legend()
 
 #%% TEMPLATE
 """
