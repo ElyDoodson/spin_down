@@ -659,7 +659,7 @@ ax.scatter(
 ax.legend()
 #%% Create CSV Files
 for name in cluster_list:
-    path = "D:/dev/spin_down/mistmade_data/{}_pm_{:2e}.csv".format(name, cluster_dict[name]["age"]/ 1e6)
+    path = "D:/dev/spin_down/mistmade_data/{}_pm_{:e}.csv".format(name, cluster_dict[name]["age"]/ 1e6)
     cluster_dict[name]["data_frame"].to_csv(path_or_buf=path, index=False, sep="\t")
 
 
