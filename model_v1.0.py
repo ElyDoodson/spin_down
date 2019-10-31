@@ -15,16 +15,39 @@ def y_pred(m, b0, b2, b3, b4, b5):
     return b0 + (b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5))))
 
 
+def calculate_chi(m, b4, b5):
+    return 1 / (1 + np.exp(-(b4 * m + b5)))
+
+
+# # linear
+
+# def y_pred_test(params, m):
+#     b0, b2, b3, b4, b5 = params
+#     return b0 + (b2 * m + b3 ) * (1 / (1 + np.exp(-(b4 * m + b5))))
+
+
+# def mse(params, m, period):
+#     b0, b2, b3, b4, b5 = params
+
+#     return np.sum(
+#         (b0 + (b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5)))) - period) ** 2
+#     ) / len(period)
+
+
+# Quadratic
+
+
 def y_pred_test(params, m):
-    b0, b2, b3, b4, b5 = params
-    return b0 + (b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5))))
+    b0, b2, b3, b4, b5, b6 = params
+    return b0 + (b6 * m ** 2 + b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5))))
 
 
 def mse(params, m, period):
-    b0, b2, b3, b4, b5 = params
+    b0, b2, b3, b4, b5, b6 = params
 
     return np.sum(
-        (b0 + (b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5)))) - period) ** 2
+        (b0 + (b6 * m ** 2 + b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5)))) - period)
+        ** 2
     ) / len(period)
 
 
@@ -101,8 +124,8 @@ cluster_dict.update(
         }
     }
 )
-#Deleting the stand-alone clusters
-del cluster_dict["praesepe"]
+# Deleting the stand-alone clusters
+del cluster_dict["pleiades"]
 del cluster_dict["m50"]
 del cluster_dict["m35"]
 del cluster_dict["ngc2516"]
@@ -110,12 +133,14 @@ del cluster_dict["m34"]
 del cluster_dict["ngc2301"]
 
 #%%
-#redeclaring names after removal
+# redeclaring names after removal
 names = np.array(list(cluster_dict.keys()))
 
-fig, ax = plt.subplots(4, 3, sharex=True, sharey=True, figsize=(24, 16))
+fig, ax = plt.subplots(4, 3, figsize=(24, 16), sharex=True, sharey=True)
 fig.subplots_adjust(wspace=0.03, hspace=0.05)
 fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
+
+fig3, ax3 = plt.subplots(4, 3, figsize=(24, 16), sharey=True)
 
 
 sorted_names = names[np.argsort([cluster_dict[name]["age"] for name in names])]
@@ -127,8 +152,6 @@ for num, name in enumerate(sorted_names):
     mass = cluster_dict[name]["df"]["Mass"]
     period = cluster_dict[name]["df"]["Per"]
 
-    ax[r][c].invert_xaxis()
-
     ax[r][c].plot(
         mass,
         period,
@@ -138,9 +161,9 @@ for num, name in enumerate(sorted_names):
         markersize=1.5,
     )
 
-    coeffs = minimize(mse, [0, 0, 0, 0, 0], args=(mass, period))
+    coeffs = minimize(mse, [0, 0, 0, 0, 0, 0], args=(mass, period))
 
-    z = np.linspace(2, 0, 200)
+    z = np.linspace(1.3, 0.2, 200)
     ax[r][c].scatter(
         z,
         y_pred_test(coeffs.x, z),
@@ -158,7 +181,20 @@ for num, name in enumerate(sorted_names):
     )
     ax2.legend()
     ax2.set(ylim=(-100, 100))
+
+    fake_mass = np.linspace(1.3,0.1,200)
+    ax3[r][c].scatter(
+        fake_mass,
+        [calculate_chi(m, coeffs.x[3], coeffs.x[4]) for m in fake_mass],
+    )
+    ax3[r][c].set(xlim=(1.4, 0.0))
+    ax3[r][c].annotate(s = "$\\frac{-b5}{b4}$" + " = {:.3f}".format(-coeffs.x[4] / coeffs.x[3]), xy = (1.2, 0.2), **dict(size=20, color='gray'))
+
+    # ax3[r][c].legend(prop={'size': 25})
 fig.show()
 fig2.show()
+fig3.show()
+
+# %%
 
 #%%
