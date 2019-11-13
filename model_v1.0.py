@@ -232,16 +232,17 @@ coeff_list = []
 for num, name in enumerate(sorted_names):
     r, c = divmod(num, 3)
     # print(r, c)
+
     df = cluster_dict[name]["df"]
 
+    #Removing Nans(breaks fitting)
     df = df[~np.isnan(df.Per)]
     df = df[~np.isnan(df.Mass)]
 
-    # mass = cluster_dict[name]["df"]["Mass"]
-    # period = cluster_dict[name]["df"]["Per"]
     mass = df["Mass"]
     period = df["Per"]
 
+    #Plotting cluster data
     ax[r][c].plot(
         mass,
         period,
@@ -250,8 +251,8 @@ for num, name in enumerate(sorted_names):
         label=("%s %iMYrs") % (name, cluster_dict[name]["age"]),
         markersize=1.5,
     )
+    #Setting initial Parameters
     b0 = 0.46
-    # starting_coeffs = [-120, 45, 85, -0.25, 54, 48, -42]
     starting_coeffs = [
         -33.01648156,
         406.80460616,
@@ -267,6 +268,7 @@ for num, name in enumerate(sorted_names):
     )
     coeff_list.append(coeffs.x)
 
+    cluster_dict[name].update({"coefficients": coeffs.x})
     z = np.linspace(1.4, 0.0, 200)
 
     ax[r][c].plot(
@@ -276,6 +278,7 @@ for num, name in enumerate(sorted_names):
         linewidth=5,
         c="purple",
     )
+    
     ax[r][c].plot(z, [b0] * len(z))
     ax[r][c].legend()
     ax[r][c].set(xlim=(1.5, -0.1), ylim=(-2, 25.0))
@@ -423,3 +426,8 @@ ax.bar(
     align="center",
 )
 ax.legend()
+
+#%%
+test_dict = {"test_name":{"item1": 1, "item2":2}}
+test_dict["test_name"].update({"item3":3})
+test_dict
