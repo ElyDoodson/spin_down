@@ -22,7 +22,7 @@ def general_polynomial(parameters, x_true, b0):
 
 def sum_residuals(parameters, x_true, y_true, b0):
     return sum(
-        (abs(np.subtract(general_polynomial(parameters, x_true, b0), y_true))) ** 1
+        (abs(np.subtract(general_polynomial(parameters, x_true, b0), y_true))) ** 2
     )
 
 
@@ -46,83 +46,47 @@ def draw_boxplot(data, edge_color, fill_color):
     plt.setp(bp["fliers"], markeredgecolor=edge_color)
 
 
-# # linear
-
-# def y_pred_test(params, m):
-#     b0, b2, b3, b4, b5 = params
-#     return b0 + (b2 * m + b3 ) * (1 / (1 + np.exp(-(b4 * m + b5))))
-
-
-# def mse(params, m, period):
-#     b0, b2, b3, b4, b5 = params
-
-#     return np.sum(
-#         (b0 + (b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5)))) - period) ** 2
-#     ) / len(period)
-
-
-# # Quadratic
-
-
-# def y_pred_test(params, m):
-#     b0, b2, b3, b4, b5, b6 = params
-#     return b0 + (b6 * m ** 2 + b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5))))
+def chi_poly_fit(params, x_true, b0, coeffs):
+    # alpha is the slope, sigma is the value the switch happens at
+    alpha, sigma = params
+    # print(alpha)
+    # print(sigma)
+    return [
+        sum(
+            [
+                b0,
+                sum(
+                    np.array([coeffs[i] * x ** i for i in range(len(coeffs))])
+                    * (1 / (1 + np.exp(-alpha * (x + sigma))))
+                ),
+            ]
+        )
+        for x in x_true
+    ]
 
 
-# def mse(params, m, period):
-#     b0, b2, b3, b4, b5, b6 = params
-
-#     return np.sum(
-#         (b0 + (b6 * m ** 2 + b2 * m + b3) * (1 / (1 + np.exp(-(b4 * m + b5)))) - period)
-#         ** 2
-#     ) / len(period)
-
-# # Quadratic, fixed b0
+def chi_sum_residuals(parameters, x_true, y_true, b0, coeffs):
+    return sum((np.subtract(y_true, chi_poly_fit(parameters, x_true, b0, coeffs))) ** 2)
 
 
-# def y_pred_test(params, m, b0):
-#     b2, b3, b4, b5, b6, b7 = params
-#     return b0 + (b7 * m ** 3 + b6 * m ** 2 + b2 * m + b3) * (
-#         1 / (1 + np.exp(-(b4 * m + b5 * b4)))
-#     )
-
-
-# def mse(params, m, period, b0):
-#     b2, b3, b4, b5, b6, b7 = params
-
-#     return np.sum(
-#         (
-#             b0
-#             + (b7 * m ** 3 + b6 * m ** 2 + b2 * m + b3)
-#             * (1 / (1 + np.exp(-(b4 * m + b5 * b4))))
-#             - period
-#         )
-#         ** 2
-#     ) / len(period)
-
-##pentanic, fixed b0
-
-
-def y_pred_test(params, m, b0):
-    b2, b3, b4, b5, b6, b7, b8 = params
-    return b0 + (b8 * m ** 4 + b7 * m ** 3 + b6 * m ** 2 + b2 * m + b3) * (
-        1 / (1 + np.exp(-(b4 * m + b5 * b4)))
+def root_general_polynomial(parameters, x_true, b0):
+    return np.array(
+        [
+            sum([b0, np.prod([x - parameters[i] for i in range(len(parameters))])])
+            for x in x_true
+        ]
     )
 
 
-def mse(params, m, period, b0):
-    b2, b3, b4, b5, b6, b7, b8 = params
+def root_sum_residuals(parameters, x_true, y_true, b0):
+    return sum(
+        (abs(np.subtract(root_general_polynomial(parameters, x_true, b0), y_true))) ** 2
+    )
 
-    return np.sum(
-        (
-            b0
-            + (b8 * m ** 4 + b7 * m ** 3 + b6 * m ** 2 + b2 * m + b3)
-            * (1 / (1 + np.exp(-(b4 * m + b5 * b4))))
-            - period
-        )
-        ** 2
-    ) / len(period)
 
+# chi_poly_fit([1, 2], [1], 0, [3, 1, 1, 1])
+
+root_general_polynomial([1, 1, 1], [1], 0)
 
 #%% Cluster Dictionary
 path = "D:/dev/spin_down/mistmade_data/"
@@ -183,11 +147,16 @@ del cluster_dict["ngc2516"]
 del cluster_dict["m34"]
 del cluster_dict["ngc2301"]
 
-# Dropping useless clusters Hyades and Usco
+# Dropping out of bound clusters Hyades and Usco
 del cluster_dict["alpha_per"]
+del cluster_dict["h_per"]
 del cluster_dict["usco"]
 
-#%% Declaring name lists and dropping values
+# Deleting low data clusters
+del cluster_dict["ngc2547"]
+del cluster_dict["hyades"]
+
+# %% Declaring name lists and dropping values
 # redeclaring names after removal
 names = np.array(list(cluster_dict.keys()))
 
@@ -195,7 +164,7 @@ names = np.array(list(cluster_dict.keys()))
 sorted_names = names[np.argsort([cluster_dict[name]["age"] for name in names])]
 
 # Dropping fast rotators
-def line(x, b0=17.0, b1=-16.2):
+def line(x, b0=26.0, b1=-32.2):
     return b0 + b1 * x
 
 
@@ -203,7 +172,7 @@ for name in sorted_names:
 
     dframe = cluster_dict[name]["df"]
 
-    ## Shows Before
+    # # Shows Before
     # fig, ax = plt.subplots(1, figsize=(11.5, 7))
     # ax.set(xlim = (1.4,0), ylim = (-2,35))
     # ax.scatter(dframe.Mass.to_numpy(), dframe.Per.to_numpy())
@@ -211,21 +180,28 @@ for name in sorted_names:
     fast_rotators = dframe.index[dframe.Per < line(dframe.Mass)]
     cluster_dict[name]["df"] = dframe.drop(fast_rotators, axis=0)
 
-    ## And after of the reduces data 
+    # And after of the reduces data
     # fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
     # ax2.set(xlim = (1.4,0), ylim = (-2,35))
     # ax2.scatter(dframe.Mass.to_numpy(), dframe.Per.to_numpy())
+
+fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
+ax2.set(xlim=(1.4, 0), ylim=(-2, 35))
+ax2.scatter(cluster_dict["praesepe"]["df"].Mass, cluster_dict["praesepe"]["df"].Per)
+fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
+ax2.set(xlim=(1.4, 0), ylim=(-2, 35))
+ax2.scatter(cluster_dict["m37"]["df"].Mass, cluster_dict["m37"]["df"].Per)
 
 
 #%% Cluster Graphs and Tables
 # fig size is nice for 24,18. Reduced to reduce run time.
 
 # Data figure
-fig, ax = plt.subplots(3, 3, figsize=(18, 12), sharex=True, sharey=True)
+fig, ax = plt.subplots(2, 3, figsize=(18, 12), sharex=True, sharey=True)
 fig.subplots_adjust(wspace=0.03, hspace=0.05)
 
 # Coefficient Figure
-fig3, ax3 = plt.subplots(3, 3, figsize=(18, 12), sharex=True)
+fig3, ax3 = plt.subplots(2, 3, figsize=(18, 12), sharex=True)
 fig3.subplots_adjust(wspace=0.03, hspace=0.05)
 
 coeff_list = []
@@ -233,16 +209,15 @@ for num, name in enumerate(sorted_names):
     r, c = divmod(num, 3)
     # print(r, c)
 
+    # Removing Nans(breaks fitting)
     df = cluster_dict[name]["df"]
-
-    #Removing Nans(breaks fitting)
     df = df[~np.isnan(df.Per)]
     df = df[~np.isnan(df.Mass)]
 
     mass = df["Mass"]
     period = df["Per"]
 
-    #Plotting cluster data
+    # Plotting cluster data
     ax[r][c].plot(
         mass,
         period,
@@ -251,20 +226,46 @@ for num, name in enumerate(sorted_names):
         label=("%s %iMYrs") % (name, cluster_dict[name]["age"]),
         markersize=1.5,
     )
-    #Setting initial Parameters
+    # Setting initial Parameters
     b0 = 0.46
+    ## optimised on praesepe
+    # starting_coeffs = [
+    #     -33.01648156,
+    #     406.80460616,
+    #     -936.89032886,
+    #     500.33705448,
+    #     685.35829236,
+    #     -887.19870956,
+    # 274.57382769,
+    # -36.96156584,
+    # ]
+
+    # starting_coeffs = [
+    #     76.95610948,
+    #     -108.71350769,
+    #     -224.85132865,
+    #     645.56928067,
+    #     -504.76986033,
+    #     125.74607982,
+    # ]
+
+    ##The one to tweak
     starting_coeffs = [
-        -33.01648156,
-        406.80460616,
-        -936.89032886,
-        500.33705448,
-        685.35829236,
-        -887.19870956,
-        274.57382769,
-        -36.96156584,
+        52.57361218,
+        -131.49428603,
+        131.07679869,
+        -18.61060615,
+        -29.63407946,
+        5.77416665,
     ]
+    # starting_coeffs = [0, 0, 0, 0, 0]
     coeffs = minimize(
-        sum_residuals, starting_coeffs, args=(mass, period, b0), tol=1e-16
+        sum_residuals,
+        starting_coeffs,
+        args=(mass, period, b0),
+        tol=1e-10,
+        bounds=[[coeff - 5, 5 + coeff] for coeff in starting_coeffs[:]],
+        # bounds=[  [None, None], [None, None],[1.3,1.3], [None, None], [None, None]],
     )
     coeff_list.append(coeffs.x)
 
@@ -275,21 +276,23 @@ for num, name in enumerate(sorted_names):
         z,
         general_polynomial(coeffs.x, z, b0),
         label="Pred from minimised coeffs",
-        linewidth=5,
+        linewidth=3.5,
         c="purple",
     )
-    
-    ax[r][c].plot(z, [b0] * len(z))
+
+    # ax[r][c].plot(z, [b0] * len(z))
     ax[r][c].legend()
     ax[r][c].set(xlim=(1.5, -0.1), ylim=(-2, 25.0))
 
-#     coeff_strings = ["b2", "b3", "b4", "b5/b4", "b6", "b7", "b8"]
+    coeff_strings = ["b{}".format(i + 1) for i in range(len(coeffs.x))]
 
-#     ax3[r][c].bar(
-#         x=np.arange(len(coeff_strings)), height=coeffs.x, tick_label=coeff_strings
-#     )
+    ax3[r][c].bar(
+        x=np.arange(len(coeff_strings)),
+        height=np.subtract(coeffs.x, starting_coeffs),
+        tick_label=coeff_strings,
+    )
 
-# fig.show()
+
 # print("------------------------------------------------------------")
 # print(
 #     "{:<13s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:>8s}".format(
@@ -303,7 +306,7 @@ for num, name in enumerate(sorted_names):
 #             sorted_names[i], *item, -item[3] * item[4]
 #         )
 #     )
-
+fig.show()
 fig3.show()
 
 
@@ -328,15 +331,11 @@ ax2.plot(
 fig2.show()
 
 
-#%%
-
-
+#%% Test Fitting One cluster
 df = cluster_dict["ngc6811"]["df"]
-
 df = df[~np.isnan(df.Per)]
 df = df[~np.isnan(df.Mass)]
 
-# sum_residuals([2, 3, 5], [1, 2, 3], [10, 28, 56], 0.46)
 starting_coeffs = [
     -33.01648156,
     406.80460616,
@@ -361,7 +360,7 @@ z = np.linspace(-2, 2, 200)
 ax2.scatter(df.Mass, df.Per, c="#ff8c00")
 ax2.plot(z, general_polynomial(values.x, z, 0.46), c="green", linewidth=3.5)
 
-#%%
+#%% BarChart Comparing Coefficients
 coeffs_praesepe = [
     -59.96209914,
     490.32021082,
@@ -428,6 +427,6 @@ ax.bar(
 ax.legend()
 
 #%%
-test_dict = {"test_name":{"item1": 1, "item2":2}}
-test_dict["test_name"].update({"item3":3})
+test_dict = {"test_name": {"item1": 1, "item2": 2}}
+test_dict["test_name"].update({"item3": 3})
 test_dict
