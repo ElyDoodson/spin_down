@@ -5,10 +5,22 @@ import os
 # from sklearn.grid_search import GridSearchCV
 # from sklearn.metrics.scorer import make_scorer
 # from sklearn.svm import SVR
+
 from scipy.optimize import minimize, curve_fit, least_squares
 import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
+
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import KFold
 
 from matplotlib import pyplot as plt
+
+plt.style.use("dark_background")
 
 #%%
 def general_polynomial(parameters, x_true, b0):
@@ -184,6 +196,19 @@ for name in sorted_names:
     # fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
     # ax2.set(xlim = (1.4,0), ylim = (-2,35))
     # ax2.scatter(dframe.Mass.to_numpy(), dframe.Per.to_numpy())
+    df = cluster_dict[name]["df"]
+
+    df = df[~np.isnan(df.Per)]
+    df = df[~np.isnan(df.Mass)]
+
+    labels, bins = pd.cut(df.Mass, 15, labels=False, retbins=True)
+
+    unique_labels = np.unique(labels)
+
+    binned_df = [df[labels == label] for label in unique_labels]
+    scores = [np.abs(stats.zscore(df.Per.to_numpy())) for df in binned_df]
+    trimmed_df = [df[scores[ind] < 1.35] for ind, df in enumerate(binned_df)]
+    cluster_dict[name]["df"] = pd.concat(trimmed_df)
 
 fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
 ax2.set(xlim=(1.4, 0), ylim=(-2, 35))
@@ -194,239 +219,262 @@ ax2.scatter(cluster_dict["m37"]["df"].Mass, cluster_dict["m37"]["df"].Per)
 
 
 #%% Cluster Graphs and Tables
-# fig size is nice for 24,18. Reduced to reduce run time.
+# # fig size is nice for 24,18. Reduced to reduce run time.
 
-# Data figure
-fig, ax = plt.subplots(2, 3, figsize=(18, 12), sharex=True, sharey=True)
-fig.subplots_adjust(wspace=0.03, hspace=0.05)
+# # Data figure
+# fig, ax = plt.subplots(2, 3, figsize=(18, 12), sharex=True, sharey=True)
+# fig.subplots_adjust(wspace=0.03, hspace=0.05)
 
-# Coefficient Figure
-fig3, ax3 = plt.subplots(2, 3, figsize=(18, 12), sharex=True)
-fig3.subplots_adjust(wspace=0.03, hspace=0.05)
+# # Coefficient Figure
+# fig3, ax3 = plt.subplots(2, 3, figsize=(18, 12), sharex=True)
+# fig3.subplots_adjust(wspace=0.03, hspace=0.05)
 
-coeff_list = []
-for num, name in enumerate(sorted_names):
-    r, c = divmod(num, 3)
-    # print(r, c)
+# coeff_list = []
+# for num, name in enumerate(sorted_names):
+#     r, c = divmod(num, 3)
+#     # print(r, c)
 
-    # Removing Nans(breaks fitting)
-    df = cluster_dict[name]["df"]
-    df = df[~np.isnan(df.Per)]
-    df = df[~np.isnan(df.Mass)]
+#     # Removing Nans(breaks fitting)
+#     df = cluster_dict[name]["df"]
+#     df = df[~np.isnan(df.Per)]
+#     df = df[~np.isnan(df.Mass)]
 
-    mass = df["Mass"]
-    period = df["Per"]
+#     mass = df["Mass"]
+#     period = df["Per"]
 
-    # Plotting cluster data
-    ax[r][c].plot(
-        mass,
-        period,
-        linestyle="none",
-        marker="x",
-        label=("%s %iMYrs") % (name, cluster_dict[name]["age"]),
-        markersize=1.5,
-    )
-    # Setting initial Parameters
-    b0 = 0.46
-    ## optimised on praesepe
-    # starting_coeffs = [
-    #     -33.01648156,
-    #     406.80460616,
-    #     -936.89032886,
-    #     500.33705448,
-    #     685.35829236,
-    #     -887.19870956,
-    # 274.57382769,
-    # -36.96156584,
-    # ]
-
-    # starting_coeffs = [
-    #     76.95610948,
-    #     -108.71350769,
-    #     -224.85132865,
-    #     645.56928067,
-    #     -504.76986033,
-    #     125.74607982,
-    # ]
-
-    ##The one to tweak
-    starting_coeffs = [
-        52.57361218,
-        -131.49428603,
-        131.07679869,
-        -18.61060615,
-        -29.63407946,
-        5.77416665,
-    ]
-    # starting_coeffs = [0, 0, 0, 0, 0]
-    coeffs = minimize(
-        sum_residuals,
-        starting_coeffs,
-        args=(mass, period, b0),
-        tol=1e-10,
-        bounds=[[coeff - 5, 5 + coeff] for coeff in starting_coeffs[:]],
-        # bounds=[  [None, None], [None, None],[1.3,1.3], [None, None], [None, None]],
-    )
-    coeff_list.append(coeffs.x)
-
-    cluster_dict[name].update({"coefficients": coeffs.x})
-    z = np.linspace(1.4, 0.0, 200)
-
-    ax[r][c].plot(
-        z,
-        general_polynomial(coeffs.x, z, b0),
-        label="Pred from minimised coeffs",
-        linewidth=3.5,
-        c="purple",
-    )
-
-    # ax[r][c].plot(z, [b0] * len(z))
-    ax[r][c].legend()
-    ax[r][c].set(xlim=(1.5, -0.1), ylim=(-2, 25.0))
-
-    coeff_strings = ["b{}".format(i + 1) for i in range(len(coeffs.x))]
-
-    ax3[r][c].bar(
-        x=np.arange(len(coeff_strings)),
-        height=np.subtract(coeffs.x, starting_coeffs),
-        tick_label=coeff_strings,
-    )
-
-
-# print("------------------------------------------------------------")
-# print(
-#     "{:<13s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:>8s}".format(
-#         "name", "b2", "b3", "b4", "b5/b4", "b6", "b7", "b8", "b5"
+#     # Plotting cluster data
+#     ax[r][c].plot(
+#         mass,
+#         period,
+#         linestyle="none",
+#         marker="x",
+#         label=("%s %iMYrs") % (name, cluster_dict[name]["age"]),
+#         markersize=1.5,
 #     )
+#     # Setting initial Parameters
+#     # b0 = 0.46
+#     ## optimised on praesepe
+#     # starting_coeffs = [
+#     #     -33.01648156,
+#     #     406.80460616,
+#     #     -936.89032886,
+#     #     500.33705448,
+#     #     685.35829236,
+#     #     -887.19870956,
+#     # 274.57382769,
+#     # -36.96156584,
+#     # ]
+
+#     # starting_coeffs = [
+#     #     76.95610948,
+#     #     -108.71350769,
+#     #     -224.85132865,
+#     #     645.56928067,
+#     #     -504.76986033,
+#     #     125.74607982,
+#     # ]
+
+#     # ##The one to tweak
+#     # starting_coeffs = [
+#     #     52.57361218,
+#     #     -131.49428603,
+#     #     131.07679869,
+#     #     -18.61060615,
+#     #     -29.63407946,
+#     #     5.77416665,
+#     # ]
+#     # # starting_coeffs = [0, 0, 0, 0, 0]
+#     # coeffs = minimize(
+#     #     sum_residuals,
+#     #     starting_coeffs,
+#     #     args=(mass, period, b0),
+#     #     tol=1e-10,
+#     #     bounds=[[coeff - 5, 5 + coeff] for coeff in starting_coeffs[:]],
+#     #     # bounds=[  [None, None], [None, None],[1.3,1.3], [None, None], [None, None]],
+#     # )
+#     # coeff_list.append(coeffs.x)
+
+#     # cluster_dict[name].update({"coefficients": coeffs.x})
+
+#     # z = np.linspace(1.4, 0.0, 200)
+#     # ax[r][c].plot(
+#     #     z,
+#     #     general_polynomial(coeffs.x, z, b0),
+#     #     label="Pred from minimised coeffs",
+#     #     linewidth=3.5,
+#     #     c="purple",
+#     # )
+
+#     # ax[r][c].plot(z, [b0] * len(z))
+#     ax[r][c].legend()
+#     ax[r][c].set(xlim=(1.5, -0.1), ylim=(-2, 25.0))
+
+#     # coeff_strings = ["b{}".format(i + 1) for i in range(len(coeffs.x))]
+
+#     # ax3[r][c].bar(
+#     #     x=np.arange(len(coeff_strings)),
+#     #     height=np.subtract(coeffs.x, starting_coeffs),
+#     #     tick_label=coeff_strings,
+#     # )
+
+
+# # print("------------------------------------------------------------")
+# # print(
+# #     "{:<13s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:^8s}{:>8s}".format(
+# #         "name", "b2", "b3", "b4", "b5/b4", "b6", "b7", "b8", "b5"
+# #     )
+# # )
+# # print("------------------------------------------------------------")
+# # for i, item in enumerate(coeff_list):
+# #     print(
+# #         "{:<13s}{:^8.1f}{:^8.1f}{:^8.1f}{:^8.2f}{:^8.1f}{:^8.1f}{:>8.1f}{:>8.1f}".format(
+# #             sorted_names[i], *item, -item[3] * item[4]
+# #         )
+# #     )
+# fig.show()
+# fig3.show()
+
+
+# #%% Boxplots
+# fig, ax = plt.subplots(1, figsize=(11.5, 7))
+
+# draw_boxplot(
+#     [[item[i] for item in coeff_list] for i in range(len(coeffs.x))], "green", "black"
 # )
-# print("------------------------------------------------------------")
-# for i, item in enumerate(coeff_list):
-#     print(
-#         "{:<13s}{:^8.1f}{:^8.1f}{:^8.1f}{:^8.2f}{:^8.1f}{:^8.1f}{:>8.1f}{:>8.1f}".format(
-#             sorted_names[i], *item, -item[3] * item[4]
-#         )
-#     )
-fig.show()
-fig3.show()
+# plt.xticks([1, 2, 3, 4, 5], ["b2", "b3", "b4", "b5", "b6"])
+
+# #%% Coefficient Plots
+# fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
+
+# ax2.scatter(
+#     [[cluster_dict[name]["age"]] * len(coeffs.x) for name in sorted_names], coeff_list
+# )
+# ax2.plot(
+#     [cluster_dict[name]["age"] for name in sorted_names],
+#     [item[0] for item in coeff_list],
+# )
+# fig2.show()
 
 
-#%% Boxplots
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+#%% RIDGE REGRESSION
+name = "ngc6811"
 
-draw_boxplot(
-    [[item[i] for item in coeff_list] for i in range(len(coeffs.x))], "green", "black"
-)
-plt.xticks([1, 2, 3, 4, 5], ["b2", "b3", "b4", "b5", "b6"])
+df = cluster_dict[name]["df"]
+if name == "m37":
+    df = df[df.Mass < 1.18]
+    df.Mass = df.Mass + 0.1
+if name == "praesepe":
+    df = df[df.Mass > 0.44]
 
-#%% Coefficient Plots
-fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
-
-ax2.scatter(
-    [[cluster_dict[name]["age"]] * len(coeffs.x) for name in sorted_names], coeff_list
-)
-ax2.plot(
-    [cluster_dict[name]["age"] for name in sorted_names],
-    [item[0] for item in coeff_list],
-)
-fig2.show()
-
-
-#%% Test Fitting One cluster
-df = cluster_dict["ngc6811"]["df"]
 df = df[~np.isnan(df.Per)]
 df = df[~np.isnan(df.Mass)]
 
-starting_coeffs = [
-    -33.01648156,
-    406.80460616,
-    -936.89032886,
-    500.33705448,
-    685.35829236,
-    -887.19870956,
-    274.57382769,
-    -36.96156584,
-]
-# starting_coeffs = [0,0,0,0,0,0,0,0]
-values = minimize(
-    sum_residuals, starting_coeffs, args=(df.Mass, df.Per, 0.46), tol=1e-16
+
+mass = df.Mass.to_numpy()
+period = df.Per.to_numpy()
+
+
+alphas = np.logspace(-10, 5)
+degrees = np.arange(3, 6)
+
+model_df = pd.DataFrame(columns=["degree", "mse", "lambda"])
+for degree in degrees:
+
+    kf = KFold(n_splits=10)
+    kf.get_n_splits(mass)
+
+    mse_list = []
+    for alpha in alphas:
+        lr = Ridge(alpha)
+        poly = PolynomialFeatures(degree)
+
+        kfold_mse = np.array([])
+        for train_index, test_index in kf.split(mass):
+            X_train, X_test = mass[train_index], mass[test_index]
+            y_train, y_test = period[train_index], period[test_index]
+
+            X_train_poly = poly.fit_transform(X_train[:, np.newaxis])
+            X_test_poly = poly.fit_transform(X_test[:, np.newaxis])
+
+            lr.fit(X_train_poly, y_train)
+
+            mse = mean_squared_error(y_test, lr.predict(X_test_poly))
+            kfold_mse = np.append(kfold_mse, mse)
+        # print(kfold_mse)
+        mse_list.append(kfold_mse.mean())
+    model_df = model_df.append(
+        {
+            "degree": degree,
+            "mse": min(mse_list),
+            "lambda": alphas[mse_list.index(min(mse_list))],
+        },
+        ignore_index=True,
+    )
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(xlim=(1.5, 0), ylim=(-1, 35), xlabel="Mass (M_Solar)", ylabel="Period (Days)")
+ax.scatter(mass, period, c="green", s=3.5)
+ax.annotate(
+    "Degree = {:.2f}\nLambda = {:.4f}\nMSE = {:.4f}".format(
+        model_df["degree"][model_df.mse.idxmin()],
+        model_df["lambda"][model_df.mse.idxmin()],
+        model_df["mse"][model_df.mse.idxmin()],
+    ),
+    xy=(0.4, 5),
 )
 
-print(values.x)
-print("Sum_res = {}".format(sum_residuals(values.x, df.Mass, df.Per, 0.46)))
+lr = Ridge(alpha=model_df["lambda"][model_df.mse.idxmin()])
+poly = PolynomialFeatures(int(model_df["degree"][model_df.mse.idxmin()]))
 
-fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
-ax2.set(xlim=(1.4, 0.0), ylim=(-1, 35.0))
-z = np.linspace(-2, 2, 200)
-ax2.scatter(df.Mass, df.Per, c="#ff8c00")
-ax2.plot(z, general_polynomial(values.x, z, 0.46), c="green", linewidth=3.5)
 
-#%% BarChart Comparing Coefficients
-coeffs_praesepe = [
-    -59.96209914,
-    490.32021082,
-    -963.9578435,
-    436.3633149,
-    663.02484292,
-    -848.7525428,
-    328.32736006,
-    -36.96156584,
-]
+X_train_poly = poly.fit_transform(X_train[:, np.newaxis])
+X_test_poly = poly.fit_transform(X_test[:, np.newaxis])
 
-coeffs_6811 = [
-    -3.30164816e01,
-    4.06804606e02,
-    -9.36890329e02,
-    5.00337054e02,
-    6.85358292e02,
-    -8.87198710e02,
-    2.74573828e02,
-    -4.27375949,
-]
+lr.fit(np.vstack((X_test_poly, X_train_poly)), np.hstack((y_test, y_train)))
 
-coeffs_m37 = [
-    -30.74459788,
-    333.02087399,
-    -768.31105221,
-    464.19979473,
-    546.46521987,
-    -899.4099719,
-    412.10128712,
-    -53.15257031,
-]
+white_space = np.linspace(1.5, 0, 100)
+ax.plot(white_space, lr.predict(poly.fit_transform(white_space[:, np.newaxis])))
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
-coeff_strings = ["b{}".format(str(i)) for i in range(len(coeffs_praesepe))]
+#%% MINIMISATION
+lr = LinearRegression()
+deg = 3
+poly = PolynomialFeatures(deg)
 
-x = np.arange(2 * len(coeff_strings), step=2)
-width = 0.3
-ax.bar(
-    x - 1.5 * width,
-    starting_coeffs,
-    width=width,
-    color="white",
-    align="center",
-    label="Starting coeffs",
+df = cluster_dict["m37"]["df"]
+df = df[~np.isnan(df.Per)]
+df = df[~np.isnan(df.Mass)]
+
+# filter_ = (df.Mass > 1.0) & (df.Per > 4.5)
+# filter_ = ~filter_
+
+# df = df[filter_]
+
+
+mass = df.Mass.to_numpy()
+period = df.Per.to_numpy()
+poly_mass = poly.fit_transform(mass.reshape(-1, 1))
+# lr.fit(poly_mass, period)
+
+fun = lambda p: np.sum((np.sum(p * poly_mass, axis=-1) - period) ** 2)
+
+res = minimize(
+    fun,
+    np.full([deg + 1], 0),
+    # [0, 0, 0, -20],
+    # bounds=[[None, None], [None, None], [None, None], [None, None]],
 )
-ax.bar(x - 0.5 * width, coeffs_m37, label="m37", width=width, color="c", align="center")
-ax.bar(
-    x + 0.5 * width,
-    coeffs_praesepe,
-    label="praesepe",
-    width=width,
-    color="m",
-    align="center",
-)
-ax.bar(
-    x + 1.5 * width,
-    coeffs_6811,
-    label="ngc6811",
-    width=width,
-    color="orange",
-    align="center",
-)
-ax.legend()
+best_p = res.x
 
-#%%
-test_dict = {"test_name": {"item1": 1, "item2": 2}}
-test_dict["test_name"].update({"item3": 3})
-test_dict
+pred = lambda x: np.sum(x * best_p, axis=-1)
+
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(xlim=(1.5, 0), ylim=(-1, 35), xlabel="Mass (M_Solar)", ylabel="Period (Days)")
+ax.scatter(mass, period, c="green", s=3.5)
+
+white_space = np.linspace(1.5, 0, 100)
+white_space_p = poly.transform(white_space.reshape(-1, 1))
+ax.plot(white_space, [pred(x) for x in white_space_p])
+
+
+# %% TEST CELL
