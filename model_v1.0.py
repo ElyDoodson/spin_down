@@ -2,11 +2,9 @@
 import numpy as np
 import os
 
-# from sklearn.grid_search import GridSearchCV
-# from sklearn.metrics.scorer import make_scorer
-# from sklearn.svm import SVR
-
 from scipy.optimize import minimize, curve_fit, least_squares
+from scipy import  stats
+
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
@@ -121,6 +119,8 @@ for i, cluster in enumerate(cluster_list):
 # Limits the maximum mass to 1.3, where a convective envelope stops
 for name in names:
     boolean_mask = cluster_dict[name]["df"].Mass < 1.3
+    if name == "m37":
+        boolean_mask = cluster_dict[name]["df"].Mass < 1.16
     cluster_dict[name]["df"].Per = cluster_dict[name]["df"].Per.loc[boolean_mask]
     cluster_dict[name]["df"].Mass = cluster_dict[name]["df"].Mass.loc[boolean_mask]
 
@@ -207,7 +207,7 @@ for name in sorted_names:
 
     binned_df = [df[labels == label] for label in unique_labels]
     scores = [np.abs(stats.zscore(df.Per.to_numpy())) for df in binned_df]
-    trimmed_df = [df[scores[ind] < 1.35] for ind, df in enumerate(binned_df)]
+    trimmed_df = [df[scores[ind] < 1.25] for ind, df in enumerate(binned_df)]
     cluster_dict[name]["df"] = pd.concat(trimmed_df)
 
 fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
@@ -357,12 +357,10 @@ ax2.scatter(cluster_dict["m37"]["df"].Mass, cluster_dict["m37"]["df"].Per)
 
 
 #%% RIDGE REGRESSION
-name = "ngc6811"
+name = "m37"
 
 df = cluster_dict[name]["df"]
-if name == "m37":
-    df = df[df.Mass < 1.18]
-    df.Mass = df.Mass + 0.1
+
 if name == "praesepe":
     df = df[df.Mass > 0.44]
 
@@ -372,10 +370,11 @@ df = df[~np.isnan(df.Mass)]
 
 mass = df.Mass.to_numpy()
 period = df.Per.to_numpy()
+if name == "m37":
+    mass = mass +0.1
 
-
-alphas = np.logspace(-10, 5)
-degrees = np.arange(3, 6)
+alphas = np.logspace(-10, 0)
+degrees = np.arange(5, 6)
 
 model_df = pd.DataFrame(columns=["degree", "mse", "lambda"])
 for degree in degrees:
