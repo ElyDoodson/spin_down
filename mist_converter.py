@@ -588,6 +588,41 @@ data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass"])
 current_dict = {"age": age, "data_frame": data_frame}
 cluster_dict.update({name: current_dict})
 
+#%% NGC6819
+name = "ngc6819"
+age = 2500
+age_err = 200*10**6
+dist = 2208 
+reddening = 0.006 #  0.41 to 0.89 mag
+path = "D:/dev/spin_down/new_data/" + "ngc6819/meibom_2015.tsv"
+
+
+data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
+mag_str = "Bessell_V"
+
+df = photometry.iloc[
+    features[
+        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
+    ].index
+]
+print(
+    ("Age Range num: % d, Num in Mass~0.1 % d")
+    % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
+)
+abs_mags = app_to_abs(data.V.to_numpy(), dist, reddening)
+
+period = data.PMean.to_numpy()
+mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
+
+fig, ax = plt.subplots(1, figsize=(11.5, 7))
+ax.invert_xaxis()
+ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.scatter(mass, period, color="green")
+
+data_dict = {"Per": period,  "Mass": mass}
+data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass"])
+current_dict = {"age": age, "data_frame": data_frame}
+cluster_dict.update({name: current_dict})
 
 #%% Plot
 fig, ax = plt.subplots(4, 4, sharex=True, sharey=True, figsize=(24, 16))
