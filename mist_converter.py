@@ -590,8 +590,8 @@ cluster_dict.update({name: current_dict})
 
 #%% NGC6819
 name = "ngc6819"
-age = 2500
-age_err = 200*10**6
+age = 2500e6
+age_err = 600*10**6
 dist = 2208 
 reddening = 0.006 #  0.41 to 0.89 mag
 path = "D:/dev/spin_down/new_data/" + "ngc6819/meibom_2015.tsv"
@@ -624,6 +624,64 @@ data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass"])
 current_dict = {"age": age, "data_frame": data_frame}
 cluster_dict.update({name: current_dict})
 
+#%% m67 
+name = "m67"
+age = 4200e6
+age_err = 1000*10**6
+dist = 816
+reddening = 0.047 #taylor 2007
+path1 = "D:/dev/spin_down/new_data/" + "m67/barnes_2016.csv"
+path2 = "D:/dev/spin_down/new_data/" + "m67/gonzalez_2016.tsv"
+path3 = "D:/dev/spin_down/new_data/" + "m67/gonzalez2_2016.tsv"
+
+
+
+data = pd.read_csv(path1, comment="#", delimiter="\t", skipinitialspace=True)
+data2 = pd.read_csv(path2, comment="#", delimiter="\t", skipinitialspace=True)
+data3 = pd.read_csv(path3, comment="#", delimiter="\t", skipinitialspace=True)
+
+mag_str = "Bessell_V"
+
+df = photometry.iloc[
+    features[
+        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
+    ].index
+]
+print(
+    ("Age Range num: % d, Num in Mass~0.1 % d")
+    % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
+)
+abs_mags = app_to_abs(data.V.to_numpy(), dist, reddening)
+abs_mags2 = app_to_abs(data2.Vmag.to_numpy(), dist, reddening)
+abs_mags3 = app_to_abs(data3.Vmag.to_numpy(), dist, reddening)
+
+
+period = data.P.to_numpy()
+period2 = data2.Per.to_numpy()
+period3 = data3.Per.to_numpy()
+
+mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
+mass2 = mist_mass_interpolate(df, features, abs_mags2, mag_str)
+mass3 = mist_mass_interpolate(df, features, abs_mags3, mag_str)
+
+fig, ax = plt.subplots(1, figsize=(11.5, 7))
+ax.invert_xaxis()
+ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.scatter(mass, period, color="green")
+
+ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.scatter(mass2, period2, color="pink")
+
+ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.scatter(mass3, period3, color="orange")
+
+period_full = np.concatenate((period,period2,period3))
+mass_full = np.concatenate((mass,mass2,mass3))
+
+data_dict = {"Per": period_full,  "Mass": mass_full}
+data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass"])
+current_dict = {"age": age, "data_frame": data_frame}
+cluster_dict.update({name: current_dict})
 #%% Plot
 fig, ax = plt.subplots(4, 4, sharex=True, sharey=True, figsize=(24, 16))
 fig.subplots_adjust(wspace=0.03, hspace=0.05)
@@ -659,10 +717,10 @@ ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 
 ax.scatter(
-    cluster_dict["m37"]["data_frame"].Mass,
+    cluster_dict["m37"]["data_frame"].Mass + 0.14,
     cluster_dict["m37"]["data_frame"].Per,
     color="yellow",
-    label="m37",
+    label=cluster_dict["m37"]["age"] / 1e6,
     marker="x",
     s=1.5,
     alpha=0.5,
@@ -671,7 +729,7 @@ ax.scatter(
     cluster_dict["praesepe"]["data_frame"].Mass,
     cluster_dict["praesepe"]["data_frame"].Per,
     color="green",
-    label="praesepe",
+    label=cluster_dict["praesepe"]["age"]/ 1e6,
     marker="x",
     s=2,
 )
@@ -679,18 +737,18 @@ ax.scatter(
     cluster_dict["ngc6811"]["data_frame"].Mass,
     cluster_dict["ngc6811"]["data_frame"].Per,
     color="blue",
-    label="ngc6811",
+    label=cluster_dict["ngc6811"]["age"]/ 1e6,
     marker="x",
     s=2,
 )
-# ax.scatter(
-#     cluster_dict["pleiades"]["data_frame"].Mass,
-#     cluster_dict["pleiades"]["data_frame"].Per,
-#     color="white",
-#     label="pleiades",
-#     marker="x",
-#     s=2,
-# )
+ax.scatter(
+    cluster_dict["ngc6819"]["data_frame"].Mass,
+    cluster_dict["ngc6819"]["data_frame"].Per,
+    color="red",
+    label=cluster_dict["ngc6819"]["age"]/ 1e6,
+    marker="x",
+    s=2,
+)
 ax.legend()
 #%% Create CSV Files
 for name in cluster_list:
