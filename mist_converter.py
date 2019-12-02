@@ -71,6 +71,7 @@ def mist_tau_interpolate(data_frame, mass_list, age, age_err):
             oneup_onedown.index
         ].conv_env_turnover_time_g.to_numpy()[index]
 
+        # print(x,y)
         lst.append(np.interp(mass, x, y))
     return np.array(lst)
 
@@ -147,6 +148,11 @@ path = "D:/dev/spin_down/new_data/hyades/douglas_2016.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
+data = data[~np.isnan(data.K2Per)]
+data = data[~np.isnan(data.Mass)]
+
+# data = data[~np.isnan(data.)]
+
 # mag_str = "2MASS_Ks"
 
 # df = photometry.iloc[
