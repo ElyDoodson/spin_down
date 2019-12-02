@@ -55,6 +55,11 @@ def mist_tau_interpolate(data_frame, mass_list, age, age_err):
     age_reduced_df = data_frame.loc[
         (data_frame.star_age >= age - age_err) & (data_frame.star_age <= age + age_err)
     ]
+    values_above = data_frame[data_frame.star_age > age].sort_values("star_age")[:8]
+    values_below = data_frame[data_frame.star_age < age].sort_values("star_age")[:8]
+
+    age_reduced_df = data_frame.iloc[pd.concat((values_above , values_below)).index]
+
     for mass in mass_list:
         # Creates DF from age_reduced df, contraining the mass value 1 above and below chosen value
         oneup_onedown = one_above_below(age_reduced_df, "star_mass", mass)
@@ -115,11 +120,11 @@ path = "D:/dev/spin_down/new_data/" + "alpha_per/prosser_1997.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_V"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -130,7 +135,7 @@ period = data.Prot.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -156,11 +161,6 @@ data = data[~np.isnan(data.Mass)]
 
 # mag_str = "2MASS_Ks"
 
-# df = photometry.iloc[
-#     features[
-#         (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-#     ].index
-# ]
 
 # abs_mags = app_to_abs(data.Ksmag.to_numpy(), dist, reddening)
 
@@ -169,7 +169,7 @@ data = data[~np.isnan(data.Mass)]
 mass = data.Mass.to_numpy()
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, data.K2Per.to_numpy(), color="green")
@@ -191,11 +191,11 @@ path = "D:/dev/spin_down/new_data/" + "h_per/moraux_2013.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "2MASS_Ks"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -207,7 +207,7 @@ mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 # mass = data.Mass.to_numpy()
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -228,11 +228,11 @@ path = "D:/dev/spin_down/new_data/" + "m34/meibom_2011.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_V"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -243,7 +243,7 @@ period = data.Prot.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -266,11 +266,16 @@ data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_V"
 
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
+values_above = features[features.star_age > age].sort_values("star_age")[:20]
+values_below = features[features.star_age < age].sort_values("star_age")[:20]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
+
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -281,7 +286,7 @@ period = data.Prot.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -307,11 +312,12 @@ mag_str = "Bessell_V"
 data = data[~np.isnan(data.Per)]
 data = data[~np.isnan(data.Vmag)]
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
+
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -322,7 +328,7 @@ period = data.Per.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -333,7 +339,7 @@ current_dict = {"age": age, "data_frame": data_frame}
 cluster_dict.update({name: current_dict})
 
 fig, ax = plt.subplots(1, figsize=(8, 4.5))
-# ax.set(xlim = (0,1.2e7))
+ax.set(xlim = (0,0.2e8))
 ax.scatter(cluster_dict["m37"]["data_frame"].Tau, cluster_dict["m37"]["data_frame"].Per)
 
 
@@ -349,11 +355,11 @@ path = "D:/dev/spin_down/new_data/" + "m50/irwin_2009.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "SDSS_i"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
@@ -366,7 +372,7 @@ mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 # mass = data.Mass.to_numpy()
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -388,11 +394,11 @@ path = "D:/dev/spin_down/new_data/" + "ngc2301/sukhbold_2009.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_R"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -403,7 +409,7 @@ period = data.Per.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -425,11 +431,11 @@ path = "D:/dev/spin_down/new_data/" + "ngc2516/irwin_2007.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_V"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -441,7 +447,7 @@ mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 # mass = data.Mass.to_numpy()
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -462,11 +468,11 @@ path = "D:/dev/spin_down/new_data/" + "ngc2547/irwin_2008.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_V"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -477,7 +483,7 @@ period = data.Per.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -499,11 +505,11 @@ path = "D:/dev/spin_down/new_data/" + "ngc6811/curtis_2019.csv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "GaiaMAW_G"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -515,7 +521,7 @@ mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 # mass = data.Mass.to_numpy()
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -537,11 +543,11 @@ path = "D:/dev/spin_down/new_data/" + "pleiades/rebull_2016.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "2MASS_Ks"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -552,7 +558,7 @@ period = data.Prot.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -579,11 +585,11 @@ data = data[~np.isnan(data.Per)]
 data = data[~np.isnan(data.Ksmag)]
 
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -593,7 +599,7 @@ abs_mags = app_to_abs(data.Ksmag.to_numpy(), dist, reddening)
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, data.Per.to_numpy(), color="green")
@@ -620,11 +626,11 @@ data = data[~np.isnan(data.Per)]
 data = data[~np.isnan(data.Ksmag)]
 
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -635,7 +641,7 @@ period = data.Per.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -657,11 +663,11 @@ path = "D:/dev/spin_down/new_data/" + "ngc6819/meibom_2015.tsv"
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_V"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -672,7 +678,7 @@ period = data.PMean.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -700,11 +706,11 @@ data3 = pd.read_csv(path3, comment="#", delimiter="\t", skipinitialspace=True)
 
 mag_str = "Bessell_V"
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -722,7 +728,7 @@ mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 mass2 = mist_mass_interpolate(df, features, abs_mags2, mag_str)
 mass3 = mist_mass_interpolate(df, features, abs_mags3, mag_str)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
@@ -771,7 +777,7 @@ for num, data in enumerate(sorted_list):
     ax[r][c].legend()
     ax[r][c].set(xlim=(2, 0.0), ylim=(-2, 40.0))  # ylim = (0, 100), yscale = "log",)
 #%% Comparing Clsuters
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 
@@ -865,11 +871,11 @@ path = "D:/dev/spin_down/new_data/" + ...............
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = .............
 
-df = photometry.iloc[
-    features[
-        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
-    ].index
-]
+
+values_above = features[features.star_age > age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values("star_age")[:100]
+
+df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -879,7 +885,7 @@ abs_mags = app_to_abs(data. ......... .to_numpy(), dist, reddening)
 period = data.Per.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 
-fig, ax = plt.subplots(1, figsize=(11.5, 7))
+fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
