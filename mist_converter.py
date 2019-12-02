@@ -49,6 +49,7 @@ def mist_mass_interpolate(photom_dataframe, feature_df, abs_mags, mag_str):
         lst.append(np.interp(abs_mag, x, y))
     return np.array(lst)
 
+
 def mist_tau_interpolate(data_frame, mass_list, age, age_err):
     lst = []
     age_reduced_df = data_frame.loc[
@@ -58,18 +59,18 @@ def mist_tau_interpolate(data_frame, mass_list, age, age_err):
         # Creates DF from age_reduced df, contraining the mass value 1 above and below chosen value
         oneup_onedown = one_above_below(age_reduced_df, "star_mass", mass)
         x = oneup_onedown["star_mass"].to_numpy()
-        
+
         # Returns the index of the sorted "above and below" values
         # (this is required for np.interp to work)
         index = x.argsort()
-        
+
         # The two are sorted ascending
         x = x[index]
 
         # The coresponding tau values for the two masses is found and used in the linear interpolation
-        y = data_frame.iloc[
-            oneup_onedown.index
-        ].conv_env_turnover_time_g.to_numpy()[index]
+        y = data_frame.iloc[oneup_onedown.index].conv_env_turnover_time_g.to_numpy()[
+            index
+        ]
 
         # print(x,y)
         lst.append(np.interp(mass, x, y))
@@ -293,7 +294,7 @@ cluster_dict.update({name: current_dict})
 #%% M37
 name = "m37"
 age = 550e6
-age_err = 150 * 10 ** 6
+age_err = 15 * 10 ** 6
 dist = 1400
 reddening = 0.227
 path = "D:/dev/spin_down/new_data/" + "m37/chang_2015.tsv"
@@ -330,6 +331,11 @@ data_dict = {"Per": period, "Mass": mass, "Tau": tau}
 data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass", "Tau"])
 current_dict = {"age": age, "data_frame": data_frame}
 cluster_dict.update({name: current_dict})
+
+fig, ax = plt.subplots(1, figsize=(8, 4.5))
+# ax.set(xlim = (0,1.2e7))
+ax.scatter(cluster_dict["m37"]["data_frame"].Tau, cluster_dict["m37"]["data_frame"].Per)
+
 
 #%% M50
 name = "m50"
@@ -677,7 +683,6 @@ current_dict = {"age": age, "data_frame": data_frame}
 cluster_dict.update({name: current_dict})
 
 
-
 #%% m67
 name = "m67"
 age = 4200e6
@@ -814,11 +819,9 @@ for name in cluster_list:
 
 #%% TEST CELL
 
-fig, ax = plt.subplots(1, figsize=(8, 4.5))
-ax.set(xlim=(0, 0.5e11))
-ax.plot(features_with_tau.star_age, features_with_tau.conv_env_turnover_time_g)
-
-
+fig, ax = plt.subplots(1)
+ax.set(xlim=(0, 1.2e7))
+ax.scatter(cluster_dict["m37"]["data_frame"].Tau, cluster_dict["m37"]["data_frame"].Per)
 
 
 #%% TEST CELL #2
