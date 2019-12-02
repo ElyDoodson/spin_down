@@ -3,8 +3,7 @@ import numpy as np
 import os
 
 from scipy.optimize import minimize, curve_fit, least_squares
-from scipy import  stats
-
+from scipy import stats
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
@@ -14,6 +13,7 @@ from sklearn.linear_model import Lasso
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
 from sklearn.model_selection import KFold
 
 from matplotlib import pyplot as plt
@@ -98,7 +98,7 @@ def root_sum_residuals(parameters, x_true, y_true, b0):
 
 root_general_polynomial([1, 1, 1], [1], 0)
 
-#%% Cluster Dictionary
+#%% Data importation and Cluster Dictionary Initialisation
 path = "D:/dev/spin_down/mistmade_data/"
 files = os.listdir(path)
 cluster_list = [name[:-4] for name in files]
@@ -180,24 +180,20 @@ def line(x, b0=26.0, b1=-32.2):
     return b0 + b1 * x
 
 
+praesepe_df = cluster_dict["praesepe"]["df"]
+m37_df = cluster_dict["m37"]["df"]
+
 for name in sorted_names:
-
+    # Removes data below line (fast rotators)
     dframe = cluster_dict[name]["df"]
-
-    # # Shows Before
-    # fig, ax = plt.subplots(1, figsize=(11.5, 7))
-    # ax.set(xlim = (1.4,0), ylim = (-2,35))
-    # ax.scatter(dframe.Mass.to_numpy(), dframe.Per.to_numpy())
-
     fast_rotators = dframe.index[dframe.Per < line(dframe.Mass)]
     cluster_dict[name]["df"] = dframe.drop(fast_rotators, axis=0)
+    if name == "praesepe":
+        praesepe_line_df = cluster_dict[name]["df"]
+    if name == "m37":
+        m37_line_df = cluster_dict[name]["df"]
 
-    # And after of the reduces data
-    # fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
-    # ax2.set(xlim = (1.4,0), ylim = (-2,35))
-    # ax2.scatter(dframe.Mass.to_numpy(), dframe.Per.to_numpy())
     df = cluster_dict[name]["df"]
-
     df = df[~np.isnan(df.Per)]
     df = df[~np.isnan(df.Mass)]
 
@@ -207,16 +203,32 @@ for name in sorted_names:
 
     binned_df = [df[labels == label] for label in unique_labels]
     scores = [np.abs(stats.zscore(df.Per.to_numpy())) for df in binned_df]
-    trimmed_df = [df[scores[ind] < 1.25] for ind, df in enumerate(binned_df)]
+    trimmed_df = [df[scores[ind] < 1.29] for ind, df in enumerate(binned_df)]
     cluster_dict[name]["df"] = pd.concat(trimmed_df)
 
-fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
-ax2.set(xlim=(1.4, 0), ylim=(-2, 35))
-ax2.scatter(cluster_dict["praesepe"]["df"].Mass, cluster_dict["praesepe"]["df"].Per)
-fig2, ax2 = plt.subplots(1, figsize=(11.5, 7))
-ax2.set(xlim=(1.4, 0), ylim=(-2, 35))
-ax2.scatter(cluster_dict["m37"]["df"].Mass, cluster_dict["m37"]["df"].Per)
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(xlim=(1.5, 0), ylim=(-1, 35), xlabel="Mass (M_Solar)", ylabel="Period (Days)")
+ax.scatter(praesepe_df.Mass, praesepe_df.Per, c = "orange", s = 3.5, label = "Below line")
 
+ax.scatter(praesepe_line_df.Mass, praesepe_line_df.Per, c= "brown", s = 3.5, label = "90% Deleted Data")
+ax.scatter(
+    cluster_dict["praesepe"]["df"].Mass,
+    cluster_dict["praesepe"]["df"].Per,
+    c="green",
+    s=3.5,
+)
+
+ax.legend()
+
+fig, ax = plt.subplots(1, figsize=(10, 6))
+ax.set(xlim=(1.5, 0), ylim=(-1, 35), xlabel="Mass (M_Solar)", ylabel="Period (Days)")
+ax.scatter(m37_df.Mass, m37_df.Per, c = "orange", s = 3.5, label = "90% Deleted Data")
+ax.scatter(m37_line_df.Mass, m37_line_df.Per, c= "brown", s = 3.5, label = "Below line")
+
+ax.scatter(
+    cluster_dict["m37"]["df"].Mass, cluster_dict["m37"]["df"].Per, c="green", s=3.5
+)
+ax.legend()
 
 #%% Cluster Graphs and Tables
 # # fig size is nice for 24,18. Reduced to reduce run time.
@@ -357,12 +369,20 @@ ax2.scatter(cluster_dict["m37"]["df"].Mass, cluster_dict["m37"]["df"].Per)
 
 
 #%% RIDGE REGRESSION
+#
+#
+#
+#
+#
+#
+#
 name = "m37"
 
 df = cluster_dict[name]["df"]
 
-if name == "praesepe":
-    df = df[df.Mass > 0.44]
+# if name == "praesepe":
+
+#     df = df[df.Mass > 0.44]
 
 df = df[~np.isnan(df.Per)]
 df = df[~np.isnan(df.Mass)]
@@ -371,10 +391,10 @@ df = df[~np.isnan(df.Mass)]
 mass = df.Mass.to_numpy()
 period = df.Per.to_numpy()
 if name == "m37":
-    mass = mass +0.1
+    mass = mass + 0.1
 
-alphas = np.logspace(-10, 0)
-degrees = np.arange(5, 6)
+alphas = np.logspace(-10, 3, 100)
+degrees = np.arange(3,7)
 
 model_df = pd.DataFrame(columns=["degree", "mse", "lambda"])
 for degree in degrees:
@@ -435,6 +455,11 @@ white_space = np.linspace(1.5, 0, 100)
 ax.plot(white_space, lr.predict(poly.fit_transform(white_space[:, np.newaxis])))
 
 #%% MINIMISATION
+#
+#
+#
+#
+#
 lr = LinearRegression()
 deg = 3
 poly = PolynomialFeatures(deg)
