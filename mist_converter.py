@@ -447,10 +447,14 @@ mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 # mass = data.Mass.to_numpy()
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig, ax = plt.subplots(1, figsize=(10, 6))
-ax.invert_xaxis()
-ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
-ax.scatter(mass, period, color="green")
+fig,ax = plt.subplots(2 ,figsize = (8,6), sharex = True)
+
+ax[0].invert_xaxis()
+
+ax[0].set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax[0].scatter(mass, period, color="green")
+
+ax[1].hist(features.iloc[df.index].star_mass)
 
 data_dict = {"Per": period, "Mass": mass, "Tau": tau}
 data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass", "Tau"])
