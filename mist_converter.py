@@ -50,15 +50,17 @@ def mist_mass_interpolate(photom_dataframe, feature_df, abs_mags, mag_str):
     return np.array(lst)
 
 
-def mist_tau_interpolate(data_frame, mass_list, age, age_err):
+def mist_tau_interpolate(data_frame, mass_list, age, age_err = 0):
     lst = []
     age_reduced_df = data_frame.loc[
         (data_frame.star_age >= age - age_err) & (data_frame.star_age <= age + age_err)
     ]
-    values_above = data_frame[data_frame.star_age > age].sort_values("star_age")[:8]
-    values_below = data_frame[data_frame.star_age < age].sort_values("star_age")[:8]
+    values_above = data_frame[data_frame.star_age > age].sort_values("star_age")[:100]
+    values_below = data_frame[data_frame.star_age < age].sort_values(
+        "star_age", ascending=False
+    )[:100]
 
-    age_reduced_df = data_frame.iloc[pd.concat((values_above , values_below)).index]
+    age_reduced_df = data_frame.iloc[pd.concat((values_above, values_below)).index]
 
     for mass in mass_list:
         # Creates DF from age_reduced df, contraining the mass value 1 above and below chosen value
@@ -122,9 +124,11 @@ mag_str = "Bessell_V"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -193,9 +197,11 @@ mag_str = "2MASS_Ks"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -230,9 +236,11 @@ mag_str = "Bessell_V"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -266,15 +274,12 @@ data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_V"
 
 
-
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
-values_above = features[features.star_age > age].sort_values("star_age")[:20]
-values_below = features[features.star_age < age].sort_values("star_age")[:20]
-
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
@@ -314,15 +319,18 @@ data = data[~np.isnan(data.Vmag)]
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
 )
 abs_mags = app_to_abs(data.Vmag.to_numpy(), dist, reddening)
+    
 
 period = data.Per.to_numpy()
 mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
@@ -333,14 +341,15 @@ ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
 
+
+fig, ax = plt.subplots(1, figsize=(8, 4.5))
+ax.scatter(tau, period)
+ax.set(xlim=(0, 1e7))
+
 data_dict = {"Per": period, "Mass": mass, "Tau": tau}
 data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass", "Tau"])
 current_dict = {"age": age, "data_frame": data_frame}
 cluster_dict.update({name: current_dict})
-
-fig, ax = plt.subplots(1, figsize=(8, 4.5))
-ax.set(xlim = (0,0.2e8))
-ax.scatter(cluster_dict["m37"]["data_frame"].Tau, cluster_dict["m37"]["data_frame"].Per)
 
 
 #%% M50
@@ -357,9 +366,11 @@ mag_str = "SDSS_i"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
@@ -396,9 +407,11 @@ mag_str = "Bessell_R"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -432,10 +445,18 @@ data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
 mag_str = "Bessell_V"
 
 
-values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_above = features[features.star_age > age].sort_values("star_age")[:200]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:200]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
+
+df2 = photometry.iloc[
+    features[
+        (features.star_age >= age - age_err) & (features.star_age <= age + age_err)
+    ].index
+]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -447,7 +468,7 @@ mass = mist_mass_interpolate(df, features, abs_mags, mag_str)
 # mass = data.Mass.to_numpy()
 tau = mist_tau_interpolate(features_with_tau, mass, age, age_err)
 
-fig,ax = plt.subplots(2 ,figsize = (8,6), sharex = True)
+fig, ax = plt.subplots(2, figsize=(8, 6), sharex=True)
 
 ax[0].invert_xaxis()
 
@@ -455,6 +476,10 @@ ax[0].set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax[0].scatter(mass, period, color="green")
 
 ax[1].hist(features.iloc[df.index].star_mass)
+
+
+fig, ax = plt.subplots(1, figsize=(8, 4.5))
+ax.scatter(tau, period)
 
 data_dict = {"Per": period, "Mass": mass, "Tau": tau}
 data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass", "Tau"])
@@ -474,9 +499,11 @@ mag_str = "Bessell_V"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -511,9 +538,11 @@ mag_str = "GaiaMAW_G"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -529,6 +558,11 @@ fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, period, color="green")
+
+
+fig, ax = plt.subplots(1, figsize=(8, 4.5))
+ax.scatter(tau, period)
+ax.set(xlim=(0, 0.2e8))
 
 data_dict = {"Per": period, "Mass": mass, "Tau": tau}
 data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass", "Tau"])
@@ -549,9 +583,11 @@ mag_str = "2MASS_Ks"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -589,11 +625,12 @@ data = data[~np.isnan(data.Per)]
 data = data[~np.isnan(data.Ksmag)]
 
 
-
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -607,6 +644,12 @@ fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
 ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
 ax.scatter(mass, data.Per.to_numpy(), color="green")
+
+
+fig, ax = plt.subplots(1, figsize=(8, 4.5))
+ax.scatter(tau, data.Per.to_numpy())
+# ax.set(xlim=(0, 0.4e9))
+
 
 data_dict = {"Per": data.Per.to_numpy(), "Mass": mass}
 data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass"])
@@ -630,11 +673,12 @@ data = data[~np.isnan(data.Per)]
 data = data[~np.isnan(data.Ksmag)]
 
 
-
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -669,9 +713,11 @@ mag_str = "Bessell_V"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -712,9 +758,11 @@ mag_str = "Bessell_V"
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
-df = photometry.iloc[pd.concat((values_above , values_below)).index]
+df = photometry.iloc[pd.concat((values_above, values_below)).index]
 print(
     ("Age Range num: % d, Num in Mass~0.1 % d")
     % (len(df), len(df[features.iloc[df.index].star_mass - 0.1 <= 0.04]))
@@ -877,7 +925,9 @@ mag_str = .............
 
 
 values_above = features[features.star_age > age].sort_values("star_age")[:100]
-values_below = features[features.star_age < age].sort_values("star_age")[:100]
+values_below = features[features.star_age < age].sort_values(
+    "star_age", ascending=False
+)[:100]
 
 df = photometry.iloc[pd.concat((values_above , values_below)).index]
 print(
