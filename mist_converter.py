@@ -9,7 +9,7 @@ from astropy.table import Table
 from astropy.io import fits
 import matplotlib.gridspec as gridspec
 
-plt.style.use("dark_background")
+plt.style.use("ggplot")
 #%% FUNCTIONS BEING DECLARED
 def app_to_abs(app_mag, distance_parsec, extinction=0):
     return app_mag - (5 * np.log10(distance_parsec)) + 5 - extinction
@@ -55,10 +55,12 @@ def mist_tau_interpolate(data_frame, mass_list, age, age_err = 0):
     age_reduced_df = data_frame.loc[
         (data_frame.star_age >= age - age_err) & (data_frame.star_age <= age + age_err)
     ]
-    values_above = data_frame[data_frame.star_age > age].sort_values("star_age")[:100]
+    values_above = data_frame[data_frame.star_age > age].sort_values("star_age")[:10]
+
+
     values_below = data_frame[data_frame.star_age < age].sort_values(
         "star_age", ascending=False
-    )[:100]
+    )[:10]
 
     age_reduced_df = data_frame.iloc[pd.concat((values_above, values_below)).index]
 
@@ -82,6 +84,18 @@ def mist_tau_interpolate(data_frame, mass_list, age, age_err = 0):
         # print(x,y)
         lst.append(np.interp(mass, x, y))
     return np.array(lst)
+
+
+def draw_boxplot(data, edge_color, fill_color):
+    bp = ax.boxplot(data, patch_artist=True)
+
+    for element in ["boxes", "whiskers", "fliers", "means", "medians", "caps"]:
+        plt.setp(bp[element], color=edge_color)
+
+    for patch in bp["boxes"]:
+        patch.set(facecolor=fill_color)
+    plt.setp(bp["boxes"], facecolor=fill_color)
+    plt.setp(bp["fliers"], markeredgecolor=edge_color)
 
 
 #%% READING AND ASSIGNING FIT FILES
@@ -344,7 +358,7 @@ ax.scatter(mass, period, color="green")
 
 fig, ax = plt.subplots(1, figsize=(8, 4.5))
 ax.scatter(tau, period)
-ax.set(xlim=(0, 1e7))
+ax.set(xlim=(0, 1.5e7))
 
 data_dict = {"Per": period, "Mass": mass, "Tau": tau}
 data_frame = pd.DataFrame(data_dict, columns=["Per", "Mass", "Tau"])
@@ -829,44 +843,47 @@ for num, data in enumerate(sorted_list):
     ax[r][c].legend()
     ax[r][c].set(xlim=(2, 0.0), ylim=(-2, 40.0))  # ylim = (0, 100), yscale = "log",)
 #%% Comparing Clsuters
+plt.style.use("seaborn-deep")
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.invert_xaxis()
-ax.set(title=name, xlabel="Mass (M_Solar)", ylabel="Period (days)")
+ax.set(title="Combined Plots", xlabel="Mass (M_Solar)", ylabel="Period (days)")
 
 ax.scatter(
     cluster_dict["m37"]["data_frame"].Mass + 0.14,
     cluster_dict["m37"]["data_frame"].Per,
-    color="yellow",
+    # color="yellow",
     label=cluster_dict["m37"]["age"] / 1e6,
-    marker="x",
-    s=1.5,
-    alpha=0.5,
+    marker="o",
+    s=12,
+    # alpha=0.5,
 )
 ax.scatter(
     cluster_dict["praesepe"]["data_frame"].Mass,
     cluster_dict["praesepe"]["data_frame"].Per,
-    color="green",
+    # color="green",
     label=cluster_dict["praesepe"]["age"] / 1e6,
-    marker="x",
-    s=2,
+    marker="o",
+    s=12,
 )
 ax.scatter(
     cluster_dict["ngc6811"]["data_frame"].Mass,
     cluster_dict["ngc6811"]["data_frame"].Per,
-    color="blue",
+    # color="blue",
     label=cluster_dict["ngc6811"]["age"] / 1e6,
-    marker="x",
-    s=2,
+    marker="o",
+    s=12,
 )
 ax.scatter(
     cluster_dict["ngc6819"]["data_frame"].Mass,
     cluster_dict["ngc6819"]["data_frame"].Per,
-    color="red",
+    # color="red",
     label=cluster_dict["ngc6819"]["age"] / 1e6,
-    marker="x",
-    s=2,
+    marker="o",
+    s=12,
 )
 ax.legend()
+
+fig.savefig("C:/Users/elydo/Documents/Harvard/AAS Poster stuff/plot1.png")
 #%% Create CSV Files
 for name in cluster_list:
     path = "D:/dev/spin_down/mistmade_data/{}_pm_{:e}.csv".format(
@@ -885,31 +902,37 @@ ax.scatter(cluster_dict["m37"]["data_frame"].Tau, cluster_dict["m37"]["data_fram
 #%% TEST CELL #2
 rossby_ = [
     [
-        [cluster_dict[name]["age"], item[1][0], item[1][1]]
+        [cluster_dict[name]["age"], *item[1]]
         for item in cluster_dict[name]["data_frame"].iterrows()
     ]
     for name in cluster_dict
 ]
 
 flatten = lambda l: [item for sublist in l for item in sublist]
-rossby = pd.DataFrame(flatten(rossby_), columns=["age", "Per", "Tau"])
+rossby = pd.DataFrame(flatten(rossby_), columns=["age", "Per", "Mass", "Tau"])
 
-fig, ax = plt.subplots(1)
-# ax.set(xlim = (0,10), ylim = (-0.2,20))
-ax.scatter(rossby.Per, rossby.Per / rossby.Tau)
+# fig, ax = plt.subplots(1)
+# # ax.set(xlim = (0,10), ylim = (-0.2,20))
+# ax.scatter(rossby.Per, rossby.Per / rossby.Tau)
 
 
 df = rossby
-labels, bins = pd.cut(df.Tau, 100, labels=False, retbins=True)
+
+df.insert(4, "Rossby", rossby.Per / rossby.Tau)
+labels, bins = pd.cut(df.Rossby, 10, labels=False, retbins=True)
 
 unique_labels = np.unique(labels)
 
 binned_df = [df[labels == label] for label in unique_labels]
 
 
-fig, ax = plt.subplots(1)
-ax.scatter(binned_df[0].age, binned_df[0].Per)
+fig, ax = plt.subplots(1, figsize = (8,4.5)) 
+ax.scatter(binned_df[5].age, binned_df[5].Per)
 
+
+# fig2, ax = plt.subplots(1) 
+# draw_boxplot(rossby.Per, "green", "black")
+# fig2.show()
 #%% TEMPLATE
 """
 name = ..........
