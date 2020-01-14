@@ -41,12 +41,12 @@
 % Title of the paper, and the short title which is used in the headers.
 % Keep the title short and informative.
 % \title[Short title, max. 45 characters]{MNRAS \LaTeXe\ template --}
-\title{Midterm Report - A Machine Leanring Approach to Stellar Spin-Down}
+\title{PHYS6013 Midterm Report: A Machine Leanring Approach to Stellar Spin-Down}
 
 % The list of authors, and the short list which is used in the headers.
 % If you need two or more lines of authors, add an extra line using \newauthor
-\author[K. T. Smith et al.]{
-Ely Doodson,$^{1,2,3}$\thanks{E-mail: ely.doodson@cfa.harvard.edu}
+\author[E. J. Doodson et al.]{
+Ely Doodson,$^{1,2????,3???}$\thanks{E-mail: ely.doodson@cfa.harvard.edu}
 Cecilia Garraffo,$^{2,3}$
 Pavlos Protopapas$^{3}$
 and Jeremy J. Drake$^{2}$
@@ -119,19 +119,46 @@ Some evolution between the two that is UNKNOWN(?).
 Normally the next section describes the techniques the authors used.
 It is frequently split into subsections, such as Section~\ref{sec:maths} below.
 
-\subsection{Maths}
-\label{sec:maths} % used for referring to this section from elsewhere
 
-Simple mathematics can be inserted into the flow of the text e.g. $2\times3=6$
-or $v=220$\,km\,s$^{-1}$, but more complicated expressions should be entered
-as a numbered equation:
+\subsection{Data Reduction}
+Collected from various papers stated in CITE BOOK, plus personal findings and unpublished data.
+Each cluster in different photometry and no one fits all conversion.
+Used MIST tracks to interpolate a mass from the given ages of the stars.
 
-\begin{equation}
-    x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.
-	\label{eq:quadratic}
-\end{equation}
+FIGURE OF ALL CLUSTERS REDUCED
+MERGE CLUSTERS?
 
-Refer back to them as e.g. equation~(\ref{eq:quadratic}).
+\subsubsection{M37 shift?}
+Perhaps due to metalicity
+
+% \subsection{Maths}
+% \label{sec:maths} % used for referring to this section from elsewhere
+
+% Simple mathematics can be inserted into the flow of the text e.g. $2\times3=6$
+% or $v=220$\,km\,s$^{-1}$, but more complicated expressions should be entered
+% as a numbered equation:
+
+\subsection{Unsupervised Clustering?}
+
+\subsection{Polynomial Ridge Regression}
+slow rotators fit using a polynomial fit of order 4. 
+Sigmoid function overlapped and optimised to change poly term on and off at switch point.
+
+FIGURE OF CURRENT FIT
+
+\subsection{Initial Period and other parameters}
+Expand of the effect initial period and perhaps metalicity.
+Other parameters could allow for deeper understanding of the "overlap" sections of the open clusters
+
+FIGURE OF HOW INTIAL PERIOD CAUSES MULTIPLE LINES TO OVERLAP AND MAKE THE TRANSITION "BLURRY"
+
+
+% \begin{equation}
+%     x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.
+% 	\label{eq:quadratic}
+% \end{equation}
+
+% Refer back to them as e.g. equation~(\ref{eq:quadratic}).
 
 \subsection{Figures and tables}
 
