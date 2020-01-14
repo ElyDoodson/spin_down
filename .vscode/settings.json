@@ -1,4 +1,5 @@
 {
-    "python.pythonPath": "D:\\Anaconda\\python.exe",
-    "cSpell.enabled": false
+    "python.pythonPath": "C:\\Users\\elydo\\AppData\\Local\\Continuum\\anaconda3\\python.exe",
+    "cSpell.enabled": false,
+    "python.formatting.provider": "black"
 }

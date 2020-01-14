@@ -203,14 +203,20 @@ for name in sorted_names:
 
     binned_df = [df[labels == label] for label in unique_labels]
     scores = [np.abs(stats.zscore(df.Per.to_numpy())) for df in binned_df]
-    trimmed_df = [df[scores[ind] < 1.29] for ind, df in enumerate(binned_df)]
+    trimmed_df = [df[scores[ind] < 1.44] for ind, df in enumerate(binned_df)]
     cluster_dict[name]["df"] = pd.concat(trimmed_df)
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(xlim=(1.5, 0), ylim=(-1, 35), xlabel="Mass (M_Solar)", ylabel="Period (Days)")
-ax.scatter(praesepe_df.Mass, praesepe_df.Per, c = "orange", s = 3.5, label = "Below line")
+ax.scatter(praesepe_df.Mass, praesepe_df.Per, c="orange", s=3.5, label="Below line")
 
-ax.scatter(praesepe_line_df.Mass, praesepe_line_df.Per, c= "brown", s = 3.5, label = "90% Deleted Data")
+ax.scatter(
+    praesepe_line_df.Mass,
+    praesepe_line_df.Per,
+    c="brown",
+    s=3.5,
+    label="90% Deleted Data",
+)
 ax.scatter(
     cluster_dict["praesepe"]["df"].Mass,
     cluster_dict["praesepe"]["df"].Per,
@@ -222,8 +228,8 @@ ax.legend()
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
 ax.set(xlim=(1.5, 0), ylim=(-1, 35), xlabel="Mass (M_Solar)", ylabel="Period (Days)")
-ax.scatter(m37_df.Mass, m37_df.Per, c = "orange", s = 3.5, label = "90% Deleted Data")
-ax.scatter(m37_line_df.Mass, m37_line_df.Per, c= "brown", s = 3.5, label = "Below line")
+ax.scatter(m37_df.Mass, m37_df.Per, c="orange", s=3.5, label="90% Deleted Data")
+ax.scatter(m37_line_df.Mass, m37_line_df.Per, c="brown", s=3.5, label="Below line")
 
 ax.scatter(
     cluster_dict["m37"]["df"].Mass, cluster_dict["m37"]["df"].Per, c="green", s=3.5
@@ -231,103 +237,110 @@ ax.scatter(
 ax.legend()
 
 #%% Cluster Graphs and Tables
-# # fig size is nice for 24,18. Reduced to reduce run time.
+# fig size is nice for 24,18. Reduced to reduce run time.
 
-# # Data figure
-# fig, ax = plt.subplots(2, 3, figsize=(18, 12), sharex=True, sharey=True)
-# fig.subplots_adjust(wspace=0.03, hspace=0.05)
+# Data figure
+fig, ax = plt.subplots(3, 3, figsize=(18, 12), sharex=True, sharey=True)
+fig.subplots_adjust(wspace=0.03, hspace=0.05)
 
 # # Coefficient Figure
 # fig3, ax3 = plt.subplots(2, 3, figsize=(18, 12), sharex=True)
 # fig3.subplots_adjust(wspace=0.03, hspace=0.05)
 
-# coeff_list = []
-# for num, name in enumerate(sorted_names):
-#     r, c = divmod(num, 3)
-#     # print(r, c)
+coeff_list = []
+for num, name in enumerate(["praesepe"]):
+    r, c = divmod(num, 3)
+    # print(r, c)
 
-#     # Removing Nans(breaks fitting)
-#     df = cluster_dict[name]["df"]
-#     df = df[~np.isnan(df.Per)]
-#     df = df[~np.isnan(df.Mass)]
+    # Removing Nans(breaks fitting)
+    df = cluster_dict[name]["df"]
+    df = df[~np.isnan(df.Per)]
+    df = df[~np.isnan(df.Mass)]
 
-#     mass = df["Mass"]
-#     period = df["Per"]
+    mass = df["Mass"]
+    period = df["Per"]
 
-#     # Plotting cluster data
-#     ax[r][c].plot(
-#         mass,
-#         period,
-#         linestyle="none",
-#         marker="x",
-#         label=("%s %iMYrs") % (name, cluster_dict[name]["age"]),
-#         markersize=1.5,
-#     )
-#     # Setting initial Parameters
-#     # b0 = 0.46
-#     ## optimised on praesepe
-#     # starting_coeffs = [
-#     #     -33.01648156,
-#     #     406.80460616,
-#     #     -936.89032886,
-#     #     500.33705448,
-#     #     685.35829236,
-#     #     -887.19870956,
-#     # 274.57382769,
-#     # -36.96156584,
-#     # ]
+    # Plotting cluster data
+    ax[r][c].scatter(
+        mass,
+        period,
+        # linestyle="none",
+        marker="x",
+        label=("%s %iMYrs") % (name, cluster_dict[name]["age"]),
+        s=1.5,
+        c="#189ad3",
+    )
+    # Setting initial Parameters
+    b0 = 0.46
+    # optimised on praesepe
+    # starting_coeffs = [
+    #     -33.01648156,
+    #     406.80460616,
+    #     -936.89032886,
+    #     500.33705448,
+    #     685.35829236,
+    #     -887.19870956,
+    # 274.57382769,
+    # -36.96156584,
+    # ]
 
-#     # starting_coeffs = [
-#     #     76.95610948,
-#     #     -108.71350769,
-#     #     -224.85132865,
-#     #     645.56928067,
-#     #     -504.76986033,
-#     #     125.74607982,
-#     # ]
+    # starting_coeffs = [
+    #     76.95610948,
+    #     -108.71350769,
+    #     -224.85132865,
+    #     645.56928067,
+    #     -504.76986033,
+    #     125.74607982,
+    # ]
 
-#     # ##The one to tweak
-#     # starting_coeffs = [
-#     #     52.57361218,
-#     #     -131.49428603,
-#     #     131.07679869,
-#     #     -18.61060615,
-#     #     -29.63407946,
-#     #     5.77416665,
-#     # ]
-#     # # starting_coeffs = [0, 0, 0, 0, 0]
-#     # coeffs = minimize(
-#     #     sum_residuals,
-#     #     starting_coeffs,
-#     #     args=(mass, period, b0),
-#     #     tol=1e-10,
-#     #     bounds=[[coeff - 5, 5 + coeff] for coeff in starting_coeffs[:]],
-#     #     # bounds=[  [None, None], [None, None],[1.3,1.3], [None, None], [None, None]],
-#     # )
-#     # coeff_list.append(coeffs.x)
+    # ##The one to tweak
+    # starting_coeffs = [
+    #     52.57361218,
+    #     -131.49428603,
+    #     131.07679869,
+    #     -18.61060615,
+    #     -29.63407946,
+    #     5.77416665,
+    # ]
+    starting_coeffs = [
+        41.8919926639974,
+        -29.44378826,
+        -85.14549312,
+        136.82333888,
+        -55.33518376,
+    ]
+    coeffs = minimize(
+        sum_residuals,
+        starting_coeffs,
+        args=(mass, period, b0),
+        tol=1e-10,
+        bounds=[[coeff - 5, 5 + coeff] for coeff in starting_coeffs[:]],
+        # bounds=[  [None, None], [None, None],[1.3,1.3], [None, None], [None, None]],
+    )
+    coeff_list.append(coeffs.x)
 
-#     # cluster_dict[name].update({"coefficients": coeffs.x})
+    cluster_dict[name].update({"coefficients": coeffs.x})
 
-#     # z = np.linspace(1.4, 0.0, 200)
-#     # ax[r][c].plot(
-#     #     z,
-#     #     general_polynomial(coeffs.x, z, b0),
-#     #     label="Pred from minimised coeffs",
-#     #     linewidth=3.5,
-#     #     c="purple",
-#     # )
+    z = np.linspace(1.4, 0.0, 200)
+    ax[r][c].plot(
+        z,
+        general_polynomial(coeffs.x, z, b0),
+        label="Pred from minimised coeffs",
+        # linewidth=3.5,
+        # c="purple",
+    )
 
-#     # ax[r][c].plot(z, [b0] * len(z))
-#     ax[r][c].legend()
-#     ax[r][c].set(xlim=(1.5, -0.1), ylim=(-2, 25.0))
+    # ax[r][c].plot(z, [b0] * len(z))
+    ax[r][c].legend()
+    ax[r][c].set(xlim=(1.5, -0.1), ylim=(-2, 35.0))
 
-#     # coeff_strings = ["b{}".format(i + 1) for i in range(len(coeffs.x))]
+    # coeff_strings = ["b{}".format(i + 1) for i in range(len(coeffs.x))]
 
-#     # ax3[r][c].bar(
-#     #     x=np.arange(len(coeff_strings)),
-#     #     height=np.subtract(coeffs.x, starting_coeffs),
-#     #     tick_label=coeff_strings,
-#     # )
+    # ax3[r][c].bar(
+    #     x=np.arange(len(coeff_strings)),
+    #     height=np.subtract(coeffs.x, starting_coeffs),
+    #     tick_label=coeff_strings,
+    # )
 
 
 # # print("------------------------------------------------------------")
@@ -376,13 +389,15 @@ ax.legend()
 #
 #
 #
-name = "m37"
+
+plt.style.use("ggplot")
+name = "praesepe"
 
 df = cluster_dict[name]["df"]
 
-# if name == "praesepe":
+if name == "praesepe":
 
-#     df = df[df.Mass > 0.44]
+    df = df[df.Mass > 0.44]
 
 df = df[~np.isnan(df.Per)]
 df = df[~np.isnan(df.Mass)]
@@ -394,7 +409,7 @@ if name == "m37":
     mass = mass + 0.1
 
 alphas = np.logspace(-10, 3, 100)
-degrees = np.arange(3,7)
+degrees = np.arange(3, 5)
 
 model_df = pd.DataFrame(columns=["degree", "mse", "lambda"])
 for degree in degrees:
@@ -431,8 +446,10 @@ for degree in degrees:
     )
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
-ax.set(xlim=(1.5, 0), ylim=(-1, 35), xlabel="Mass (M_Solar)", ylabel="Period (Days)")
-ax.scatter(mass, period, c="green", s=3.5)
+ax.set(
+    xlim=(1.5, 0), ylim=(-1, 35), xlabel=r"Mass ($M_\odot$)", ylabel="Period ($days$)"
+)
+ax.scatter(mass, period, c="#189ad3", s=3.5)
 ax.annotate(
     "Degree = {:.2f}\nLambda = {:.4f}\nMSE = {:.4f}".format(
         model_df["degree"][model_df.mse.idxmin()],
@@ -440,6 +457,7 @@ ax.annotate(
         model_df["mse"][model_df.mse.idxmin()],
     ),
     xy=(0.4, 5),
+    color="#189ad3",
 )
 
 lr = Ridge(alpha=model_df["lambda"][model_df.mse.idxmin()])
@@ -464,7 +482,7 @@ lr = LinearRegression()
 deg = 3
 poly = PolynomialFeatures(deg)
 
-df = cluster_dict["m37"]["df"]
+df = cluster_dict["ngc6811"]["df"]
 df = df[~np.isnan(df.Per)]
 df = df[~np.isnan(df.Mass)]
 

@@ -883,7 +883,6 @@ ax.scatter(
 )
 ax.legend()
 
-fig.savefig("C:/Users/elydo/Documents/Harvard/AAS Poster stuff/plot1.png")
 #%% Create CSV Files
 for name in cluster_list:
     path = "D:/dev/spin_down/mistmade_data/{}_pm_{:e}.csv".format(
