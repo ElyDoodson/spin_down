@@ -72,25 +72,25 @@ $^{3}$Institute for Applied Computational Science, Harvard University, Cambridge
 
 % Abstract of the paper
 \begin{abstract}
-% This is a simple template for authors to write new MNRAS papers.
-% The abstract should briefly describe the aims, methods, and main results of the paper.
-% It should be a single paragraph not more than 250 words (200 words for Letters).
-% No references should appear in the abstract.
-Observations of young open clusters have shown a bimodal distribution in the rotation
-periods of cool stars.
-This bi-modality stems from stars having fast or slow rotation periods.
-The evolution of this trend through time suggests a fast transition from fast to slow rotating.
-Our current understanding of cool star spin down, through magnetic braking, accounts for the slow-rotators branch, while the fast rotators remain somewhat of a mystery.
+	% This is a simple template for authors to write new MNRAS papers.
+	% The abstract should briefly describe the aims, methods, and main results of the paper.
+	% It should be a single paragraph not more than 250 words (200 words for Letters).
+	% No references should appear in the abstract.
+	Observations of young open clusters have shown a bimodal distribution in the rotation
+	periods of cool stars.
+	This bi-modality stems from stars having fast or slow rotation periods.
+	The evolution of this trend through time suggests a fast transition from fast to slow rotating.
+	Our current understanding of cool star spin down, through magnetic braking, accounts for the slow-rotators branch, while the fast rotators remain somewhat of a mystery.
 
-Our goal is to build a predictive probabilistic spin-down model that links the period of a starat any given mass and age. 
-We use machine learning to predict the age at which each star transitions from fast to slow-rotation. 
-Using a graphical model we translate the distribution of initial periods into a rotation period probability distribution for a given mass and age.
+	Our goal is to build a predictive probabilistic spin-down model that links the period of a starat any given mass and age.
+	We use machine learning to predict the age at which each star transitions from fast to slow-rotation.
+	Using a graphical model we translate the distribution of initial periods into a rotation period probability distribution for a given mass and age.
 \end{abstract}
 
 % Select between one and six entries from the list of approved keywords.
 % Don't make up new ones.
 \begin{keywords}
-keyword1 -- keyword2 -- keyword3
+	keyword1 -- keyword2 -- keyword3
 \end{keywords}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -117,7 +117,7 @@ Some evolution between the two that is UNKNOWN(?).
 \section{Methods, Observations, Simulations etc.}
 
 Normally the next section describes the techniques the authors used.
-It is frequently split into subsections, such as Section~\ref{sec:maths} below.
+It is frequently split into subsections, such as Section 1234 below.
 
 
 \subsection{Data Reduction}
@@ -141,7 +141,7 @@ Perhaps due to metalicity
 \subsection{Unsupervised Clustering?}
 
 \subsection{Polynomial Ridge Regression}
-slow rotators fit using a polynomial fit of order 4. 
+slow rotators fit using a polynomial fit of order 4.
 Sigmoid function overlapped and optimised to change poly term on and off at switch point.
 
 FIGURE OF CURRENT FIT
@@ -153,55 +153,10 @@ Other parameters could allow for deeper understanding of the "overlap" sections 
 FIGURE OF HOW INTIAL PERIOD CAUSES MULTIPLE LINES TO OVERLAP AND MAKE THE TRANSITION "BLURRY"
 
 
-% \begin{equation}
-%     x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.
-% 	\label{eq:quadratic}
-% \end{equation}
 
-% Refer back to them as e.g. equation~(\ref{eq:quadratic}).
-
-\subsection{Figures and tables}
-
-Figures and tables should be placed at logical positions in the text. Don't
-worry about the exact layout, which will be handled by the publishers.
-
-Figures are referred to as e.g. Fig.~\ref{fig:example_figure}, and tables as
-e.g. Table~\ref{tab:example_table}.
-
-% Example figure
-\begin{figure}
-	% To include a figure from a file named example.*
-	% Allowable file formats are eps or ps if compiling using latex
-	% or pdf, png, jpg if compiling using pdflatex
-	%\includegraphics[width=\columnwidth]{example}
-    \caption{This is an example figure. Captions appear below each figure.
-	Give enough detail for the reader to understand what they're looking at,
-	but leave detailed discussion to the main body of the text.}
-    \label{fig:example_figure}
-\end{figure}
-
-% Example table
-\begin{table}
-	\centering
-	\caption{This is an example table. Captions appear above each table.
-	Remember to define the quantities, symbols and units used.}
-	\label{tab:example_table}
-	\begin{tabular}{lccr} % four columns, alignment for each
-		\hline
-		A & B & C & D\\
-		\hline
-		1 & 2 & 3 & 4\\
-		2 & 4 & 6 & 8\\
-		3 & 5 & 7 & 9\\
-		\hline
-	\end{tabular}
-\end{table}
-
-
-\section{Conclusions}
-
-The last numbered section should briefly summarise what has been done, and describe
-the final conclusions which the authors draw from their work.
+\section{Furture Work?}
+Since there is overlap, 1 polynomial fit will give poor predictive results and without inital period is not purely deterministic to the degree we want.
+To remedy this a probabilistic model will be built that can be used to sample and generate a synthetic population of stars at a given age and a range of masses.
 
 \section*{Acknowledgements}
 

@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex midterm_report"] 1579044182 "midterm_report.aux" "midterm_report.bbl" "midterm_report" 1579044184
+["bibtex midterm_report"] 1579044754 "midterm_report.aux" "midterm_report.bbl" "midterm_report" 1579044756
   "c:/texlive/2019/texmf-dist/bibtex/bst/mnras/mnras.bst" 1579031537 43377 4db2f843e4986670b152898ac35c448e ""
   "example.bib" 0 -1 0 ""
-  "midterm_report.aux" 1579044183 2997 f9c8021a67a79851f36d80d080ba33b9 "pdflatex"
+  "midterm_report.aux" 1579044755 1930 a0175ed4e7ebaf4c33db0e899cf9e56c "pdflatex"
   (generated)
   "midterm_report.blg"
   "midterm_report.bbl"
-["pdflatex"] 1579044182 "c:/dev/spin_down/midterm_report/midterm_report.tex" "c:\dev\spin_down\midterm_report/midterm_report.pdf" "midterm_report" 1579044184
-  "c:/dev/spin_down/midterm_report/midterm_report.tex" 1579044181 9766 60df96a25801bf15593b2cdaa831af28 ""
+["pdflatex"] 1579044754 "c:/dev/spin_down/midterm_report/midterm_report.tex" "c:\dev\spin_down\midterm_report/midterm_report.pdf" "midterm_report" 1579044756
+  "c:/dev/spin_down/midterm_report/midterm_report.tex" 1579044753 8546 9aff8d367c1e7d4920e37082c7705511 ""
   "c:/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc" 1579029760 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "c:/texlive/2019/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc" 1579031737 2880 847ca622ad468c3dafba6a3f9d89a636 ""
   "c:/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc" 1579033300 3124 3813fd4c981d99822890a2861b0d274c ""
@@ -140,15 +140,15 @@
   "c:/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1579034185 4776304 79a2a030cd18a4df42241ddd0f5befde ""
   "c:/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt" 1579034271 4290737 293b768c1fe2ca88b47ea325b953408c ""
   "c:/texlive/2019/texmf.cnf" 1579034163 673 4ae7b2f49cee444c5343a45b5d0f169c ""
-  "c:\dev\spin_down\midterm_report/midterm_report.aux" 1579044183 2997 f9c8021a67a79851f36d80d080ba33b9 ""
-  "midterm_report.aux" 1579044183 2997 f9c8021a67a79851f36d80d080ba33b9 "pdflatex"
+  "c:\dev\spin_down\midterm_report/midterm_report.aux" 1579044755 1930 a0175ed4e7ebaf4c33db0e899cf9e56c ""
+  "midterm_report.aux" 1579044755 1930 a0175ed4e7ebaf4c33db0e899cf9e56c "pdflatex"
   "midterm_report.bbl" 0 -1 0 "bibtex midterm_report"
-  "midterm_report.out" 1579044183 585 0d21e67dc2564429ebe7eff9c4a553c1 "pdflatex"
-  "midterm_report.tex" 1579044181 9766 60df96a25801bf15593b2cdaa831af28 ""
+  "midterm_report.out" 1579044755 520 125648a17e4d152f1192fc46aeb6c28c "pdflatex"
+  "midterm_report.tex" 1579044753 8546 9aff8d367c1e7d4920e37082c7705511 ""
   (generated)
-  "midterm_report.log"
-  "midterm_report.pdf"
-  "midterm_report.aux"
   "midterm_report.out"
-  "c:\dev\spin_down\midterm_report/midterm_report.log"
+  "midterm_report.pdf"
+  "midterm_report.log"
   "c:\dev\spin_down\midterm_report/midterm_report.pdf"
+  "c:\dev\spin_down\midterm_report/midterm_report.log"
+  "midterm_report.aux"
