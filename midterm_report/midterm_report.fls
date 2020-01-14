@@ -274,9 +274,6 @@ INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txexa.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Bold-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Bold-tlf-t1.tfm
-INPUT c:/texlive/2019/texmf-dist/tex/latex/txfonts/t1txtt.fd
-INPUT c:/texlive/2019/texmf-dist/tex/latex/txfonts/t1txtt.fd
-INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/t1xtt.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txr.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txr.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txmi.tfm
@@ -344,7 +341,6 @@ INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmb.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb
-INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/t1xtt.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/txsy.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/urw/times/utmri8a.pfb
