@@ -40,27 +40,29 @@
 
 % Title of the paper, and the short title which is used in the headers.
 % Keep the title short and informative.
-\title[Short title, max. 45 characters]{MNRAS \LaTeXe\ template -- title goes here}
+% \title[Short title, max. 45 characters]{MNRAS \LaTeXe\ template --}
+\title{Midterm Report - A Machine Leanring Approach to Stellar Spin-Down}
 
 % The list of authors, and the short list which is used in the headers.
 % If you need two or more lines of authors, add an extra line using \newauthor
 \author[K. T. Smith et al.]{
-Keith T. Smith,$^{1}$\thanks{E-mail: mn@ras.org.uk (KTS)}
-A. N. Other,$^{2}$
-Third Author$^{2,3}$
-and Fourth Author$^{3}$
+Ely Doodson,$^{1,2,3}$\thanks{E-mail: ely.doodson@cfa.harvard.edu}
+Cecilia Garraffo,$^{2,3}$
+Pavlos Protopapas$^{3}$
+and Jeremy J. Drake$^{2}$
 \\
 % List of institutions
-$^{1}$Royal Astronomical Society, Burlington House, Piccadilly, London W1J 0BQ, UK\\
-$^{2}$Department, Institution, Street Address, City Postal Code, Country\\
-$^{3}$Another Department, Different Institution, Street Address, City Postal Code, Country
+$^{1}$School of Physics and Astronomy, University of Southampton,
+Southampton, SO17 1BJ, United Kingdom\\
+$^{2}$Harvard-Smithsonian Center for Astrophysics, 60 Garden St, Cambridge, MA 02138, United States \\
+$^{3}$Institute for Applied Computational Science, Harvard University, Cambridge, MA 02138, United States
 }
 
 % These dates will be filled out by the publisher
-\date{Accepted XXX. Received YYY; in original form ZZZ}
+% \date{Accepted XXX. Received YYY; in original form ZZZ}
 
 % Enter the current year, for the copyright statements etc.
-\pubyear{2015}
+\pubyear{2020}
 
 % Don't change these lines
 \begin{document}
@@ -70,10 +72,20 @@ $^{3}$Another Department, Different Institution, Street Address, City Postal Cod
 
 % Abstract of the paper
 \begin{abstract}
-This is a simple template for authors to write new MNRAS papers.
-The abstract should briefly describe the aims, methods, and main results of the paper.
-It should be a single paragraph not more than 250 words (200 words for Letters).
-No references should appear in the abstract.
+% This is a simple template for authors to write new MNRAS papers.
+% The abstract should briefly describe the aims, methods, and main results of the paper.
+% It should be a single paragraph not more than 250 words (200 words for Letters).
+% No references should appear in the abstract.
+Observations of young open clusters have shown a bimodal distribution in the rotation
+periods of cool stars.
+This bi-modality stems from stars having fast or slow rotation periods.
+The evolution of this trend through time suggests a fast transition from fast to slow rotating.
+Our current understanding of cool star spin down, through magnetic braking, accounts for the slow-rotators branch, while the fast rotators remain somewhat of a mystery.
+
+Our goal is to build a predictive probabilistic spin-down model that links the period of a star
+at any given mass and age. We use machine learning to predict the age at which each star
+transitions from fast to slow-rotation. Using a graphical model we translate the distribution
+of initial periods into a rotation period probability distribution for a given mass and age.
 \end{abstract}
 
 % Select between one and six entries from the list of approved keywords.
@@ -87,7 +99,6 @@ keyword1 -- keyword2 -- keyword3
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
-\pcm
 This is a simple template for authors to write new MNRAS papers.
 See \texttt{mnras\_sample.tex} for a more complex example, and \texttt{mnras\_guide.tex}
 for a full user guide.
