@@ -41,11 +41,11 @@
 % Title of the paper, and the short title which is used in the headers.
 % Keep the title short and informative.
 % \title[Short title, max. 45 characters]{MNRAS \LaTeXe\ template --}
-\title{PHYS6013 Midterm Report: A Machine Leanring Approach to Stellar Spin-Down}
+\title{PHYS6013 Midterm Report: A Machine Leanring Approach to Cool Star Spin-Down}
 
 % The list of authors, and the short list which is used in the headers.
 % If you need two or more lines of authors, add an extra line using \newauthor
-\author[E. J. Doodson et al.]{
+\author[E. Doodson et al.]{
 Ely Doodson,$^{1,2????,3???}$\thanks{E-mail: ely.doodson@cfa.harvard.edu}
 Cecilia Garraffo,$^{2,3}$
 Pavlos Protopapas$^{3}$
@@ -98,28 +98,28 @@ $^{3}$Institute for Applied Computational Science, Harvard University, Cambridge
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
-% This is a simple template for authors to write new MNRAS papers.
-% See \texttt{mnras\_sample.tex} for a more complex example, and \texttt{mnras\_guide.tex}
-% for a full user guide.
+Stars are born from the collapse of clouds made of dust and gas.
+This cloud, though being made up of many molecules with their own random velocities, can be said to have an overall spin which, when the star collapses, will be the axis of rotation when the star is born.
+However, this spin rate is not constant and will descrease over a stars lifetime, assuming no companion or outside influence.
 
-% All papers should start with an Introduction section, which sets the work
-% in context, cites relevant earlier studies in the field by \citet{Fournier1901},
-% and describes the problem the authors aim to solve \citep[e.g.][]{vanDijk1902}.
-% Multiple citations can be joined in a simple way like \citet{deLaguarde1903, delaGuarde1904}.
+Cool stars are classified as having a conventive envelope, meaning the outer-most layer of the star is moving.
+Due to this movement, ionic material in the star is allowed to generate massive magnetic fields which stretch in orders of stellar radii.
+Ejected stellar material travels along these lines, forming large arms which effectively co-rotate with the star.
+When material at the end of these arms breaks free, the loss in angular momentum (AM) is much grater than it would have been if the same material was lost at the stars surface.
+This loss in AM causes the star to lessen its rotational period and spin down.
+This is called \emph{magnetic breaking} and is a very effecient way for the star to spin down.
+
+(((((((())))))))
+
 Stars born spinning, Over time they spin down with a mechanism.
-First pointed out by skumanich and studied further for hopes of a gyrochronological model.
+First pointed out by skumanich(feed back mechqnism so they converge(Faster they spin the LESS??? they lose), however fast branch escape thix for long period of time ) and studied further for hopes of a gyrochronological model.
 Magnetic breaking modeled and used as a method of spin down by Garraffo et al. 2017.
 Linked to magnetic field complexity.
 Dipole causes large arms that make for an effecient spin down.
 Viewing open clusters one can see the fast, slow and transitional rotators.
 Some evolution between the two that is UNKNOWN(?).
 
-\section{Methods, Observations, Simulations etc.}
-
-Normally the next section describes the techniques the authors used.
-It is frequently split into subsections, such as Section 1234 below.
-
-
+\section{Methods and Observations}
 \subsection{Data Reduction}
 Collected from various papers stated in CITE BOOK, plus personal findings and unpublished data.
 Each cluster in different photometry and no one fits all conversion.
@@ -131,14 +131,10 @@ MERGE CLUSTERS?
 \subsubsection{M37 shift?}
 Perhaps due to metalicity
 
-% \subsection{Maths}
-% \label{sec:maths} % used for referring to this section from elsewhere
-
-% Simple mathematics can be inserted into the flow of the text e.g. $2\times3=6$
-% or $v=220$\,km\,s$^{-1}$, but more complicated expressions should be entered
-% as a numbered equation:
-
 \subsection{Unsupervised Clustering?}
+Initial attempt to seperate the fast and slow rotators however problematic due to it not being a "two group" problem. 
+Transitional stars need to be considered, otherwise subjecting the transition to a dirac delta.
+
 
 \subsection{Polynomial Ridge Regression}
 slow rotators fit using a polynomial fit of order 4.
@@ -154,7 +150,7 @@ FIGURE OF HOW INTIAL PERIOD CAUSES MULTIPLE LINES TO OVERLAP AND MAKE THE TRANSI
 
 
 
-\section{Furture Work?}
+\section{Future Work?}
 Since there is overlap, 1 polynomial fit will give poor predictive results and without inital period is not purely deterministic to the degree we want.
 To remedy this a probabilistic model will be built that can be used to sample and generate a synthetic population of stars at a given age and a range of masses.
 
@@ -171,19 +167,7 @@ Try to keep it short.
 % The best way to enter references is to use BibTeX:
 
 \bibliographystyle{mnras}
-\bibliography{example} % if your bibtex file is called example.bib
-
-
-% Alternatively you could enter them by hand, like this:
-% This method is tedious and prone to error if you have lots of references
-%\begin{thebibliography}{99}
-%\bibitem[\protect\citeauthoryear{Author}{2012}]{Author2012}
-%Author A.~N., 2013, Journal of Improbable Astronomy, 1, 1
-%\bibitem[\protect\citeauthoryear{Others}{2013}]{Others2013}
-%Others S., 2012, Journal of Interesting Stuff, 17, 198
-%\end{thebibliography}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliography{example} 
 
 %%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
 
