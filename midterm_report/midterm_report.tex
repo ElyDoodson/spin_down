@@ -61,10 +61,10 @@ $^{3}$Institute for Applied Computational Science, Harvard University, Cambridge
 % These dates will be filled out by the publisher
 % \date{Accepted XXX. Received YYY; in original form ZZZ}
 
-% Enter the current year, for the copyright statements etc.
 \pubyear{2020}
 
-% Don't change these lines
+\usepackage{ulem}
+
 \begin{document}
 \label{firstpage}
 \pagerange{\pageref{firstpage}--\pageref{lastpage}}
@@ -87,14 +87,8 @@ $^{3}$Institute for Applied Computational Science, Harvard University, Cambridge
 	Using a graphical model we translate the distribution of initial periods into a rotation period probability distribution for a given mass and age.
 \end{abstract}
 
-% Select between one and six entries from the list of approved keywords.
-% Don't make up new ones.
-\begin{keywords}
-	keyword1 -- keyword2 -- keyword3
-\end{keywords}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%827wordsInTotalBeforeBody%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
@@ -109,50 +103,55 @@ When material at the end of these arms breaks free, the loss in angular momentum
 This loss in AM causes the star to lessen its rotational period and spin down.
 This is called \emph{magnetic breaking} and is a very effecient way for the star to spin down.
 
+
+Open clusters are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs.
+In addition there are, to a lesser extent, transitional stars between these two populations, showing the time to move between the populations must be rapid.
+It was shown in \cite{}(Garraffo et al. 2017) that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars.
+
 (((((((())))))))
 
-Stars born spinning, Over time they spin down with a mechanism.
-First pointed out by skumanich(feed back mechqnism so they converge(Faster they spin the LESS??? they lose), however fast branch escape thix for long period of time ) and studied further for hopes of a gyrochronological model.
-Magnetic breaking modeled and used as a method of spin down by Garraffo et al. 2017.
-Linked to magnetic field complexity.
-Dipole causes large arms that make for an effecient spin down.
-Viewing open clusters one can see the fast, slow and transitional rotators.
-Some evolution between the two that is UNKNOWN(?).
+\sout{Stars born spinning, Over time they spin down with a mechanism.
+	First pointed out by skumanich(feed back mechqnism so they converge(Faster they spin the LESS??? they lose), however fast branch escape thix for long period of time ) and studied further for hopes of a gyrochronological model.
+	Magnetic breaking modeled and used as a method of spin down by Garraffo et al. 2017.
+	Linked to magnetic field complexity.
+	Dipole causes large arms that make for an effecient spin down.
+	Viewing open clusters one can see the fast, slow and transitional rotators.
+	Some evolution between the two that is UNKNOWN(?).}
 
 \section{Methods and Observations}
 \subsection{Data Reduction}
-Collected from various papers stated in CITE BOOK, plus personal findings and unpublished data.
-Each cluster in different photometry and no one fits all conversion.
-Used MIST tracks to interpolate a mass from the given ages of the stars.
+\sout{Collected from various papers stated in CITE BOOK, plus personal findings and unpublished data.
+	Each cluster in different photometry and no one fits all conversion.
+	Used MIST tracks to interpolate a mass from the given ages of the stars.
 
-FIGURE OF ALL CLUSTERS REDUCED
-MERGE CLUSTERS?
+	FIGURE OF ALL CLUSTERS REDUCED
+	MERGE CLUSTERS?}
 
 \subsubsection{M37 shift?}
-Perhaps due to metalicity
+\sout{Perhaps due to metalicity}
 
 \subsection{Unsupervised Clustering?}
-Initial attempt to seperate the fast and slow rotators however problematic due to it not being a "two group" problem. 
-Transitional stars need to be considered, otherwise subjecting the transition to a dirac delta.
+\sout{Initial attempt to seperate the fast and slow rotators however problematic due to it not being a "two group" problem.
+	Transitional stars need to be considered, otherwise subjecting the transition to a dirac delta.}
 
 
 \subsection{Polynomial Ridge Regression}
-slow rotators fit using a polynomial fit of order 4.
-Sigmoid function overlapped and optimised to change poly term on and off at switch point.
+\sout{slow rotators fit using a polynomial fit of order 4.
+	Sigmoid function overlapped and optimised to change poly term on and off at switch point.
 
-FIGURE OF CURRENT FIT
+	FIGURE OF CURRENT FIT}
 
 \subsection{Initial Period and other parameters}
-Expand of the effect initial period and perhaps metalicity.
-Other parameters could allow for deeper understanding of the "overlap" sections of the open clusters
+\sout{Expand of the effect initial period and perhaps metalicity.
+	Other parameters could allow for deeper understanding of the "overlap" sections of the open clusters
 
-FIGURE OF HOW INTIAL PERIOD CAUSES MULTIPLE LINES TO OVERLAP AND MAKE THE TRANSITION "BLURRY"
+	FIGURE OF HOW INTIAL PERIOD CAUSES MULTIPLE LINES TO OVERLAP AND MAKE THE TRANSITION "BLURRY"}
 
 
 
 \section{Future Work?}
-Since there is overlap, 1 polynomial fit will give poor predictive results and without inital period is not purely deterministic to the degree we want.
-To remedy this a probabilistic model will be built that can be used to sample and generate a synthetic population of stars at a given age and a range of masses.
+\sout{Since there is overlap, 1 polynomial fit will give poor predictive results and without inital period is not purely deterministic to the degree we want.
+	To remedy this a probabilistic model will be built that can be used to sample and generate a synthetic population of stars at a given age and a range of masses.}
 
 \section*{Acknowledgements}
 
@@ -162,14 +161,14 @@ Try to keep it short.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%REFERENCES%%%%%%%%%%%%%%%%%%
 
-% The best way to enter references is to use BibTeX:
+%The best way to enter references is to use BibTeX:
 
 \bibliographystyle{mnras}
-\bibliography{example} 
+\bibliography{example}
 
-%%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%APPENDICES%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
 

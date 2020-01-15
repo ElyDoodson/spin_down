@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.1.14)  15 JAN 2020 16:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.1.14)  15 JAN 2020 17:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -963,6 +963,17 @@ LaTeX Font Info:    Redeclaring math symbol \varkappa on input line 260.
 LaTeX Font Info:    Redeclaring math symbol \Bbbk on input line 261.
 LaTeX Font Info:    Redeclaring math symbol \hslash on input line 262.
 LaTeX Font Info:    Redeclaring math symbol \backepsilon on input line 265.
+) (c:/texlive/2019/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box29
+\UL@hyphenbox=\box30
+\UL@skip=\skip52
+\UL@hook=\toks27
+\UL@height=\dimen127
+\UL@pe=\count124
+\UL@pixel=\dimen128
+\ULC@box=\box31
+Package: ulem 2019/11/18
+\ULdepth=\dimen129
 )
 LaTeX Font Info:    Trying to load font information for T1+ntxtlf on input line 68.
  (c:/texlive/2019/texmf-dist/tex/latex/newtx/t1ntxtlf.fd
@@ -1056,7 +1067,7 @@ LaTeX Font Info:    ... okay on input line 68.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\AtBeginShipoutBox=\box29
+\AtBeginShipoutBox=\box32
 (c:/texlive/2019/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
  (c:/texlive/2019/texmf-dist/tex/latex/graphics-cfg/color.cfg
@@ -1072,7 +1083,7 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ) (c:/texlive/2019/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count124
+\c@section@level=\count125
 )
 LaTeX Info: Redefining \ref on input line 68.
 LaTeX Info: Redefining \pageref on input line 68.
@@ -1081,21 +1092,21 @@ LaTeX Info: Redefining \nameref on input line 68.
 \@outlinefile=\write3
 \openout3 = `midterm_report.out'.
 
-\c@mv@tabular=\count125
-\c@mv@boldtabular=\count126
+\c@mv@tabular=\count126
+\c@mv@boldtabular=\count127
  (c:/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count127
-\scratchdimen=\dimen127
-\scratchbox=\box30
-\nofMPsegments=\count128
-\nofMParguments=\count129
-\everyMPshowfont=\toks27
-\MPscratchCnt=\count130
-\MPscratchDim=\dimen128
-\MPnumerator=\count131
-\makeMPintoPDFobject=\count132
-\everyMPtoPDFconversion=\toks28
+\scratchcounter=\count128
+\scratchdimen=\dimen130
+\scratchbox=\box33
+\nofMPsegments=\count129
+\nofMParguments=\count130
+\everyMPshowfont=\toks28
+\MPscratchCnt=\count131
+\MPscratchDim=\dimen131
+\MPnumerator=\count132
+\makeMPintoPDFobject=\count133
+\everyMPtoPDFconversion=\toks29
 ) (c:/texlive/2019/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2019-12-09 v2.10 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -1172,61 +1183,65 @@ LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
 (Font)              scaled to size 9.0pt on input line 74.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
 (Font)              scaled to size 10.0pt on input line 74.
-LaTeX Font Info:    Font shape `T1/ntxtlf/bx/n' in size <10> not available
-(Font)              Font shape `T1/ntxtlf/b/n' tried instead on input line 92.
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 10.0pt on input line 92.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 107.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 107.
 Missing character: There is no ¹ in font txsy!
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
-(Font)              scaled to size 9.0pt on input line 110.
+(Font)              scaled to size 9.0pt on input line 130.
 LaTeX Font Info:    Font shape `T1/ntxtlf/bx/n' in size <8> not available
-(Font)              Font shape `T1/ntxtlf/b/n' tried instead on input line 145.
+(Font)              Font shape `T1/ntxtlf/b/n' tried instead on input line 149.
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 8.0pt on input line 145.
+(Font)              scaled to size 8.0pt on input line 149.
+Missing character: There is no ¹ in font txsy!
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 6.0pt on input line 145.
-LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input line 145.
-(c:/texlive/2019/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd
+(Font)              scaled to size 6.0pt on input line 149.
+LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input line 149.
+ (c:/texlive/2019/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd
 File: ts1ntxtlf.fd 2015/01/18 v1.0 fd file for TS1/ntxtlf
 )
 LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
-(Font)              scaled to size 8.0pt on input line 145.
+(Font)              scaled to size 8.0pt on input line 149.
  [1{c:/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
 No file midterm_report.bbl.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 187.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 186.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 12.0pt on input line 187.
+(Font)              scaled to size 12.0pt on input line 186.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
-(Font)              scaled to size 12.0pt on input line 187.
+(Font)              scaled to size 12.0pt on input line 186.
 [2
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 187.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 186.
  (c:\dev\spin_down\midterm_report/midterm_report.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 187.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 187.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 186.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 186.
 Package rerunfilecheck Info: File `midterm_report.out' has not changed.
 (rerunfilecheck)             Checksum: C8270F8CF215E29F2F37D508392BAEE6;504.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 187.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 186.
  ) 
 Here is how much of TeX's memory you used:
- 10682 strings out of 492163
- 145708 string characters out of 6129076
- 230716 words of memory out of 5000000
- 14785 multiletter control sequences out of 15000+600000
- 74690 words of font info for 112 fonts, out of 8000000 for 9000
+ 10789 strings out of 492163
+ 146845 string characters out of 6129076
+ 254797 words of memory out of 5000000
+ 14885 multiletter control sequences out of 15000+600000
+ 81307 words of font info for 140 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 48i,15n,40p,974b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 48i,15n,40p,974b,351s stack positions out of 5000i,500n,10000p,200000b,80000s
 pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist, replaced by a fixed one
 
-{c:/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}{c:/texlive/2019/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{c:/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}<c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmb.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb><c:/texlive/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on c:\dev\spin_down\midterm_report/midterm_report.pdf (2 pages, 103383 bytes).
+{c:/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}{c:/texlive/2019/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{c:/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}<c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmb.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/txsy.pfb><c:/texlive/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
+Output written on c:\dev\spin_down\midterm_report/midterm_report.pdf (2 pages, 112088 bytes).
 PDF statistics:
- 85 PDF objects out of 1000 (max. 8388607)
- 75 compressed objects within 1 object stream
+ 89 PDF objects out of 1000 (max. 8388607)
+ 78 compressed objects within 1 object stream
  13 named destinations out of 1000 (max. 500000)
  65 words of extra memory for PDF output out of 10000 (max. 10000000)
 
