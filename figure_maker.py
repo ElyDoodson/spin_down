@@ -89,7 +89,7 @@ def line(x, b0=26.0, b1=-32.2):
 
 
 #%% Data importation and Cluster Dictionary Initialisation
-path = "D:/dev/spin_down/mistmade_data/"
+path = "C:/dev/spin_down/mistmade_data/"
 files = os.listdir(path)
 cluster_list = [name[:-4] for name in files]
 cluster_dict = {}
@@ -226,8 +226,7 @@ fig.text(
     fontsize=15,
     color="#4C4C4C",
 )
-ax[0][0].text(0.25, 16, "$P_i$", ha="center", color="#4C4C4C",
-    fontsize=12,)
+ax[0][0].text(0.25, 16, "$P_i$", ha="center", color="#4C4C4C", fontsize=12)
 ax[0][0].annotate(
     "",
     (0.25, -1),
@@ -486,7 +485,8 @@ fig.savefig(
 #%% FITTED PLOT
 coefficients_1 = minimize(
     sum_residuals_chi,
-    [0, 0, 0, 0, 0, 0],args=(mass_full, period_full, 0.46),
+    [0, 0, 0, 0, 0, 0],
+    args=(mass_full, period_full, 0.46),
     bounds=[
         [90, 90],
         [-35, -35],
@@ -579,7 +579,7 @@ fig, ax = plt.subplots(1, figsize=(10, 5))
 ax.set(
     xlim=(1.5, 0), ylim=(-1, 35), xlabel=r"Mass ($M_\odot$)", ylabel="Period ($days$)"
 )
-#Data and line
+# Data and line
 ax.scatter(mass_full, period_full, color="#189ad3")
 ax.plot(
     white_space,
@@ -588,7 +588,7 @@ ax.plot(
     c="#E15A45",
 )
 
-start,split,end = -3,3,35
+start, split, end = -3, 3, 35
 ax.plot(
     gaussian(np.linspace(start, split, 100), 1, 0.5) * 0.02 + 1,
     np.linspace(start, split, 100),
@@ -602,7 +602,7 @@ ax.plot(
     linewidth=4,
 )
 
-start,split,end = -3,12,35
+start, split, end = -3, 12, 35
 ax.plot(
     gaussian(np.linspace(start, split, 100), 0.86, 2.4) * 0.05 + 0.44,
     np.linspace(start, split, 100),
@@ -611,8 +611,8 @@ ax.plot(
     label="Flattened Probability\nDistribution of P ",
 )
 ax.plot(
-    gaussian(np.linspace(split,end, 100), 20, 3) * 0.12 + 0.44,
-    np.linspace(split,end, 100),
+    gaussian(np.linspace(split, end, 100), 20, 3) * 0.12 + 0.44,
+    np.linspace(split, end, 100),
     c="#FFBC42",
     linewidth=4,
 )
@@ -625,9 +625,7 @@ ax.plot(
     linewidth=4,
 )
 
-ax.text(0.75, 6, "Non-Zero",
-    color="#4C4C4C",ha = "center",
-    va="center",)
+ax.text(0.75, 6, "Non-Zero", color="#4C4C4C", ha="center", va="center")
 ax.annotate(
     "",
     (0.44, 10),
@@ -640,7 +638,7 @@ ax.annotate(
 ax.annotate(
     "",
     (1, 4),
-    (0.86,6),
+    (0.86, 6),
     arrowprops={"arrowstyle": "->", "color": "#4C4C4C", "lw": 2.5},
     va="center",
     fontsize="25",
