@@ -63,6 +63,7 @@ $^{3}$Institute for Applied Computational Science, Harvard University, Cambridge
 
 \pubyear{2020}
 
+%imported for strikethrough
 \usepackage{ulem}
 
 \begin{document}
@@ -88,7 +89,7 @@ $^{3}$Institute for Applied Computational Science, Harvard University, Cambridge
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%827wordsInTotalBeforeBody%%%%%%%%%%%%%%%
+%%%%%835wordsInTotalBeforeBody%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
@@ -101,10 +102,9 @@ Due to this movement, ionic material in the star is allowed to generate massive 
 Ejected stellar material travels along these lines, forming large arms which effectively co-rotate with the star.
 When material at the end of these arms breaks free, the loss in angular momentum (AM) is much grater than it would have been if the same material was lost at the stars surface.
 This loss in AM causes the star to lessen its rotational period and spin down.
-This is called \emph{magnetic breaking} and is a very effecient way for the star to spin down.
+This is called \textit{magnetic breaking} and is a very effecient way for the star to spin down.
 
-
-Open clusters are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs.
+Open clusters(OC) are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this, stellar disc effects make it hard to model what is happening.
 In addition there are, to a lesser extent, transitional stars between these two populations, showing the time to move between the populations must be rapid.
 It was shown in \cite{}(Garraffo et al. 2017) that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars.
 
@@ -120,12 +120,29 @@ It was shown in \cite{}(Garraffo et al. 2017) that, when accounting for magnetic
 
 \section{Methods and Observations}
 \subsection{Data Reduction}
+
 \sout{Collected from various papers stated in CITE BOOK, plus personal findings and unpublished data.
 	Each cluster in different photometry and no one fits all conversion.
 	Used MIST tracks to interpolate a mass from the given ages of the stars.
 
 	FIGURE OF ALL CLUSTERS REDUCED
 	MERGE CLUSTERS?}
+
+Though there are lots of field stars with known masses and periods, the difficulty lies in having a correct value for their ages.
+This makes OC, with a known age, ideal for the data used in this modelling process if we know the period and mass of the stars contained.
+The vast majority of OC data for this project was gathered from \cite{bookthingy}(PLANET BOOK et al. YEAR) as well as some new additions to already existing OC M37 \cite{chang}(Chang et al. 2017) and some unpublished data generously provided by Jason Curtis.
+Although all these catalogs contained values for period, mass was not often provided.
+Instead, mass was effectively given by the photometry values of each star, with each catalog providing different bands for their stars.
+This made it difficult to convert all the stars to mass as different conversion are needed for different bands and different mass ranges, with some conversions not stretching as low as the lowest mass.
+
+A conversion was possible, however, it did not use conventional functions to map photometry to mass. 
+Instead I used the MESA Isochrone and Stellar Track(MIST) tables \cite{MIST}(MISTTHING et al. 2004), which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
+
+These tables start with discrete mass steps(e.g 0.1, 0.15...1.35, 1.40~$\textup{M}_\odot$ etc).
+These masses, evolving at differnt rates, are very likely to have a degeneracy in their photomorty, meaning they may cross each others "photometry path" and as a consequence the conversion was not as simple as choosing the two closest photometries and interpolating.
+Instead I had to restrict the available pool of photometries, based on the closest ages to that star, and from that pool choose the clostest photometry to interpolate between.
+The discontinuity of the tracks, due to discrete time steps, means there will be an inherent error in choosing the pool of ages, this has not currently been addressed, however may be implemented into error propagation in a future model if a Bayesian network approach is used. 
+
 
 \subsubsection{M37 shift?}
 \sout{Perhaps due to metalicity}
