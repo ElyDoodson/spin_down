@@ -22,7 +22,8 @@
 %%%%% AUTHORS - PLACE YOUR OWN PACKAGES HERE %%%%%
 
 % Only include extra packages if you really need them. Common packages are:
-\usepackage{graphicx}	% Including figure files
+\usepackage{graphicx}
+\graphicspath{ {C:/Users/elydo/Documents/Harvard/} }	% Including figure files
 \usepackage{amsmath}	% Advanced maths commands
 \usepackage{amssymb}	% Extra maths symbols
 
@@ -106,7 +107,11 @@ This is called \textit{magnetic breaking} and is a very effecient way for the st
 
 Open clusters(OC) are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this, stellar disc effects make it hard to model what is happening.
 In addition there are, to a lesser extent, transitional stars between these two populations, showing the time to move between the populations must be rapid.
+This can be seen in Figure \cite{fig:fast_slow_transition}
 It was shown in \cite{}(Garraffo et al. 2017) that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars.
+\begin{figure}
+	
+\end{figure}
 
 (((((((())))))))
 
@@ -139,10 +144,9 @@ A conversion was possible, however, it did not use conventional functions to map
 Instead I used the MESA Isochrone and Stellar Track(MIST) tables \cite{MIST}(MISTTHING et al. 2004), which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
 
 These tables start with discrete mass steps(e.g 0.1, 0.15...1.35, 1.40~$\textup{M}_\odot$ etc).
-These masses, evolving at differnt rates, are very likely to have a degeneracy in their photomorty, meaning they may cross each others "photometry path" and as a consequence the conversion was not as simple as choosing the two closest photometries and interpolating.
+These masses, evolving at differnt rates, are very likely to have a degeneracy in their photomerty, meaning they may cross each others "photometry path", and as a consequence the conversion was not as simple as choosing the two closest photometries and interpolating.
 Instead I had to restrict the available pool of photometries, based on the closest ages to that star, and from that pool choose the clostest photometry to interpolate between.
 The discontinuity of the tracks, due to discrete time steps, means there will be an inherent error in choosing the pool of ages, this has not currently been addressed, however may be implemented into error propagation in a future model if a Bayesian network approach is used. 
-
 
 \subsubsection{M37 shift?}
 \sout{Perhaps due to metalicity}

@@ -305,8 +305,6 @@ INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txexa.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txexa.tfm
-INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
-INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Bold-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd
@@ -325,6 +323,8 @@ INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/rtxr.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/vf/public/txfonts/txr.vf
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/rtxptmr.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/rtxr.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Italic-tlf-t1.tfm
 INPUT c:\dev\spin_down\midterm_report/midterm_report.aux
