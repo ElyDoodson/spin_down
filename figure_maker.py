@@ -114,7 +114,74 @@ for name in names:
     cluster_dict[name]["df"].Per = cluster_dict[name]["df"].Per.loc[boolean_mask]
     cluster_dict[name]["df"].Mass = cluster_dict[name]["df"].Mass.loc[boolean_mask]
 
+# Dropping out of bound clusters  Usco
 
+del cluster_dict["usco"]
+
+#%% Image of all clusters
+
+# redeclaring names after removal
+names = np.array(list(cluster_dict.keys()))
+
+# list of names sorted by age
+sorted_names = names[np.argsort([cluster_dict[name]["age"] for name in names])]
+plt.style.use("ggplot")
+# plt.style.use("fast")
+fig, ax = plt.subplots(
+    5,
+    3,
+    figsize=(8, 10),
+    sharex=True,
+    sharey=True,
+    gridspec_kw={"hspace": 0.07, "wspace": 0.05},
+    dpi=800,
+)
+# fig.subplots_adjust(wspace=0, hspace=0.0)
+
+for num, name in enumerate(sorted_names):
+    r, c = divmod(num, 3)
+    # print(r, c)
+
+    # Removing Nans(breaks fitting)
+    df = cluster_dict[name]["df"]
+    df = df[~np.isnan(df.Per)]
+    df = df[~np.isnan(df.Mass)]
+
+    mass = df["Mass"]
+    period = df["Per"]
+
+    # Plotting cluster data
+    ax[r][c].scatter(
+        mass,
+        period,
+        marker="o",
+        label=("%s ~%iMYrs") % (name, cluster_dict[name]["age"]),
+        s=1,
+        c="#189ad3",
+    )
+    ax[r][c].set(xlim=(1.4, -0.1), ylim=(-3, 45))
+    ax[r][c].legend()
+
+# ax[1][0].set(ylabel="Period ($days$)")
+# ax[-1][1].set(xlabel=r"Mass ($M_\odot$)")
+
+fig.text(0.5, 0.075, r"Mass ($M_\odot$)", ha="center", fontsize=15, color="#4C4C4C")
+fig.text(
+    0.05,
+    0.5,
+    "Period ($days$)",
+    va="center",
+    rotation="vertical",
+    fontsize=15,
+    color="#4C4C4C",
+)
+
+fig.savefig(
+    "C:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png",
+    bbox_inches="tight",
+    dpi=1600,
+)
+#%% Cluster Merging and removal
 # Merging Pleiades + m50, m35  + ngc2516, ngc2301 + m34
 cluster_dict.update(
     {
@@ -149,10 +216,6 @@ del cluster_dict["m35"]
 del cluster_dict["ngc2516"]
 del cluster_dict["m34"]
 del cluster_dict["ngc2301"]
-
-# Dropping out of bound clusters  Usco
-
-del cluster_dict["usco"]
 
 # Deleting low data clusters
 del cluster_dict["ngc2547"]
