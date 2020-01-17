@@ -276,7 +276,6 @@ INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txexa.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txexa.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Bold-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
-INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Italic-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txr.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txr.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txmi.tfm
@@ -305,6 +304,12 @@ INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txexa.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txexa.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Italic-tlf-t1.tfm
+INPUT c:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png
+INPUT c:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png
+INPUT c:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Bold-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd
@@ -323,8 +328,12 @@ INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/rtxr.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/vf/public/txfonts/txr.vf
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/rtxptmr.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/rtxr.tfm
-INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
-INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/vf/public/txfonts/txmi.vf
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/rtxmi.tfm
+INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/rtxptmri.tfm
+INPUT c:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png
+INPUT c:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png
+INPUT c:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-t1.tfm
 INPUT c:/texlive/2019/texmf-dist/fonts/tfm/public/newtx/ntx-Italic-tlf-t1.tfm
 INPUT c:\dev\spin_down\midterm_report/midterm_report.aux
@@ -333,6 +342,7 @@ INPUT c:/dev/spin_down/midterm_report/midterm_report.out
 INPUT c:/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc
 INPUT c:/texlive/2019/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc
 INPUT c:/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc
+INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmb.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb
 INPUT c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb

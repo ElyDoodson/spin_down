@@ -23,7 +23,7 @@
 
 % Only include extra packages if you really need them. Common packages are:
 \usepackage{graphicx}
-\graphicspath{ {C:/Users/elydo/Documents/Harvard/} }	% Including figure files
+\graphicspath{ {C:/Users/elydo/Documents/Harvard/Midterm_report_images/} }	% Including figure files
 \usepackage{amsmath}	% Advanced maths commands
 \usepackage{amssymb}	% Extra maths symbols
 
@@ -98,7 +98,7 @@ Stars are born from the collapse of clouds made of dust and gas.
 This cloud, though being made up of many molecules with their own random velocities, can be said to have an overall spin which, when the star collapses, will be the axis of rotation when the star is born.
 However, this spin rate is not constant and will descrease over a stars lifetime, assuming no companion or outside influence.
 
-Cool stars are classified as having a conventive envelope, meaning the outer-most layer of the star is moving.
+Cool stars are classified as having a convective envelope, which have a mass of $\lessapprox 1.3 \textup{M}_\odot$ meaning the outer-most layer of the star is moving.
 Due to this movement, ionic material in the star is allowed to generate massive magnetic fields which stretch in orders of stellar radii.
 Ejected stellar material travels along these lines, forming large arms which effectively co-rotate with the star.
 When material at the end of these arms breaks free, the loss in angular momentum (AM) is much grater than it would have been if the same material was lost at the stars surface.
@@ -107,10 +107,12 @@ This is called \textit{magnetic breaking} and is a very effecient way for the st
 
 Open clusters(OC) are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this, stellar disc effects make it hard to model what is happening.
 In addition there are, to a lesser extent, transitional stars between these two populations, showing the time to move between the populations must be rapid.
-This can be seen in Figure \cite{fig:fast_slow_transition}
+This can be seen in Figure \ref{fig:slow_fast_transition}.
 It was shown in \cite{}(Garraffo et al. 2017) that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars.
 \begin{figure}
-	
+	\includegraphics[width = 0.5\textwidth]{slow_fast_transition.png}
+	\caption[]{Plot of period vs mass(inverted) for Praesepe, with visulisation of the slow, fast and transitional rotators.}
+	\label{fig:slow_fast_transition}
 \end{figure}
 
 (((((((())))))))
@@ -142,6 +144,15 @@ This made it difficult to convert all the stars to mass as different conversion 
 
 A conversion was possible, however, it did not use conventional functions to map photometry to mass. 
 Instead I used the MESA Isochrone and Stellar Track(MIST) tables \cite{MIST}(MISTTHING et al. 2004), which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
+The converted OC can be seen in Figure \ref{fig:allclusters}
+\begin{figure}
+	\centering
+	\includegraphics[width = 0.5\textwidth]{allclusters.png}
+	\caption[]{Plot showing all converted OC and their respective ages}
+	\label{fig:allclusters}
+	
+\end{figure}
+
 
 These tables start with discrete mass steps(e.g 0.1, 0.15...1.35, 1.40~$\textup{M}_\odot$ etc).
 These masses, evolving at differnt rates, are very likely to have a degeneracy in their photomerty, meaning they may cross each others "photometry path", and as a consequence the conversion was not as simple as choosing the two closest photometries and interpolating.

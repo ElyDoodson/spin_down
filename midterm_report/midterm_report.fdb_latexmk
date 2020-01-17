@@ -1,13 +1,15 @@
 # Fdb version 3
-["bibtex midterm_report"] 1579295396 "midterm_report.aux" "midterm_report.bbl" "midterm_report" 1579295396
+["bibtex midterm_report"] 1579299429 "midterm_report.aux" "midterm_report.bbl" "midterm_report" 1579299444
   "c:/texlive/2019/texmf-dist/bibtex/bst/mnras/mnras.bst" 1579031537 43377 4db2f843e4986670b152898ac35c448e ""
   "example.bib" 0 -1 0 ""
-  "midterm_report.aux" 1579295390 2017 0f856e03c12a10976b20f58c8ce5cd99 "pdflatex"
+  "midterm_report.aux" 1579299443 2310 a3c5bef840094d08f5c42cbd2e339534 "pdflatex"
   (generated)
-  "midterm_report.bbl"
   "midterm_report.blg"
-["pdflatex"] 1579295389 "c:/dev/spin_down/midterm_report/midterm_report.tex" "c:\dev\spin_down\midterm_report/midterm_report.pdf" "midterm_report" 1579295396
-  "c:/dev/spin_down/midterm_report/midterm_report.tex" 1579295395 11279 31ea8dde9de0305a6faa2bd84bbbf4f2 ""
+  "midterm_report.bbl"
+["pdflatex"] 1579299430 "c:/dev/spin_down/midterm_report/midterm_report.tex" "c:\dev\spin_down\midterm_report/midterm_report.pdf" "midterm_report" 1579299444
+  "c:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png" 1579299185 3036563 b80aa476a1f15c8f3230bbb64ec1c875 ""
+  "c:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png" 1579294850 734890 b43c61474ff13f725b8ea259c8ae471d ""
+  "c:/dev/spin_down/midterm_report/midterm_report.tex" 1579299429 11846 1c9f67d55fa2afb0e25b22322004b267 ""
   "c:/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc" 1579029760 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "c:/texlive/2019/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc" 1579031737 2880 847ca622ad468c3dafba6a3f9d89a636 ""
   "c:/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc" 1579033300 3124 3813fd4c981d99822890a2861b0d274c ""
@@ -45,6 +47,7 @@
   "c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txr.tfm" 1579033695 2408 aec793a3c45e495f7ad15b227c91f508 ""
   "c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txsy.tfm" 1579033695 1268 1d124f224979493f8fd017a7597ea1cd ""
   "c:/texlive/2019/texmf-dist/fonts/tfm/public/txfonts/txsyc.tfm" 1579033695 1084 75e807e9e71f7a312e4e1187dce5e93b ""
+  "c:/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb" 1579028504 31764 459c573c03a4949a528c2cc7f557e217 ""
   "c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmb.pfb" 1579033303 131776 4be3e220f990dc716f91bb7965c09237 ""
   "c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb" 1579033303 133302 c4942f65edfb6dde8dac434e6a2388b0 ""
   "c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb" 1579033303 129669 8a9ef3a22a6054894318d5bed6d721d0 ""
@@ -145,15 +148,15 @@
   "c:/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1579034185 4776304 79a2a030cd18a4df42241ddd0f5befde ""
   "c:/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt" 1579034271 4290737 293b768c1fe2ca88b47ea325b953408c ""
   "c:/texlive/2019/texmf.cnf" 1579034163 673 4ae7b2f49cee444c5343a45b5d0f169c ""
-  "c:\dev\spin_down\midterm_report/midterm_report.aux" 1579295390 2017 0f856e03c12a10976b20f58c8ce5cd99 ""
-  "midterm_report.aux" 1579295390 2017 0f856e03c12a10976b20f58c8ce5cd99 "pdflatex"
+  "c:\dev\spin_down\midterm_report/midterm_report.aux" 1579299443 2310 a3c5bef840094d08f5c42cbd2e339534 ""
+  "midterm_report.aux" 1579299443 2310 a3c5bef840094d08f5c42cbd2e339534 "pdflatex"
   "midterm_report.bbl" 0 -1 0 "bibtex midterm_report"
-  "midterm_report.out" 1579295390 504 c8270f8cf215e29f2f37d508392baee6 "pdflatex"
-  "midterm_report.tex" 1579295395 11279 31ea8dde9de0305a6faa2bd84bbbf4f2 ""
+  "midterm_report.out" 1579299443 504 c8270f8cf215e29f2f37d508392baee6 "pdflatex"
+  "midterm_report.tex" 1579299429 11846 1c9f67d55fa2afb0e25b22322004b267 ""
   (generated)
-  "midterm_report.out"
-  "midterm_report.log"
-  "c:\dev\spin_down\midterm_report/midterm_report.log"
   "midterm_report.pdf"
+  "midterm_report.log"
+  "midterm_report.out"
   "c:\dev\spin_down\midterm_report/midterm_report.pdf"
+  "c:\dev\spin_down\midterm_report/midterm_report.log"
   "midterm_report.aux"

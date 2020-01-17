@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.1.14)  17 JAN 2020 16:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/W32TeX) (preloaded format=pdflatex 2020.1.14)  17 JAN 2020 17:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1183,82 +1183,112 @@ LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
 (Font)              scaled to size 9.0pt on input line 76.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
 (Font)              scaled to size 10.0pt on input line 76.
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
-(Font)              scaled to size 9.0pt on input line 106.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 108.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 101.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 108.
-Missing character: There is no ¹ in font txsy!
-
-Package natbib Warning: Citation `fig:fast_slow_transition' on page 1 undefined on input line 110.
-
-
-Package natbib Warning: Citation `bookthingy' on page 1 undefined on input line 138.
-
-
-Package natbib Warning: Citation `chang' on page 1 undefined on input line 138.
-
-
-Package natbib Warning: Citation `MIST' on page 1 undefined on input line 144.
-
-LaTeX Font Info:    Font shape `T1/ntxtlf/bx/n' in size <8> not available
-(Font)              Font shape `T1/ntxtlf/b/n' tried instead on input line 146.
-LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 8.0pt on input line 146.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 101.
 Missing character: There is no ¹ in font txsy!
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 6.0pt on input line 146.
-LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input line 146.
+(Font)              scaled to size 7.0pt on input line 101.
+LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
+(Font)              scaled to size 5.0pt on input line 101.
+LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
+(Font)              scaled to size 9.0pt on input line 106.
+<C:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png, id=38, 644.28705pt x 342.28879pt>
+File: C:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png Graphic file (type png)
+<use C:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png>
+Package pdftex.def Info: C:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png  used on input line 113.
+(pdftex.def)             Requested size: 252.0pt x 133.87857pt.
+
+Overfull \hbox (12.0pt too wide) in paragraph at lines 113--114
+[][]
+ []
+
+LaTeX Font Info:    Font shape `T1/ntxtlf/bx/n' in size <8> not available
+(Font)              Font shape `T1/ntxtlf/b/n' tried instead on input line 114.
+LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
+(Font)              scaled to size 8.0pt on input line 114.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+Package natbib Warning: Citation `bookthingy' on page 1 undefined on input line 140.
+
+
+Package natbib Warning: Citation `chang' on page 1 undefined on input line 140.
+
+Missing character: There is no ¹ in font txsy!
+LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
+(Font)              scaled to size 6.0pt on input line 144.
+LaTeX Font Info:    Trying to load font information for TS1+ntxtlf on input line 144.
 (c:/texlive/2019/texmf-dist/tex/latex/newtx/ts1ntxtlf.fd
 File: ts1ntxtlf.fd 2015/01/18 v1.0 fd file for TS1/ntxtlf
 )
 LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
-(Font)              scaled to size 8.0pt on input line 146.
+(Font)              scaled to size 8.0pt on input line 144.
  [1{c:/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
-]
-Missing character: There is no ¹ in font txsy!
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 7.0pt on input line 146.
-LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 5.0pt on input line 146.
+pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) has been already used, duplicate ignored
 
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.144 
+       <c:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png>]
+
+Package natbib Warning: Citation `MIST' on page 2 undefined on input line 146.
+
+<C:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png, id=59, 505.84483pt x 599.34415pt>
+File: C:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png Graphic file (type png)
+<use C:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png>
+Package pdftex.def Info: C:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png  used on input line 150.
+(pdftex.def)             Requested size: 252.0pt x 298.58305pt.
+
+Overfull \hbox (12.0pt too wide) in paragraph at lines 150--151
+ [][] 
+ []
+
+Missing character: There is no ¹ in font txsy!
 No file midterm_report.bbl.
 Missing character: There is no ¹ in font txsy!
 
 Package natbib Warning: There were undefined citations.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 207.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 218.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 12.0pt on input line 207.
+(Font)              scaled to size 12.0pt on input line 218.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
-(Font)              scaled to size 12.0pt on input line 207.
-[2]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 207.
+(Font)              scaled to size 12.0pt on input line 218.
+[2pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.218 \end{document}
+                     <c:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 218.
  (c:\dev\spin_down\midterm_report/midterm_report.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 207.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 207.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 218.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 218.
 Package rerunfilecheck Info: File `midterm_report.out' has not changed.
 (rerunfilecheck)             Checksum: C8270F8CF215E29F2F37D508392BAEE6;504.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 207.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 218.
  ) 
 Here is how much of TeX's memory you used:
- 10791 strings out of 492163
- 146875 string characters out of 6129076
- 256836 words of memory out of 5000000
- 14887 multiletter control sequences out of 15000+600000
- 86923 words of font info for 142 fonts, out of 8000000 for 9000
+ 10812 strings out of 492163
+ 147729 string characters out of 6129076
+ 246902 words of memory out of 5000000
+ 14900 multiletter control sequences out of 15000+600000
+ 88299 words of font info for 144 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  48i,15n,40p,974b,349s stack positions out of 5000i,500n,10000p,200000b,80000s
 pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist, replaced by a fixed one
 
-{c:/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}{c:/texlive/2019/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{c:/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}<c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmb.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/txsy.pfb><c:/texlive/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-Output written on c:\dev\spin_down\midterm_report/midterm_report.pdf (2 pages, 114802 bytes).
+{c:/texlive/2019/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}{c:/texlive/2019/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{c:/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}<c:/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmb.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmr.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/tex-gyre/qtmri.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb><c:/texlive/2019/texmf-dist/fonts/type1/public/txfonts/txsy.pfb><c:/texlive/2019/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
+Output written on c:\dev\spin_down\midterm_report/midterm_report.pdf (2 pages, 3230508 bytes).
 PDF statistics:
- 89 PDF objects out of 1000 (max. 8388607)
- 78 compressed objects within 1 object stream
- 13 named destinations out of 1000 (max. 500000)
- 65 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 102 PDF objects out of 1000 (max. 8388607)
+ 86 compressed objects within 1 object stream
+ 15 named destinations out of 1000 (max. 500000)
+ 75 words of extra memory for PDF output out of 10000 (max. 10000000)
 
