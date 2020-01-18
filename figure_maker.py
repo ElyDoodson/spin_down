@@ -714,3 +714,19 @@ fig.savefig(
     dpi=800,
     bbox_inches="tight",
 )
+
+#%% Revisted Unsupervised clustering
+fig, ax = plt.subplots(1, figsize=(10, 5))
+ax.set(
+    xlim=(1.5, 0), ylim=(-1, 35), xlabel=r"Mass ($M_\odot$)", ylabel="Period ($days$)"
+)
+prae_df = cluster_dict["praesepe"]["df"]
+# ax.scatter(prae_df.Mass,prae_df.Per )
+
+
+upper_group =prae_df[prae_df.Per > -12.00 * prae_df.Mass + 15.00]
+lower_group =prae_df[prae_df.Per < -12.00 * prae_df.Mass + 15.00]
+
+ax.scatter(upper_group.Mass, upper_group.Per)
+ax.scatter(lower_group.Mass, lower_group.Per)
+
