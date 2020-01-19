@@ -3,10 +3,10 @@
 % MNRAS is set in Times font. If you don't have this installed (most LaTeX
 % installations will be fine) or prefer the old Computer Modern fonts, comment
 % out the following line
-\usepackage{newtxtext,newtxmath}
+% \usepackage{newtxtext,newtxmath}
 % Depending on your LaTeX fonts installation, you might get better results with one of these:
-\usepackage{mathptmx}
-\usepackage{txfonts}
+% \usepackage{mathptmx}
+% \usepackage{txfonts}
 
 % Use vector fonts, so it zooms properly in on-screen viewing software
 % Don't change these lines unless you know what you are doing
@@ -167,6 +167,19 @@ The discontinuity of the tracks, due to discrete time steps, means there will be
 \subsection{Unsupervised Clustering?}
 \sout{Initial attempt to seperate the fast and slow rotators however problematic due to it not being a "two group" problem.
 	Transitional stars need to be considered, otherwise subjecting the transition to a dirac delta.}
+
+Our inital approach to the problem was to cluster the data into "fast" and "slow" rotators and fit a weighted polynomial regression to each of these groups.
+We then cycle through each star and assign it to the opposing group, if the overall fit is better with the star in the opposing group, it reemained there, otherwise it was transfered back and the next star was assessed.
+To measure the fit, mean squared error(MSE) was used.
+$ \textup{MSE} = \frac{1}{N}\sum_{i=1}^N \left(y_i - \hat{y}_i\right)^2$,where $y_i$ is the true value, and $\hat{y}_i$ is the predicted value.
+A reduedtion in MSE means the predicted values are close to the predicted and a good fit is being generated, if we minimise this MSE then we are rewarding the model with a better fit.
+The results of this clustering can be seen in Figure \ref{fig:unsupervised_clustering}
+
+\begin{figure}
+	\includegraphics[width = 0.5\textwidth]{unsupervised_clustering.png}
+	\caption{shows the results of unsupervised clustering of the "fast" rotators in blue, "slow" rotators in orange and their respective polynomial fits.}
+	\label{fig:unsupervised_clustering}
+\end{figure}
 
 
 \subsection{Polynomial Ridge Regression}
