@@ -20,6 +20,7 @@ from matplotlib import pyplot as plt
 
 plt.style.use("dark_background")
 
+plt.style.use("ggplot")
 #%%
 def general_polynomial(parameters, x_true, b0):
     return np.array(
@@ -99,7 +100,7 @@ def root_sum_residuals(parameters, x_true, y_true, b0):
 root_general_polynomial([1, 1, 1], [1], 0)
 
 #%% Data importation and Cluster Dictionary Initialisation
-path = "D:/dev/spin_down/mistmade_data/"
+path = "C:/dev/spin_down/mistmade_data/"
 files = os.listdir(path)
 cluster_list = [name[:-4] for name in files]
 cluster_dict = {}
@@ -120,7 +121,7 @@ for i, cluster in enumerate(cluster_list):
 for name in names:
     boolean_mask = cluster_dict[name]["df"].Mass < 1.3
     if name == "m37":
-        boolean_mask = cluster_dict[name]["df"].Mass < 1.16
+        boolean_mask = cluster_dict[name]["df"].Mass < 1.13
     cluster_dict[name]["df"].Per = cluster_dict[name]["df"].Per.loc[boolean_mask]
     cluster_dict[name]["df"].Mass = cluster_dict[name]["df"].Mass.loc[boolean_mask]
 
@@ -197,13 +198,14 @@ for name in sorted_names:
     df = df[~np.isnan(df.Per)]
     df = df[~np.isnan(df.Mass)]
 
-    labels, bins = pd.cut(df.Mass, 15, labels=False, retbins=True)
+    labels, bins = pd.cut(df.Mass, 20, labels=False, retbins=True)
 
     unique_labels = np.unique(labels)
 
     binned_df = [df[labels == label] for label in unique_labels]
     scores = [np.abs(stats.zscore(df.Per.to_numpy())) for df in binned_df]
-    trimmed_df = [df[scores[ind] < 1.44] for ind, df in enumerate(binned_df)]
+    # zscore
+    trimmed_df = [df[scores[ind] < 0.84] for ind, df in enumerate(binned_df)]
     cluster_dict[name]["df"] = pd.concat(trimmed_df)
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
@@ -248,7 +250,7 @@ fig.subplots_adjust(wspace=0.03, hspace=0.05)
 # fig3.subplots_adjust(wspace=0.03, hspace=0.05)
 
 coeff_list = []
-for num, name in enumerate(["praesepe"]):
+for num, name in enumerate(sorted_names):
     r, c = divmod(num, 3)
     # print(r, c)
 
@@ -302,13 +304,7 @@ for num, name in enumerate(["praesepe"]):
     #     -29.63407946,
     #     5.77416665,
     # ]
-    starting_coeffs = [
-        41.8919926639974,
-        -29.44378826,
-        -85.14549312,
-        136.82333888,
-        -55.33518376,
-    ]
+    starting_coeffs = [66.69405999290854, -158.62725034, 157.03891041, -56.08440611]
     coeffs = minimize(
         sum_residuals,
         starting_coeffs,
@@ -390,14 +386,15 @@ for num, name in enumerate(["praesepe"]):
 #
 #
 
-plt.style.use("ggplot")
-name = "praesepe"
+name = "m37"
 
 df = cluster_dict[name]["df"]
 
 if name == "praesepe":
-
     df = df[df.Mass > 0.44]
+# if name == "m37":
+#     df = df[df.Mass > 0.5]
+
 
 df = df[~np.isnan(df.Per)]
 df = df[~np.isnan(df.Mass)]
@@ -405,11 +402,11 @@ df = df[~np.isnan(df.Mass)]
 
 mass = df.Mass.to_numpy()
 period = df.Per.to_numpy()
-if name == "m37":
-    mass = mass + 0.1
+# if name == "m37":
+#     mass = mass + 0.1
 
 alphas = np.logspace(-10, 3, 100)
-degrees = np.arange(3, 5)
+degrees = np.arange(4, 6)
 
 model_df = pd.DataFrame(columns=["degree", "mse", "lambda"])
 for degree in degrees:
