@@ -198,14 +198,14 @@ for name in sorted_names:
     df = df[~np.isnan(df.Per)]
     df = df[~np.isnan(df.Mass)]
 
-    labels, bins = pd.cut(df.Mass, 20, labels=False, retbins=True)
+    labels, bins = pd.cut(df.Mass, 10, labels=False, retbins=True)
 
     unique_labels = np.unique(labels)
 
     binned_df = [df[labels == label] for label in unique_labels]
     scores = [np.abs(stats.zscore(df.Per.to_numpy())) for df in binned_df]
     # zscore
-    trimmed_df = [df[scores[ind] < 0.84] for ind, df in enumerate(binned_df)]
+    trimmed_df = [df[scores[ind] < 1.0] for ind, df in enumerate(binned_df)]
     cluster_dict[name]["df"] = pd.concat(trimmed_df)
 
 fig, ax = plt.subplots(1, figsize=(10, 6))
@@ -304,7 +304,13 @@ for num, name in enumerate(sorted_names):
     #     -29.63407946,
     #     5.77416665,
     # ]
-    starting_coeffs = [66.69405999290854, -158.62725034, 157.03891041, -56.08440611]
+    starting_coeffs = [
+        41.8919926639974,
+        -29.44378826,
+        -85.14549312,
+        136.82333888,
+        -55.33518376,
+    ]
     coeffs = minimize(
         sum_residuals,
         starting_coeffs,
@@ -386,7 +392,7 @@ for num, name in enumerate(sorted_names):
 #
 #
 
-name = "m37"
+name = "praesepe"
 
 df = cluster_dict[name]["df"]
 
@@ -406,7 +412,7 @@ period = df.Per.to_numpy()
 #     mass = mass + 0.1
 
 alphas = np.logspace(-10, 3, 100)
-degrees = np.arange(4, 6)
+degrees = np.arange(3, 4)
 
 model_df = pd.DataFrame(columns=["degree", "mse", "lambda"])
 for degree in degrees:
@@ -442,7 +448,7 @@ for degree in degrees:
         ignore_index=True,
     )
 
-fig, ax = plt.subplots(1, figsize=(10, 6))
+fig, ax = plt.subplots(1, figsize=(10, 5))
 ax.set(
     xlim=(1.5, 0), ylim=(-1, 35), xlabel=r"Mass ($M_\odot$)", ylabel="Period ($days$)"
 )
@@ -479,7 +485,9 @@ lr = LinearRegression()
 deg = 3
 poly = PolynomialFeatures(deg)
 
-df = cluster_dict["ngc6811"]["df"]
+df = cluster_dict["praesepe"]["df"]
+df = df[df.Mass > 0.46]
+df = df[df.Mass < 1.29]
 df = df[~np.isnan(df.Per)]
 df = df[~np.isnan(df.Mass)]
 
@@ -506,10 +514,14 @@ best_p = res.x
 
 pred = lambda x: np.sum(x * best_p, axis=-1)
 
-
-fig, ax = plt.subplots(1, figsize=(10, 6))
-ax.set(xlim=(1.5, 0), ylim=(-1, 35), xlabel="Mass (M_Solar)", ylabel="Period (Days)")
+fig, ax = plt.subplots(1, figsize=(10, 5))
+ax.set(
+    xlim=(1.5, 0), ylim=(-1, 35), xlabel=r"Mass ($M_\odot$)", ylabel="Period ($days$)"
+)
 ax.scatter(mass, period, c="green", s=3.5)
+
+# ax.scatter(cluster_dict["praesepe"]["df"].Mass, cluster_dict["praesepe"]["df"].Per, c="green", s=3.5)
+
 
 white_space = np.linspace(1.5, 0, 100)
 white_space_p = poly.transform(white_space.reshape(-1, 1))

@@ -715,18 +715,83 @@ fig.savefig(
     bbox_inches="tight",
 )
 
-#%% Revisted Unsupervised clustering
-fig, ax = plt.subplots(1, figsize=(10, 5))
-ax.set(
-    xlim=(1.5, 0), ylim=(-1, 35), xlabel=r"Mass ($M_\odot$)", ylabel="Period ($days$)"
+#%% Top Branch Fitting
+fig, ax = plt.subplots(1, figsize=(10, 5), sharex=True, sharey=True)
+# ax.set(
+#     xlim=(1.35, 0.2), ylim=(-1, 35), xlabel=r"Mass ($M_\odot$)", ylabel="Period ($days$)"
+# )
+fig.text(0.5, 0.02, r"Mass ($M_\odot$)", ha="center", fontsize=20, color="#4C4C4C")
+fig.text(
+    0.054,
+    0.5,
+    "Period ($days$)",
+    va="center",
+    rotation="vertical",
+    fontsize=20,
+    color="#4C4C4C",
 )
-prae_df = cluster_dict["praesepe"]["df"]
-# ax.scatter(prae_df.Mass,prae_df.Per )
 
+ax.set(xlim=(1.4, 0.2), ylim=(-1, 35))
 
-upper_group =prae_df[prae_df.Per > -12.00 * prae_df.Mass + 15.00]
-lower_group =prae_df[prae_df.Per < -12.00 * prae_df.Mass + 15.00]
+ax.scatter(
+    cluster_dict["m37"]["df"].Mass + 0.12,
+    cluster_dict["m37"]["df"].Per,
+    alpha=0.6,
+    s=10,
+    c="#189ad3",
+)
 
-ax.scatter(upper_group.Mass, upper_group.Per)
-ax.scatter(lower_group.Mass, lower_group.Per)
+ax.plot(
+    white_space + 0.12,
+    (
+        general_polynomial(
+            [
+                92.82546788,
+                -518.94620094,
+                1466.05095574,
+                -2165.42130764,
+                1586.5281352,
+                -456.28210631,
+            ],
+            white_space,
+            0.46,
+        )
+    ),
+    label="M37 ~550Myrs",
+    c="#189ad3",
+    linewidth=2,
+    alpha=0.8,
+)
+ax.plot(
+    white_space,
+    (
+        general_polynomial(
+            [97.16266638, -288.94208122, 328.98197146, -126.97043705], white_space, 0.46
+        )
+    ),
+    c="#E15A45",
+    label="NGC 6811 ~1000Myrs",
+    linewidth=2,
+    alpha=0.8,
+)
+ax.scatter(
+    cluster_dict["ngc6811"]["df"].Mass,
+    cluster_dict["ngc6811"]["df"].Per,
+    alpha=1,
+    s=10,
+    c="#E15A45",
+)
+# import matplotlib.lines as mlines
+# blue_line = mlines.Line2D(
+#     [], [], color="black", marker=".", markersize=15, label="M37 ~550Myrs"
+# )
+# plt.legend(handles=[blue_line])
+ax.legend()
 
+fig.savefig(
+    "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/polyfit_twoclusters.png",
+    dpi=800,
+    bbox_inches="tight",
+    # transparent=True,
+    # facecolor="#E5E5E5",
+)
