@@ -133,8 +133,8 @@ fig, ax = plt.subplots(
     figsize=(8, 10),
     sharex=True,
     sharey=True,
-    gridspec_kw={"hspace": 0.07, "wspace": 0.05},
-    dpi=800,
+    gridspec_kw={"hspace": 0.07, "wspace": 0.15},
+    dpi=300,
 )
 # fig.subplots_adjust(wspace=0, hspace=0.0)
 
@@ -155,12 +155,21 @@ for num, name in enumerate(sorted_names):
         mass,
         period,
         marker="o",
-        label=("%s ~%iMYrs") % (name, cluster_dict[name]["age"]),
+        # label=("%s ~%iMYrs") % (name, cluster_dict[name]["age"]),
         s=1,
         c="#189ad3",
     )
-    ax[r][c].set(xlim=(1.4, -0.1), ylim=(-3, 45))
-    ax[r][c].legend()
+    ax[r][c].set(xlim=(1.5, 0), ylim=(-3, 45))
+    # ax[r][c].legend()
+    ax[r][c].annotate(
+        "{} ~{}MYrs".format(name, cluster_dict[name]["age"]),
+        xy=(130,95),
+        xycoords="axes points",
+        size=10,
+        ha="right",
+        va="top",
+        bbox=dict(boxstyle="round", fc="w"),
+    )
 
 # ax[1][0].set(ylabel="Period ($days$)")
 # ax[-1][1].set(xlabel=r"Mass ($M_\odot$)")
@@ -179,7 +188,7 @@ fig.text(
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png",
     bbox_inches="tight",
-    dpi=1600,
+    dpi=300,
 )
 #%% Cluster Merging and removal
 # Merging Pleiades + m50, m35  + ngc2516, ngc2301 + m34
@@ -248,7 +257,7 @@ fig, ax = plt.subplots(
     sharex=True,
     sharey=True,
     gridspec_kw={"hspace": 0.07, "wspace": 0.05},
-    dpi=200,
+    dpi=300,
 )
 # fig.subplots_adjust(wspace=0, hspace=0.0)
 
@@ -301,14 +310,14 @@ ax[0][0].annotate(
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/plot1.png",
     bbox_inches="tight",
-    dpi=800,
+    dpi=300,
 )
 
 #%% PLOTTING SINGULAR CLUSTER
 
 plt.rcParams.update({"font.size": 18})
 
-fig, ax = plt.subplots(1, figsize=(10, 5), dpi=400)
+fig, ax = plt.subplots(1, figsize=(10, 5), dpi=300)
 
 mass = cluster_dict["praesepe"]["df"]["Mass"]
 period = cluster_dict["praesepe"]["df"]["Per"]
@@ -358,7 +367,7 @@ ax.annotate(
 
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/plot2.png",
-    dpi=800,
+    dpi=300,
     bbox_inches="tight",
     # transparent=True,
     # facecolor="#E5E5E5",
@@ -484,7 +493,7 @@ ax.plot(white_space, [0.86] * len(white_space), color="#E15A45")
 
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/slow_fast_transition.png",
-    dpi=800,
+    dpi=300,
     bbox_inches="tight",
     # transparent=True,
     # facecolor="#E5E5E5",
@@ -505,17 +514,14 @@ for offset in sorted(offset_data):
     ax.plot(white_space, data, lw=1.5, c=col)  # , label=offset)
 
 # plotting one orange line to highlight clusters place in the plot
-data = sigmoid(white_space, -20, 12)
-ax.plot(white_space, data, lw=1.5, c="#1BE7FF")
-
+data = sigmoid(white_space, -20, 17)
+ax.plot(white_space, data, lw=1.5, c="#E15A45")
 
 data = sigmoid(white_space, -20, 15)
 ax.plot(white_space, data, lw=1.5, c="#FFBC3F")
 
-
-data = sigmoid(white_space, -20, 17)
-ax.plot(white_space, data, lw=1.5, c="#E15A45")
-
+data = sigmoid(white_space, -20, 12)
+ax.plot(white_space, data, lw=1.5, c="#1BE7FF")
 
 ax.set_yticks([0, 0.5, 1])
 ax.set_yticklabels(["$FAST$", "$TRANSITION$", "$SLOW$"])
@@ -540,7 +546,7 @@ ax.annotate(
 )
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/fixedtime_transition.png",
-    dpi=800,
+    dpi=300,
     bbox_inches="tight",
     # transparent=True,
     # facecolor="#E5E5E5",
@@ -552,7 +558,7 @@ coefficients_1 = minimize(
     args=(mass_full, period_full, 0.46),
     bounds=[
         [90, 90],
-        [-35, -35],
+        [-30, -30],
         [66.69405999290854, 66.69405999290854],
         [-158.62725034, -158.62725034],
         [157.03891041, 157.03891041],
@@ -578,7 +584,7 @@ coefficients_3 = minimize(
     args=(mass_full, period_full, 0.46),
     bounds=[
         [90, 90],
-        [-45, -45],
+        [-53, -53],
         [66.69405999290854, 66.69405999290854],
         [-158.62725034, -158.62725034],
         [157.03891041, 157.03891041],
@@ -593,37 +599,41 @@ ax.set(
 ax.scatter(mass_full, period_full, color="#189ad3")
 ax.plot(
     white_space,
-    general_polynomial_chi(coefficients_3.x, white_space, 0.86),
+    general_polynomial_chi(coefficients_1.x, white_space, 0.86),
     linewidth=2.2,
-    c="#1BE7FF",
+    c="#E15A45",
+    label = r"$P_i = \alpha$"
 )
+
 ax.plot(
     white_space,
     general_polynomial_chi(coefficients_2.x, white_space, 0.86),
     linewidth=2.2,
     c="#FFBC42",
-)
-ax.plot(
-    white_space,
-    general_polynomial_chi(coefficients_1.x, white_space, 0.86),
-    linewidth=2.2,
-    c="#E15A45",
+    label = r"$P_i = \beta$"
 )
 
+ax.plot(
+    white_space,
+    general_polynomial_chi(coefficients_3.x, white_space, 0.86),
+    linewidth=2.2,
+    c="#1BE7FF",
+    label = r"$P_i = \gamma $"
+)
 ax.text(1.10, 11, "SLOW", rotation=23, color="#4C4C4C")
 
 ax.text(0.21, 3, "FAST", rotation=0, color="#4C4C4C")
 
 ax.text(0.35, 7, "TRANSITION", rotation=277, color="#4C4C4C")
-
+ax.legend()
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/chiswitch_model.png",
-    dpi=800,
+    dpi=300,
     bbox_inches="tight",
     # transparent=True,
     # facecolor="#E5E5E5",
 )
-#%% FITTED PLOT
+#%% FITTED PLOT + gaussians
 coefficients = minimize(
     sum_residuals_chi,
     [0, 0, 0, 0, 0, 0],
@@ -711,7 +721,7 @@ ax.annotate(
 ax.legend()
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/period_probability.png",
-    dpi=800,
+    dpi=300,
     bbox_inches="tight",
 )
 
@@ -790,7 +800,90 @@ ax.legend()
 
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/Midterm_report_images/polyfit_twoclusters.png",
-    dpi=800,
+    dpi=300,
+    bbox_inches="tight",
+    # transparent=True,
+    # facecolor="#E5E5E5",
+)
+
+#%% only Chi fit
+# coefficients_1 = minimize(
+#     sum_residuals_chi,
+#     [0, 0, 0, 0, 0, 0],
+#     args=(mass_full, period_full, 0.46),
+#     bounds=[
+#         [90, 90],
+#         [-30, -30],
+#         [66.69405999290854, 66.69405999290854],
+#         [-158.62725034, -158.62725034],
+#         [157.03891041, 157.03891041],
+#         [-56.08440611, -56.08440611],
+#     ],
+# )
+coefficients_2 = minimize(
+    sum_residuals_chi,
+    [0, 0, 0, 0, 0, 0],
+    args=(mass_full, period_full, 0.46),
+    bounds=[
+        [90, 90],
+        [-42, -42],
+        [66.69405999290854, 66.69405999290854],
+        [-158.62725034, -158.62725034],
+        [157.03891041, 157.03891041],
+        [-56.08440611, -56.08440611],
+    ],
+)
+# coefficients_3 = minimize(
+#     sum_residuals_chi,
+#     [0, 0, 0, 0, 0, 0],
+#     args=(mass_full, period_full, 0.46),
+#     bounds=[
+#         [90, 90],
+#         [-53, -53],
+#         [66.69405999290854, 66.69405999290854],
+#         [-158.62725034, -158.62725034],
+#         [157.03891041, 157.03891041],
+#         [-56.08440611, -56.08440611],
+#     ],
+# )
+
+fig, ax = plt.subplots(1, figsize=(10, 5))
+ax.set(
+    xlim=(1.5, 0), ylim=(-1, 35), xlabel=r"Mass ($M_\odot$)", ylabel="Period ($days$)"
+)
+ax.scatter(mass_full, period_full, color="#189ad3")
+# ax.plot(
+#     white_space,
+#     general_polynomial_chi(coefficients_1.x, white_space, 0.86),
+#     linewidth=2.2,
+#     c="#E15A45",
+#     label = r"$P_i = \alpha$"
+# )
+
+ax.plot(
+    white_space,
+    general_polynomial_chi(coefficients_2.x, white_space, 0.86),
+    linewidth=3,
+    c="#E15A45",
+    label = r"$P_i = \beta$"
+)
+
+# ax.plot(
+#     white_space,
+#     general_polynomial_chi(coefficients_3.x, white_space, 0.86),
+#     linewidth=2.2,
+#     c="#1BE7FF",
+#     label = r"$P_i = \gamma $"
+# )
+# ax.text(1.10, 11, "SLOW", rotation=23, color="#4C4C4C")
+
+# ax.text(0.21, 3, "FAST", rotation=0, color="#4C4C4C")
+
+# ax.text(0.35, 7, "TRANSITION", rotation=277, color="#4C4C4C")
+# ax.legend()
+fig.savefig(
+    "C:/Users/elydo/Documents/Harvard/Midterm_report_images/model_fit.png",
+    dpi=300,
     bbox_inches="tight",
     # transparent=True,
     # facecolor="#E5E5E5",
