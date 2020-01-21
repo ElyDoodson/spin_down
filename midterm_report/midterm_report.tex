@@ -173,7 +173,6 @@ We then cycle through each star and assign it to the opposing group, if the over
 To measure the fit, mean squared error(MSE) was used.
 $ \textup{MSE} = \frac{1}{N}\sum_{i=1}^N \left(y_i - \hat{y}_i\right)^2$,where $y_i$ is the true value, and $\hat{y}_i$ is the predicted value.
 A reduedtion in MSE means the predicted values are close to the predicted and a good fit is being generated, if we minimise this MSE then we are rewarding the model with a better fit.
-The results of this clustering can be seen in Figure \ref{fig:unsupervised_clustering}
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{unsupervised_clustering.png}
@@ -181,6 +180,11 @@ The results of this clustering can be seen in Figure \ref{fig:unsupervised_clust
 	\label{fig:unsupervised_clustering}
 \end{figure}
 
+Figure \ref{fig:unsupervised_clustering} shows the results off this approach.
+The fits generated were a polynomial of $3^\textup{rd}$ order for the blue "slow" rotators, and $1^\textup{st}$ order for the orange "fast" rotators.
+As it can be seen, this approach does not generate an accurate representation of the two groups.
+This is because the transition between these two groups is effectively instantaneous, however, in reality this is not the case.
+As we also wanted to try understand how these stars transitioned throughout their lifetime, this approach would not extract this kind of information and so clustering was deemed an inappropriate method.
 
 \subsection{Polynomial Ridge Regression}
 \sout{slow rotators fit using a polynomial fit of order 4.
@@ -188,8 +192,32 @@ The results of this clustering can be seen in Figure \ref{fig:unsupervised_clust
 
 	FIGURE OF CURRENT FIT}
 
-Through the coefficients, it was thought that the progression of this transition from one population to the otehr could be understood, however, so far this time evolution has not been assessed.
-though polynoimal fits have been generatred from the coefficients, the problem of degeneracy still presents itself with this method. 
+Our next approach was to fit a polynomial to some of the fast rotators and combine this polynomial with a sigmoid function to have the transition between the fast and slow rotators.
+The method was to remove the "slow" and as many transitional rotators for each cluster as possible.
+From this subset of stars I created 10 bins according to mass and reduced this subset to the central 80\% to remove outliers and and remaining transitional stars.
+This data set was then optimised using ridge regression, which is a form of polynomial regression, with the addition of regularisation term, which stops the coefficients becoming too large.
+
+\begin{figure}
+	\includegraphics[width = 0.5\textwidth]{polyfit_twoclusters}
+	\caption{shows M37 in blue and NGC6811 in orange with their respective best fits.}
+	\label{fig:polyfit_twoclusters}
+\end{figure}
+
+In Figure \ref{fig:polyfit_twoclusters} I show this for two clusters of different ages.
+It can be seen from the data and fits that the 450Myrs has allowed the stars on "slow" branch to reduce their spin further.
+It can also be seen that there is a lack of a "fast" population for NGC6811 in the region $0.5~\textup{M}_\odot \leq m \leq 1.3~\textup{M}_\odot$.
+This is because all these stars have had time to transition.
+
+This optimised polynomial can then be combined with the sigmoid function, see Equation \ref{eq:sigmoid}, and minimised to produce our current model shown in Figure \ref{fig:model_fit}
+
+\begin{align}
+	\centering
+	\label{eq:sigmoid}
+	\Phi\left(x\right) = \frac{1}{1 + \exp^{-x}}
+\end{align}
+
+Through the coefficients, it was thought that the progression of this transition from one population to the other could be understood, however, so far this time evolution has not been assessed.
+Though polynoimal fits have been generatred from the coefficients, the problem of degeneracy still presents itself with this method. 
 A potential model to address this could have an error associated with it, where this line is the mean.
 This model would have confidence intervals as a function of mass and age.
 The closer to the "overlap area" the prediction was, the larger the uncertainty becomes, then subsequently dropping after the lone fast rotators have been reached.
@@ -234,7 +262,7 @@ Try to keep it short.
 %%%%%%%%%%%%%%%%%APPENDICES%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
-
+ 
 \section{Some extra material}
 
 If you want to present additional material which would interrupt the flow of the main paper,

@@ -734,7 +734,7 @@ fig.text(
 ax.set(xlim=(1.4, 0.2), ylim=(-1, 35))
 
 ax.scatter(
-    cluster_dict["m37"]["df"].Mass + 0.12,
+    cluster_dict["m37"]["df"].Mass + 0.13,
     cluster_dict["m37"]["df"].Per,
     alpha=0.6,
     s=10,
@@ -742,7 +742,7 @@ ax.scatter(
 )
 
 ax.plot(
-    white_space + 0.12,
+    white_space + 0.13,
     (
         general_polynomial(
             [
@@ -759,8 +759,8 @@ ax.plot(
     ),
     label="M37 ~550Myrs",
     c="#189ad3",
-    linewidth=2,
-    alpha=0.8,
+    linewidth=3,
+    # alpha=0.8,
 )
 ax.plot(
     white_space,
@@ -771,8 +771,8 @@ ax.plot(
     ),
     c="#E15A45",
     label="NGC 6811 ~1000Myrs",
-    linewidth=2,
-    alpha=0.8,
+    linewidth=3,
+    # alpha=0.8,
 )
 ax.scatter(
     cluster_dict["ngc6811"]["df"].Mass,
@@ -789,7 +789,7 @@ ax.scatter(
 ax.legend()
 
 fig.savefig(
-    "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/polyfit_twoclusters.png",
+    "C:/Users/elydo/Documents/Harvard/Midterm_report_images/polyfit_twoclusters.png",
     dpi=800,
     bbox_inches="tight",
     # transparent=True,
