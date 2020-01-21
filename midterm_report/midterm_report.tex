@@ -198,26 +198,25 @@ As we also wanted to try understand how these stars transitioned throughout thei
 
 	FIGURE OF CURRENT FIT}
 
-Our next approach was to fit a polynomial to some of the fast rotators and combine this polynomial with a sigmoid function to have the transition between the fast and slow rotators.
+Our next approach was to fit a polynomial to a portion of the "slow" rotators and combine this polynomial with a sigmoid function($\Phi\left(x\right)$), shown in Equation \ref{eq:poly+sigmoid}, to have the transition between the fast and slow rotators.
+The sigmoid function, shown in Equation \ref{eq:sigmoid}, maps any value of $x$ to the range $ 0 \leq \Phi\left(x\right) \leq 1$, this effectively turns the polynomial on and off.
+
 The method was to manually remove the "slow" and as many transitional rotators for each cluster as possible.
 From this subset of stars I created 10 bins according to mass and reduced this subset to the central 80\% to remove outliers and and remaining transitional stars.
 This reduced data set was then fit using ridge regression, which is a form of polynomial regression, with the addition of regularisation term, which stops the coefficients becoming too large.
 This regularisation coefficient and the degree of polynomial was chosen via \textit{Cross Validation}.
 
-splits, aintaining the data distribution ad the original.
-then we do it for 10 splits
-
 Cross validation is method to choose the best model from a selection, such as we have here with varying polynomial degree and regularisation term.
-Your data is split into a number of random subsets which maintain the original data distribution.
+For each model, your data is split into a number of random subsets which maintain the original data distribution.
 One of these subsets is chosen as the validation set, and used to score your current model.
 The remaining subsets are then used to train your model on.
 The validation set is then changed and the same process repeated until every subset has been a validation set.
 This ensures that all data has been used to train the models and to be validated on.
 All these scores are then averaged to give a score for your model.
-Figure \ref{fig:cross_validation} shows this for 10 subsets.
+Figure \ref{fig:cross_validation} shows this for 5 subsets.
 
 \begin{figure}
-	\includegraphics[width = 0.5\textwidth]{cross_validation.png}
+	\includegraphics[width = 0.5\textwidth]{kfold_crossval.png}
 	\caption{shows how cross validation splits a data set and produces a score of that model.}
 	\label{fig:cross_validation}
 \end{figure}
@@ -230,49 +229,49 @@ Figure \ref{fig:cross_validation} shows this for 10 subsets.
 	\label{fig:polyfit_twoclusters}
 \end{figure}
 
-In Figure \ref{fig:polyfit_twoclusters} I show the results of the process for two clusters of different ages.
-It can be seen from the data and fits that the 450Myrs has allowed the stars on "slow" branch to reduce their spin further.
+In Figure \ref{fig:polyfit_twoclusters} I show the results of only the polynomial ridge regression for two clusters of different ages.
+It can be seen from the data and fits that the 450Myrs has allowed the stars on the "slow" branch to reduce their spin further.
 It can also be seen that there is a lack of a "fast" population for NGC6811 in the region $0.5~\textup{M}_\odot \leq m \leq 1.3~\textup{M}_\odot$.
 This is because all these stars have had time to transition.
 
-This optimised polynomial can then be combined with the sigmoid function, see Equation \ref{eq:sigmoid}, and minimised to produce our current model shown in Figure \ref{fig:model_fit}
+This optimised polynomial can then be combined with the sigmoid function($\Phi\left(x\right)$), as seen in Equation \ref{eq:poly+sigmoid}, and minimised to produce our current model shown in Figure \ref{fig:model_fit}
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{model_fit.png}
 	\caption{shows an optimised fit using ridge regression and sigmoid for the OC Praesepe}
 	\label{fig:model_fit}
 \end{figure}
 \begin{align}
-	\centering
+	\label{eq:poly+sigmoid}
+	\textup{Period} = \left(b_0 + b_1m + b_2m^2...b_im^j\right)*\Phi\left(x\right) 
+\end{align}
+\begin{align}
 	\label{eq:sigmoid}
 	\Phi\left(x\right) = \frac{1}{1 + \exp^{-x}}
 \end{align}
 The coefficients of these polynomials were thought to be the key to understanding the progression of the system.
 However, it was found that there was no obivous trend to these coefficients through time.
-The fit in Figure \ref{fig:model_fit} is able to predict the majority of the "slow" and "fast" rotator branch, however becomes problematic for the region which they overlap, which varies in size for different OC.
+The fit in Figure \ref{fig:model_fit} is able to predict the majority of the "slow" and "fast" rotator branch, however, becomes problematic for the region which they overlap, which varies in size for different OC.
 We think the cause of this degeneracy is caused by a spread of initial periods and is discussed further in Section \ref{sec:initial_period}.
 
 A potential solution to this would be to calculate an error associated with each point of the fit.
 A region of uncertainty around the prediction would be produced, which would be low if the data spread was minimal and high when approaching the overlapped area.
 
-\subsection{The Importance of Initial Period, $P_i$}
-\label{sec:initial_period}
+\subsection{The Importance of Initial Period, $P_i$} \label{sec:initial_period}
 \sout{Expand of the effect initial period and perhaps metalicity.
 	Other parameters could allow for deeper understanding of the "overlap" sections of the open clusters
 
 	FIGURE OF HOW INTIAL PERIOD CAUSES MULTIPLE LINES TO OVERLAP AND MAKE THE TRANSITION "BLURRY"}
 
-We think the difficulty in these predictions of period, for a given age and mass, stem from the lack of information on the initial period distribution.
-In a hypothetical OC, whose stars are born of a single initial rotation period, we think the distribution would look like one of the lines in Figure \ref{fig:initial_period}.
-However in reality these observed OC are made up of a range of masses and initial periods, of which only the former can be measured.
-The different lines in Figure \ref{fig:initial_period} represent how different values of initial period would look if evolved to the age of the cluster.
-When taking an average of all these initial periods, we will get a distribution which looks like the observed OC, which has a degeneracy between the two branches.
-
-
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{../AAS Poster Stuff/chiswitch_model.png}
-	\label{fig:initial_period}
+	\label{fig:initial_period_spread}
 	\caption{shows what we hypothesise the OC star distribution would follow for 3 different initial periods, $\alpha, \beta~\&~\gamma$.}
 \end{figure}
+We think the difficulty in these predictions of period, for a given age and mass, stem from the lack of information on the initial period distribution.
+In a hypothetical OC, whose stars are born of a single initial rotation period, we think the distribution would look like one of the lines in Figure \ref{fig:initial_period_spread}.
+However, in reality these observed OC are made up of a range of masses and initial periods, of which only the former can be measured.
+The different lines in Figure \ref{fig:initial_period_spread} represent theoterical OC data, provided different values of initial period.
+When taking an average of all these initial periods, we will get a distribution which looks like the observed OC, which has a degeneracy between the two branches.
 
 The best estimates for inital period of the system can be assumed to be the youngest clusters distribution that is no longer under the influence of disc effects, such as H Persei(NGC 869) in Figure \ref{fig:allclusters}.
 
