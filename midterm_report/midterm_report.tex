@@ -108,21 +108,33 @@ However, this spin rate is not static and will descrease over a stars lifetime, 
 
 Cool stars are classified as having a convective envelope, meaning the outer-most layer of the star is moving.
 They have a mass, $m \lesssim 1.3 \textup{M}_\odot$. 
-Due to the convection, moving ionic material in the star generates massive magnetic fields which stretch in orders of stellar radii.
+Due to the convection, moving ionic material in the star generates massive magnetic fields which stretch in orders of stellar radii. (SOMEONE I NEED TO CITE?)
 Ejected stellar material travels along these lines, forming large arms which effectively co-rotate with the star.
-When material at the end of these arms breaks free, the loss in angular momentum (AM) is much grater than it would have been if the same material was lost at the stars surface.
-This loss in AM causes the star to lessen its rotational period and spin down.
-This is called \textit{magnetic breaking} and is a very effecient way for the star to spin down.
+When material at the end of these arms breaks free, the loss in angular momentum (AM) is much grater than if the same material was lost at the stars surface.
+This loss in AM causes the star to lessen its rotation period and spin down.
+This is called \textit{magnetic breaking} and is a very effecient way for a star to spin down. (CITE HERE ALSO??? WHO?)
 
-Open clusters(OC) are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this, stellar disc effects make it hard to model what is happening.
-In addition there are  transitional stars between these two populations, which have a density less than the two populations, showing the time to move between the populations must be rapid.
-This can be seen in Figure \ref{fig:slow_fast_transition}.
-It was shown in \cite{}(Garraffo et al. 2017) that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars.
+"Open clusters(OC) are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this, the stars have not had time to transition and the  stellar disc effects make it very difficult to paramterise and model.
+In addition there are  transitional stars between these two populations, which are less numerous than the two populations, showing the time to move between the populations must be rapid.
+This can be seen in Figure \ref{fig:slow_fast_transition}."
+-This part should perhaps be the intro to the method section?
+"It was shown in (Garraffo et al. 2017) that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars."
+-and this added to another paragraph???
+
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{slow_fast_transition.png}
-	\caption[]{Plot of period vs mass(inverted) for Praesepe, with visulisation of the slow, fast and transitional rotators.}
+	\caption[]{Plot of period vs mass for Praesepe, with visulisation of the slow, fast and transitional rotators.}
 	\label{fig:slow_fast_transition}
 \end{figure}
+
+Current models suggest..........?
+
+This models fits into this here.........?
+
+This model could be used in X Y Z ways.
+
+Discussion on gyrochronology and its importance in aging stars...........which leads to its importancein other fields etc etc.
+
 
 \section{Methods and Observations}
 \subsection{Data Reduction}
@@ -144,18 +156,17 @@ These conversions are complex for each band and vary greatly as a function of ma
 
 A conversion was possible, however, it did not use the conventional functions to map photometry to mass. 
 Instead I used the Modules for Experiments in Stellar Astrophysics (MESA) Isochrones and Stellar Tracks (MIST) tables \cite{MIST}(MISTTHING et al. 2004), which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
-The converted OC can be seen in Figure \ref{fig:allclusters}
+I have converted all OC and display them in Figure \ref{fig:allclusters}.
+
 \begin{figure}
 	\centering
 	\includegraphics[width = 0.5\textwidth]{allclusters.png}
 	\caption[]{Plot showing all converted OC and their respective ages}
 	\label{fig:allclusters}
-	
 \end{figure}
 
-
-These tables start with discrete mass steps (e.g 0.1, 0.15...1.35, 1.40~$\textup{M}_\odot$ etc).
-These masses, evolving at differnt rates, are very likely to have a degeneracy in their photomerty, meaning they may cross each others "photometry path", and as a consequence the conversion was not as simple as choosing the two closest photometries and interpolating.
+These tracks start at discrete mass steps (e.g 0.1, 0.15...1.35, 1.40~$\textup{M}_\odot$ etc).
+These masses, evolving at differnt rates, are very likely to have a degeneracy in their photomerty, meaning one star can have the same photomerty value as another at a different age and mass, and as a consequence the conversion was not as simple as choosing the two closest photometries and interpolating.
 Instead I restricted the values of the various mass tracks to the clostest ages of that star and from this pool, interpolated between the two clostest photometries for that given age.
 The discontinuity of the tracks, due to discrete time steps, means there will be an inherent error in choosing the pool of ages, this has not currently been addressed, however may be implemented into error propagation in a future model if a Bayesian network approach is used. 
 
@@ -169,25 +180,48 @@ The discontinuity of the tracks, due to discrete time steps, means there will be
 	Transitional stars need to be considered, otherwise subjecting the transition to a dirac delta.}
 
 Our inital approach to the problem was to cluster the data into "fast" and "slow" rotators and fit a weighted polynomial regression to each of these groups.
-We then cycle through each star in the cluster and assign it to the other group, if the overall fit is better with the star in the opposing group, it remained there, otherwise it was transfered back and the next star was assessed.
-After each star was assessed, a new polynomial fit was generated for each cluster the process repeated until stars no longer changed groups.
-To measure the fit, mean squared error(MSE), Equation \ref{eq:mse}, was minimised and reduced.
+A polynomial regression is like linear regression, where you fit a straight line to you data $\hat{y} = b_0 + b_1x$, but with polynomial you allow $n$ more higher order terms such as $...+ b_2x^2 + b_3x^3+b_4x^4+...+b_nx^n $ to be considered and becomes\dots
 \begin{equation}
-	\label{eq:mse}
-	\textup{MSE} = \frac{1}{N}\sum_{i=1}^N \left(y_i - \hat{y}_i\right)^2
+	\label{eq:poly}
+	\hat{y} = b_0 + \sum_{j = 1}^n b_jx^j
 \end{equation}
-where $y_i$ is the true value, and $\hat{y}_i$ is the predicted value.
+This allows your predicted value, $\hat{y}$, to be predicted closer to the true value, $y$.
 
+After a polynomial regression of the two groups cycle through each star in the cluster and assign it to the other group, if the overall fit is better with the star in the opposing group, it remained there, otherwise it is transfered back and the next star was assessed.
+After each star was assessed, a new polynomial fit was generated for each cluster the process repeated until stars no longer changed groups.
+To measure the score, mean squared error(MSE), Equation \ref{eq:mse}, was minimised and reduced.
+\begin{align}
+	\label{eq:mse}
+	\textup{MSE} &= \frac{1}{n}\sum_{i=1}^n \left(y_i - \hat{y}_i\right)^2 \\
+	\textup{subbing in Equation \ref{eq:poly}} \nonumber \\
+	&= \frac{1}{n}\sum_{i = 1}^n \left(y_i - \left(b_0 + \sum_{j = 1}^p b_jx_i^j\right) \right)^2
+\end{align}
+where $y_i$ is the true value, and $\hat{y}_i$ is the predicted value.
+% \begin{gather}
+% 	\begin{split}
+% 	  m &=n \\
+% 		&=o \\
+% 		&=p \\
+% 		&=q
+% 	\end{split}\\
+% 	\begin{aligned}
+% 	  a &=b + 1 \\
+% 	  c &=d \\
+% 	  e &=f \\
+% 	  g &=h
+% 	\end{aligned}
+% \end{gather}
+	
 A reduction in MSE means the predicted values are close to the true values and a good fit is being generated, if we minimise this MSE then we are rewarding the model with a fit closer to the true data.
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{unsupervised_clustering.png}
-	\caption{shows the results of unsupervised clustering of the "fast" rotators in blue, "slow" rotators in orange and their respective polynomial fits.}
+	\caption{shows the results of unsupervised clustering of Praesepe. The "fast" rotators in blue, "slow" rotators in orange and their respective polynomial fits.}
 	\label{fig:unsupervised_clustering}
 \end{figure}
 
 Figure \ref{fig:unsupervised_clustering} shows the results off this approach.
-The fits generated were a polynomial of $3^\textup{rd}$ order for the blue "slow" rotators, and $1^\textup{st}$ order for the orange "fast" rotators.
+The fits generated were a polynomial $\mathcal{O}(x^3)$ for the blue "slow" rotators, and $\mathcal{O}(x)$ for the orange "fast" rotators.
 As it can be seen, this approach does not generate an accurate representation of the two groups.
 This is because the transition between these two clusters is effectively instantaneous, however, in reality this is not the case.
 As we also wanted to try understand how these stars transitioned throughout their lifetime, this approach would not extract this kind of information and so clustering was deemed an uneffective method.
@@ -199,20 +233,25 @@ As we also wanted to try understand how these stars transitioned throughout thei
 	FIGURE OF CURRENT FIT}
 
 Our next approach was to fit a polynomial to a portion of the "slow" rotators and combine this polynomial with a sigmoid function($\Phi\left(x\right)$), shown in Equation \ref{eq:poly+sigmoid}, to have the transition between the fast and slow rotators.
-The sigmoid function, shown in Equation \ref{eq:sigmoid}, maps any value of $x$ to the range $ 0 \leq \Phi\left(x\right) \leq 1$, this effectively turns the polynomial on and off.
+The sigmoid function, shown in Equation \ref{eq:sigmoid}, maps any value of $x$ to the range $ 0 \leq \Phi\left(x\right) \leq 1$, this can be thought of as switching between the two lines in Figure \ref{fig:slow_fast_transition}.
 
-The method was to manually remove the "slow" and as many transitional rotators for each cluster as possible.
-From this subset of stars I created 10 bins according to mass and reduced this subset to the central 80\% to remove outliers and and remaining transitional stars.
-This reduced data set was then fit using ridge regression, which is a form of polynomial regression, with the addition of regularisation term, which stops the coefficients becoming too large.
-This regularisation coefficient and the degree of polynomial was chosen via \textit{Cross Validation}.
+The method was to remove the "slow" and as many transitional rotators for each cluster as possible, by eye.
+From this subset of stars I created 10 bins according to mass and reduced this subset to the central 80\% to remove outliers and and remaining transitional stars.(Is a figure needed to show the reduction?)
+This reduced data set was then fit using {\textit{Ridge Regression}, which scores using MSE, Equation \ref{eq:mse}, with the addition of regularisation term, $\lambda$, which stops the coefficients becoming too large, shown in Equation \ref{eq:ridge}.
+This regularisation coefficient, $\lambda$, and the degree of polynomial, $p$, was chosen via \textit{Cross Validation}.
 
-Cross validation is method to choose the best model from a selection, such as we have here with varying polynomial degree and regularisation term.
+\begin{equation}
+	\label{eq:ridge}
+	 = \frac{1}{n}\sum_{i = 1}^n \left(y_i - b_0 - \sum_{j = 1}^p b_jx_i^j \right)^2 + \lambda \sum_{j = 1}^p b^2_j
+\end{equation}
+
+Cross validation is a method to choose the best model from a selection, such as we have here with varying polynomial degree and regularisation term.
 For each model, your data is split into a number of random subsets which maintain the original data distribution.
 One of these subsets is chosen as the validation set, and used to score your current model.
 The remaining subsets are then used to train your model on.
-The validation set is then changed and the same process repeated until every subset has been a validation set.
-This ensures that all data has been used to train the models and to be validated on.
-All these scores are then averaged to give a score for your model.
+The validation set used is then changed and the same process repeated until every subset has been a validation set.
+This ensures that all data has been used to train and validate the models.
+All these scores are then averaged to give a performance for your model.
 Figure \ref{fig:cross_validation} shows this for 5 subsets.
 
 \begin{figure}
@@ -251,7 +290,7 @@ This optimised polynomial can then be combined with the sigmoid function($\Phi\l
 The coefficients of these polynomials were thought to be the key to understanding the progression of the system.
 However, it was found that there was no obivous trend to these coefficients through time.
 The fit in Figure \ref{fig:model_fit} is able to predict the majority of the "slow" and "fast" rotator branch, however, becomes problematic for the region which they overlap, which varies in size for different OC.
-We think the cause of this degeneracy is caused by a spread of initial periods and is discussed further in Section \ref{sec:initial_period}.
+We think this degeneracy is caused by a spread of initial periods and is discussed further in Section \ref{sec:initial_period}.
 
 A potential solution to this would be to calculate an error associated with each point of the fit.
 A region of uncertainty around the prediction would be produced, which would be low if the data spread was minimal and high when approaching the overlapped area.
@@ -264,16 +303,16 @@ A region of uncertainty around the prediction would be produced, which would be 
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{../AAS Poster Stuff/chiswitch_model.png}
-	\label{fig:initial_period_spread}
 	\caption{shows what we hypothesise the OC star distribution would follow for 3 different initial periods, $\alpha, \beta~\&~\gamma$.}
+	\label{fig:spread_initial_period}
 \end{figure}
 We think the difficulty in these predictions of period, for a given age and mass, stem from the lack of information on the initial period distribution.
-In a hypothetical OC, whose stars are born of a single initial rotation period, we think the distribution would look like one of the lines in Figure \ref{fig:initial_period_spread}.
+In a hypothetical OC, whose stars are born of a single initial rotation period, we think the distribution would look like one of the lines in Figure \ref{fig:spread_initial_period}.
 However, in reality these observed OC are made up of a range of masses and initial periods, of which only the former can be measured.
-The different lines in Figure \ref{fig:initial_period_spread} represent theoterical OC data, provided different values of initial period.
+The different lines in Figure \ref{fig:spread_initial_period} represent theoterical distributions, provided different values of initial period.
 When taking an average of all these initial periods, we will get a distribution which looks like the observed OC, which has a degeneracy between the two branches.
 
-The best estimates for inital period of the system can be assumed to be the youngest clusters distribution that is no longer under the influence of disc effects, such as H Persei(NGC 869) in Figure \ref{fig:allclusters}.
+To try and address this, an estimate for inital period distribution can be made from the youngest cluster's distribution, that is no longer under the influence of disc effects, such as H Persei(h\_per) in Figure \ref{fig:allclusters}.
 
 
 
@@ -281,7 +320,11 @@ The best estimates for inital period of the system can be assumed to be the youn
 \sout{Since there is overlap, 1 polynomial fit will give poor predictive results and without inital period is not purely deterministic to the degree we want.
 	To remedy this a probabilistic model will be built that can be used to sample and generate a synthetic population of stars at a given age and a range of masses.}
 
+The degeneracy discussed in previous sections is a large motivator to approch this model probabilistically.
+Instead of generating a polynomial regression and modelling its evolution through time, a heat map of the likelihood of a star being in that spot for a given age and mass could be generated.
+One could then sample stars of random masses for a given age to generate a synthetic population of stars, whos distribution looks like that of an observed OC.
 \section*{Acknowledgements}
+My amazing supervisors $<3$
 
 The Acknowledgements section is not numbered. Here you can thank helpful
 colleagues, acknowledge funding agencies, telescopes and facilities used etc.
