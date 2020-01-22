@@ -66,6 +66,7 @@ $^{3}$Institute for Applied Computational Science, Harvard University, Cambridge
 
 %imported for strikethrough
 \usepackage{ulem}
+\usepackage{float}
 
 \begin{document}
 \label{firstpage}
@@ -118,7 +119,7 @@ This is called \textit{magnetic breaking} and is a very effecient way for a star
 In addition there are  transitional stars between these two populations, which are less numerous than the two populations, showing the time to move between the populations must be rapid.
 This can be seen in Figure \ref{fig:slow_fast_transition}."
 -This part should perhaps be the intro to the method section?
-"It was shown in (Garraffo et al. 2017) that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars."
+"It was shown in \cite{Garraffo_2018} that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars."
 -and this added to another paragraph???
 
 \begin{figure}
@@ -148,14 +149,14 @@ Discussion on gyrochronology and its importance in aging stars...........which l
 
 Though there are lots of field stars with known masses and periods, the difficulty lies in having a correct value for their ages.
 This makes OC, with known ages, ideal for collecting data on period and mass, which can be used readily in the expansion of gyrochronological models. 
-The vast majority of OC data for this project was gathered from \cite{bookthingy}(PLANET BOOK et al. YEAR) as well as some new additions to already existing OC M37 \cite{chang}(Chang et al. 2017) \sout{and some unpublished data generously provided by Jason Curtis.}
+The vast majority of OC data for this project was gathered from \cite{bookthingy}(PLANET BOOK et al. YEAR) as well as some new additions to already existing OC M37,\cite{chang}. \sout{and some unpublished data generously provided by Jason Curtis.}
 Although all these catalogs contained values for period, mass was not often provided.
 The magnitude and waveband(frequency maybe?) of light is corralated heavily with the mass of a star, so this is the parameter one observes when measuring the mass of a star. 
 Each catalog presented their data in a different band of light, which make it difficult to convert them all to mass as different conversions were needed.
 These conversions are complex for each band and vary greatly as a function of mass, with some conversions not covering our lowest masses.
 
 A conversion was possible, however, it did not use the conventional functions to map photometry to mass. 
-Instead I used the Modules for Experiments in Stellar Astrophysics (MESA) Isochrones and Stellar Tracks (MIST) tables \cite{MIST}(MISTTHING et al. 2004), which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
+Instead I used the Modules for Experiments in Stellar Astrophysics (MESA) Isochrones and Stellar Tracks (MIST) tables \cite{Choi_2016}, which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
 I have converted all OC and display them in Figure \ref{fig:allclusters}.
 
 \begin{figure}
@@ -256,7 +257,7 @@ Figure \ref{fig:cross_validation} shows this for 5 subsets.
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{kfold_crossval.png}
-	\caption{shows how cross validation splits a data set and produces a score of that model.}
+	\caption{shows how cross validation splits a data set and produces a score of that model, from \protect\cite{CrossVal}.}
 	\label{fig:cross_validation}
 \end{figure}
 
@@ -337,7 +338,7 @@ Try to keep it short.
 %The best way to enter references is to use BibTeX:
 
 \bibliographystyle{mnras}
-\bibliography{example}
+\bibliography{references}
 
 %%%%%%%%%%%%%%%%%APPENDICES%%%%%%%%%%%%%%%%%%%%%
 
