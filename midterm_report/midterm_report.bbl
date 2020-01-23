@@ -17,6 +17,12 @@
   {mn@eprint@\@tempb}{\@tempb:\@tempc}{\expandafter \expandafter \csname
   mn@eprint@\@tempb\endcsname \expandafter{\@tempc}}}
 
+\bibitem[\protect\citeauthoryear{Beuther, Klessen, Dullemond  \&
+  Henning}{Beuther et~al.}{2014}]{beuther2014protostars}
+Beuther H.,  Klessen R.~S.,  Dullemond C.~P.,   Henning T.~K.,  2014,
+  Protostars and planets VI.
+University of Arizona Press
+
 \bibitem[\protect\citeauthoryear{Choi, Dotter, Conroy, Cantiello, Paxton  \&
   Johnson}{Choi et~al.}{2016}]{Choi_2016}
 Choi J.,  Dotter A.,  Conroy C.,  Cantiello M.,  Paxton B.,   Johnson B.~D.,

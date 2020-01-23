@@ -95,14 +95,6 @@ $^{3}$Institute for Applied Computational Science, Harvard University, Cambridge
 %%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
-\sout{Stars born spinning, Over time they spin down with a mechanism.
-	First pointed out by skumanich(feed back mechqnism so they converge(Faster they spin the LESS??? they lose), however fast branch escape thix for long period of time ) and studied further for hopes of a gyrochronological model.
-	Magnetic breaking modeled and used as a method of spin down by Garraffo et al. 2017.
-	Linked to magnetic field complexity.
-	Dipole causes large arms that make for an effecient spin down.
-	Viewing open clusters one can see the fast, slow and transitional rotators.
-	Some evolution between the two that is UNKNOWN(?).}
-
 Stars are born from the collapse of clouds made of dust and gas.
 This cloud, though being made up of many molecules with their own random velocities, can be said to have an overall spin which, when the star collapses, will be the axis of rotation when the star is born.
 However, this spin rate is not static and will descrease over a stars lifetime, assuming no companion or outside influence.
@@ -139,24 +131,16 @@ Discussion on gyrochronology and its importance in aging stars...........which l
 
 \section{Methods and Observations}
 \subsection{Data Reduction}
-
-\sout{Collected from various papers stated in CITE BOOK, plus personal findings and unpublished data.
-	Each cluster in different photometry and no one fits all conversion.
-	Used MIST tracks to interpolate a mass from the given ages of the stars.
-
-	FIGURE OF ALL CLUSTERS REDUCED
-	MERGE CLUSTERS?}
-
 Though there are lots of field stars with known masses and periods, the difficulty lies in having a correct value for their ages.
 This makes OC, with known ages, ideal for collecting data on period and mass, which can be used readily in the expansion of gyrochronological models. 
-The vast majority of OC data for this project was gathered from \cite{bookthingy}(PLANET BOOK et al. YEAR) as well as some new additions to already existing OC M37,\cite{chang}. \sout{and some unpublished data generously provided by Jason Curtis.}
+The vast majority of OC data for this project was gathered from \cite{beuther2014protostars} as well as some new additions to already existing OC M37,\cite{chang}.
 Although all these catalogs contained values for period, mass was not often provided.
 The magnitude and waveband(frequency maybe?) of light is corralated heavily with the mass of a star, so this is the parameter one observes when measuring the mass of a star. 
 Each catalog presented their data in a different band of light, which make it difficult to convert them all to mass as different conversions were needed.
 These conversions are complex for each band and vary greatly as a function of mass, with some conversions not covering our lowest masses.
 
 A conversion was possible, however, it did not use the conventional functions to map photometry to mass. 
-Instead I used the Modules for Experiments in Stellar Astrophysics (MESA) Isochrones and Stellar Tracks (MIST) tables \cite{Choi_2016}, which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
+Instead I used the Modules for Experiments in Stellar Astrophysics (MESA) Isochrones and Stellar Tracks (MIST) tables from \cite{Choi_2016}, which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
 I have converted all OC and display them in Figure \ref{fig:allclusters}.
 
 \begin{figure}
@@ -171,15 +155,7 @@ These masses, evolving at differnt rates, are very likely to have a degeneracy i
 Instead I restricted the values of the various mass tracks to the clostest ages of that star and from this pool, interpolated between the two clostest photometries for that given age.
 The discontinuity of the tracks, due to discrete time steps, means there will be an inherent error in choosing the pool of ages, this has not currently been addressed, however may be implemented into error propagation in a future model if a Bayesian network approach is used. 
 
-
-
-\subsubsection{M37 shift?}
-\sout{Perhaps due to metalicity}
-
 \subsection{Unsupervised Clustering?}
-\sout{Initial attempt to seperate the fast and slow rotators however problematic due to it not being a "two group" problem.
-	Transitional stars need to be considered, otherwise subjecting the transition to a dirac delta.}
-
 Our inital approach to the problem was to cluster the data into "fast" and "slow" rotators and fit a weighted polynomial regression to each of these groups.
 A polynomial regression is like linear regression, where you fit a straight line to you data $\hat{y} = b_0 + b_1x$, but with polynomial you allow $n$ more higher order terms such as $...+ b_2x^2 + b_3x^3+b_4x^4+...+b_nx^n $ to be considered and becomes\dots
 \begin{equation}
@@ -228,11 +204,6 @@ This is because the transition between these two clusters is effectively instant
 As we also wanted to try understand how these stars transitioned throughout their lifetime, this approach would not extract this kind of information and so clustering was deemed an uneffective method.
 
 \subsection{Polynomial Ridge Regression}
-\sout{slow rotators fit using a polynomial fit of order 4.
-	Sigmoid function overlapped and optimised to change poly term on and off at switch point.
-
-	FIGURE OF CURRENT FIT}
-
 Our next approach was to fit a polynomial to a portion of the "slow" rotators and combine this polynomial with a sigmoid function($\Phi\left(x\right)$), shown in Equation \ref{eq:poly+sigmoid}, to have the transition between the fast and slow rotators.
 The sigmoid function, shown in Equation \ref{eq:sigmoid}, maps any value of $x$ to the range $ 0 \leq \Phi\left(x\right) \leq 1$, this can be thought of as switching between the two lines in Figure \ref{fig:slow_fast_transition}.
 
@@ -297,11 +268,6 @@ A potential solution to this would be to calculate an error associated with each
 A region of uncertainty around the prediction would be produced, which would be low if the data spread was minimal and high when approaching the overlapped area.
 
 \subsection{The Importance of Initial Period, $P_i$} \label{sec:initial_period}
-\sout{Expand of the effect initial period and perhaps metalicity.
-	Other parameters could allow for deeper understanding of the "overlap" sections of the open clusters
-
-	FIGURE OF HOW INTIAL PERIOD CAUSES MULTIPLE LINES TO OVERLAP AND MAKE THE TRANSITION "BLURRY"}
-
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{../AAS Poster Stuff/chiswitch_model.png}
 	\caption{shows what we hypothesise the OC star distribution would follow for 3 different initial periods, $\alpha, \beta~\&~\gamma$.}
@@ -315,12 +281,7 @@ When taking an average of all these initial periods, we will get a distribution 
 
 To try and address this, an estimate for inital period distribution can be made from the youngest cluster's distribution, that is no longer under the influence of disc effects, such as H Persei(h\_per) in Figure \ref{fig:allclusters}.
 
-
-
 \section{Future Work?}
-\sout{Since there is overlap, 1 polynomial fit will give poor predictive results and without inital period is not purely deterministic to the degree we want.
-	To remedy this a probabilistic model will be built that can be used to sample and generate a synthetic population of stars at a given age and a range of masses.}
-
 The degeneracy discussed in previous sections is a large motivator to approch this model probabilistically.
 Instead of generating a polynomial regression and modelling its evolution through time, a heat map of the likelihood of a star being in that spot for a given age and mass could be generated.
 One could then sample stars of random masses for a given age to generate a synthetic population of stars, whos distribution looks like that of an observed OC.

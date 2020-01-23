@@ -5,49 +5,48 @@ The style file: mnras.bst
 Database file #1: references.bib
 Warning--entry type for "CrossVal" isn't style-file defined
 --line 61 of file references.bib
-Warning--I didn't find a database entry for "bookthingy"
 Warning--I didn't find a database entry for "chang"
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-You've used 3 entries,
+You've used 4 entries,
             2881 wiz_defined-function locations,
-            745 strings with 6722 characters,
-and the built_in function-call counts, 1311 in all, are:
-= -- 90
-> -- 102
-< -- 6
-+ -- 49
-- -- 14
-* -- 161
-:= -- 218
+            749 strings with 6877 characters,
+and the built_in function-call counts, 1804 in all, are:
+= -- 112
+> -- 151
+< -- 8
++ -- 72
+- -- 22
+* -- 217
+:= -- 304
 add.period$ -- 0
-call.type$ -- 3
-change.case$ -- 6
-chr.to.int$ -- 3
-cite$ -- 3
-duplicate$ -- 66
-empty$ -- 68
-format.name$ -- 22
-if$ -- 209
+call.type$ -- 4
+change.case$ -- 8
+chr.to.int$ -- 4
+cite$ -- 4
+duplicate$ -- 93
+empty$ -- 100
+format.name$ -- 32
+if$ -- 290
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 2
-newline$ -- 22
-num.names$ -- 18
-pop$ -- 17
+missing$ -- 4
+newline$ -- 26
+num.names$ -- 26
+pop$ -- 31
 preamble$ -- 1
-purify$ -- 12
+purify$ -- 16
 quote$ -- 0
-skip$ -- 38
+skip$ -- 50
 stack$ -- 0
-substring$ -- 55
-swap$ -- 24
-text.length$ -- 12
+substring$ -- 63
+swap$ -- 38
+text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 27
+type$ -- 33
 warning$ -- 0
-while$ -- 20
+while$ -- 26
 width$ -- 0
-write$ -- 42
-(There were 3 warnings)
+write$ -- 52
+(There were 2 warnings)
