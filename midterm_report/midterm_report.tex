@@ -107,10 +107,6 @@ When material at the end of these arms breaks free, the loss in angular momentum
 This loss in AM causes the star to lessen its rotation period and spin down.
 This is called \textit{magnetic breaking} and is a very effecient way for a star to spin down. (CITE HERE ALSO??? WHO?)
 
-"Open clusters(OC) are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this, the stars have not had time to transition and the  stellar disc effects make it very difficult to paramterise and model.
-In addition there are  transitional stars between these two populations, which are less numerous than the two populations, showing the time to move between the populations must be rapid.
-This can be seen in Figure \ref{fig:slow_fast_transition}."
--This part should perhaps be the intro to the method section?
 "It was shown in \cite{Garraffo_2018} that, when accounting for magnetic breaking and AM loss, this bimodal population could be seen with an evolved simulation of stars."
 -and this added to another paragraph???
 
@@ -129,8 +125,12 @@ This model could be used in X Y Z ways.
 Discussion on gyrochronology and its importance in aging stars...........which leads to its importancein other fields etc etc.
 
 
-\section{Methods and Observations}
+\section{Observations}
 \subsection{Data Reduction}
+Open clusters(OC) are coeval groups of stars and, when obeserved in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this, the stars have not had time to transition and the  stellar disc effects make it very difficult to paramterise and model.
+In addition there are  transitional stars between these two populations, which are less numerous than the two populations, showing the time to move between the populations must be rapid.
+This can be seen in Figure \ref{fig:slow_fast_transition}.
+
 Though there are lots of field stars with known masses and periods, the difficulty lies in having a correct value for their ages.
 This makes OC, with known ages, ideal for collecting data on period and mass, which can be used readily in the expansion of gyrochronological models. 
 The vast majority of OC data for this project was gathered from \cite{beuther2014protostars} as well as some new additions to already existing OC M37,\cite{chang}.
@@ -155,8 +155,13 @@ These masses, evolving at differnt rates, are very likely to have a degeneracy i
 Instead I restricted the values of the various mass tracks to the clostest ages of that star and from this pool, interpolated between the two clostest photometries for that given age.
 The discontinuity of the tracks, due to discrete time steps, means there will be an inherent error in choosing the pool of ages, this has not currently been addressed, however may be implemented into error propagation in a future model if a Bayesian network approach is used. 
 
-\subsection{Unsupervised Clustering?}
-Our inital approach to the problem was to cluster the data into "fast" and "slow" rotators and fit a weighted polynomial regression to each of these groups.
+\section{Methods}
+\subsection{Unsupervised Clustering}
+Our inital approach to the problem was to use \textit{Unsupervised Clustering}.
+Clustering is the process of grouping data of similar properties together.
+The process being unsupervised means the data did not have a "correct" label telling us which group it belongs to, which one can use to reinforce and encourage certain clustering.
+
+This clustering would split the data into "fast" and "slow" rotators and we could then fit a polynomial regression to each of these groups.
 A polynomial regression is like linear regression, where you fit a straight line to you data $\hat{y} = b_0 + b_1x$, but with polynomial you allow $n$ more higher order terms such as $...+ b_2x^2 + b_3x^3+b_4x^4+...+b_nx^n $ to be considered and becomes\dots
 \begin{equation}
 	\label{eq:poly}
