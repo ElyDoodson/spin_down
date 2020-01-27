@@ -180,7 +180,7 @@ Our initial approach was to model the two branches (fast and slow rotators) as d
 Clustering is the process of grouping data of similar properties together such as stars on one or the other rotation branch.
 The process being unsupervised means the data did not have a "correct" label telling us which group it belongs to, which one can use to reinforce and encourage certain clustering.
 This method would split the data into clusters that could then be fit with a polynomial regression.
-A polynomial regression is similar to linear regression, where you fit a straight line is fitted to the data $\hat{y} = b_0 + b_1x$, but with a polynomial you allow $j$ more higher order terms such as $...+ b_2x^2 + b_3x^3+b_4x^4+...+b_jx^j $ to be considered such that
+A polynomial regression is similar to linear regression, where you fit a straight line is fitted to the data $\hat{y} = b_0 + b_1x$, but with a polynomial you allow $p$ more higher order terms such as $...+ b_2x^2 + b_3x^3+b_4x^4+...+b_px^p $ to be considered such that
 \begin{equation}
 	\label{eq:poly}
 	\hat{y} = b_0 + \sum_{j = 1}^p b_jx^j
@@ -204,7 +204,7 @@ The performance of this clustering is scored using the mean squared error (MSE),
 		\textup{MSE} = \frac{1}{n}\sum_{i = 1}^n \left(y_i - \left(b_0 + \sum_{j = 1}^p b_jx_i^j\right) \right)^2
 	\end{aligned}
 \end{gather}
-where $y_i$ is the true value, and $\hat{y}_i$ is the predicted value.
+where $n$ is the number of values, $y_i$ is the true value, and $\hat{y}_i$ is the predicted value.
 % \begin{gather}
 % 	\begin{split}
 % 	  m &=n \\
@@ -278,7 +278,7 @@ In Figure \ref{fig:polyfit_twoclusters} I show the results of only the polynomia
 It can be seen from the data and fits that the 450Myr difference has allowed the stars on the slow branch to reduce their spin further.
 A lack of the fast rotator population for NGC6811 can be seen in the region $0.5~\textup{M}_\odot \leq m \leq 1.3~\textup{M}_\odot$.
 This is because the higher mass stars transition first and have had time to transition.
-This optimised polynomial can then be combined with the sigmoid function($\Phi\left(x\right)$), as seen in Equation \ref{eq:poly+sigmoid}, and minimised to produce our current model shown in Figure \ref{fig:model_fit}
+This optimised polynomial can then be combined with the sigmoid function, as seen in Equation \ref{eq:poly+sigmoid}, and minimised to produce our current model shown in Figure \ref{fig:model_fit}
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{model_fit.png}
@@ -287,7 +287,7 @@ This optimised polynomial can then be combined with the sigmoid function($\Phi\l
 \end{figure}
 \begin{align}
 	\label{eq:poly+sigmoid}
-	\textup{Period} = \left(b_0 + b_1m + b_2m^2+\dots+b_im^j\right)*\Phi\left(x\right)
+	\textup{Period} = \left(b_0 + b_1m + b_2m^2+\dots+b_pm^p\right)*\Phi\left(x\right)
 \end{align}
 \begin{align}
 	\label{eq:sigmoid}
@@ -322,7 +322,7 @@ This will provide us with a probabilistic graphical model, displayed in Figure \
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{graphical_model.png}
-	\caption{An illustration of how distributions of $\protect\vec{b}~(= (b_0, b_1, b_2...b_j)$, $\beta$ and static values will be combined to give a predicted period}
+	\caption{An illustration of how distributions of $\protect\vec{b}~(= (b_0, b_1, b_2...b_p)$, $\beta$ and static values will be combined to give a predicted period}
 	\label{fig:graphical_model}
 \end{figure}
 
