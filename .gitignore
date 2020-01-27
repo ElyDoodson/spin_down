@@ -6,3 +6,4 @@ project_notes.odt
 new_MIST_data/
 .*
 unsupervised_clustering_script.py
+.vscode/

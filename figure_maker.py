@@ -602,7 +602,7 @@ ax.plot(
     general_polynomial_chi(coefficients_1.x, white_space, 0.86),
     linewidth=2.2,
     c="#E15A45",
-    label = r"$P_i = \alpha$"
+    label = r"$P_i = Constant1$"
 )
 
 ax.plot(
@@ -610,7 +610,7 @@ ax.plot(
     general_polynomial_chi(coefficients_2.x, white_space, 0.86),
     linewidth=2.2,
     c="#FFBC42",
-    label = r"$P_i = \beta$"
+    label = r"$P_i = Constant2$"
 )
 
 ax.plot(
@@ -618,13 +618,14 @@ ax.plot(
     general_polynomial_chi(coefficients_3.x, white_space, 0.86),
     linewidth=2.2,
     c="#1BE7FF",
-    label = r"$P_i = \gamma $"
+    label = r"$P_i = Constant3$"
 )
-ax.text(1.10, 11, "SLOW", rotation=23, color="#4C4C4C")
+# ax.text(1.10, 11, "SLOW", rotation=23, color="#4C4C4C")
 
-ax.text(0.21, 3, "FAST", rotation=0, color="#4C4C4C")
 
-ax.text(0.35, 7, "TRANSITION", rotation=277, color="#4C4C4C")
+# ax.text(0.21, 3, "FAST", rotation=0, color="#4C4C4C")
+
+# ax.text(0.35, 7, "TRANSITION", rotation=277, color="#4C4C4C")
 ax.legend()
 fig.savefig(
     "C:/Users/elydo/Documents/Harvard/AAS Poster stuff/chiswitch_model.png",
