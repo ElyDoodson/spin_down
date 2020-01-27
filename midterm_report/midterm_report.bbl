@@ -17,6 +17,12 @@
   {mn@eprint@\@tempb}{\@tempb:\@tempc}{\expandafter \expandafter \csname
   mn@eprint@\@tempb\endcsname \expandafter{\@tempc}}}
 
+\bibitem[\protect\citeauthoryear{{Barnes} \& {Kim}}{{Barnes} \&
+  {Kim}}{2010}]{core_env}
+{Barnes} S.~A.,  {Kim} Y.-C.,  2010, \mn@doi [\apj]
+  {10.1088/0004-637X/721/1/675}, \href
+  {https://ui.adsabs.harvard.edu/abs/2010ApJ...721..675B} {721, 675}
+
 \bibitem[\protect\citeauthoryear{Beuther, Klessen, Dullemond  \&
   Henning}{Beuther et~al.}{2014}]{beuther2014protostars}
 Beuther H.,  Klessen R.~S.,  Dullemond C.~P.,   Henning T.~K.,  2014,
@@ -35,10 +41,30 @@ Choi J.,  Dotter A.,  Conroy C.,  Cantiello M.,  Paxton B.,   Johnson B.~D.,
   2016, \mn@doi [The Astrophysical Journal] {10.3847/0004-637x/823/2/102}, 823,
   102
 
+\bibitem[\protect\citeauthoryear{{Curtis}, {Ag{\"u}eros}, {Douglas}  \&
+  {Meibom}}{{Curtis} et~al.}{2019}]{2019ApJ...879...49C}
+{Curtis} J.~L.,  {Ag{\"u}eros} M.~A.,  {Douglas} S.~T.,   {Meibom} S.,  2019,
+  \mn@doi [\apj] {10.3847/1538-4357/ab2393}, \href
+  {https://ui.adsabs.harvard.edu/abs/2019ApJ...879...49C} {879, 49}
+
+\bibitem[\protect\citeauthoryear{{Douglas}, {Ag{\"u}eros}, {Covey}  \&
+  {Kraus}}{{Douglas} et~al.}{2017}]{2017ApJ...842...83D}
+{Douglas} S.~T.,  {Ag{\"u}eros} M.~A.,  {Covey} K.~R.,   {Kraus} A.,  2017,
+  \mn@doi [\apj] {10.3847/1538-4357/aa6e52}, \href
+  {https://ui.adsabs.harvard.edu/abs/2017ApJ...842...83D} {842, 83}
+
 \bibitem[\protect\citeauthoryear{Garraffo et~al.,}{Garraffo
   et~al.}{2018}]{Garraffo_2018}
 Garraffo C.,  et~al., 2018, \mn@doi [The Astrophysical Journal]
   {10.3847/1538-4357/aace5d}, 862, 90
+
+\bibitem[\protect\citeauthoryear{{Newton}, {Irwin}, {Charbonneau},
+  {Berta-Thompson}, {Dittmann}  \& {West}}{{Newton}
+  et~al.}{2016}]{2016ApJ...821...93N}
+{Newton} E.~R.,  {Irwin} J.,  {Charbonneau} D.,  {Berta-Thompson} Z.~K.,
+  {Dittmann} J.~A.,   {West} A.~A.,  2016, \mn@doi [\apj]
+  {10.3847/0004-637X/821/2/93}, \href
+  {https://ui.adsabs.harvard.edu/abs/2016ApJ...821...93N} {821, 93}
 
 \bibitem[\protect\citeauthoryear{github.io}{github.io}{2020}]{CrossVal}
 github.io E.,  2020, {K-fold Cross Validation} Visual Description, \url

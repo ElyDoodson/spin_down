@@ -95,9 +95,9 @@ and Jeremy J. Drake
 	periods of cool stars.
 	This bi-modality stems from stars having fast or slow rotation periods.
 	The evolution of this trend through time suggests a fast transition from fast to slow rotating.
-	Our current understanding of cool star spin down, through magnetic braking, accounts for the slow-rotators branch, while the fast rotators remain somewhat of a mystery.
+	Our current understanding of cool star spin down, through magnetic braking, accounts for the slow rotators branch, while the fast rotators  remain somewhat of a mystery.
 
-	Our goal is to build a predictive probabilistic spin-down model that links the period of a starat any given mass and age.
+	Our goal is to build a predictive probabilistic spin-down model that links the period of a star at any given mass and age.
 	We use machine learning to predict the age at which each star transitions from fast to slow-rotation.
 	Using a graphical model we will translate the distribution of initial periods into a rotation period probability distribution for a given mass and age.
 \end{abstract}
@@ -109,16 +109,17 @@ and Jeremy J. Drake
 \section{Introduction}
 Stars are born from the collapse of clouds made of dust and gas.
 Such a cloud, though being made up of many molecules with their own random velocities, can be said to be spinning in one direction overall.
-Some of this angular momentum is sequestered in newly-formed stars which consequently rotate.
-However, their rotation rates are not static and decrease over a stars lifetime as a result of angular momentum lost through stellar winds.
+Some of this angular momentum (AM) is sequestered in newly-formed stars which consequently rotate.
+However, their rotation rates are not static and decrease over a stars lifetime as a result of AM lost through stellar winds.
 
-Cool stars, which are those classified as having a convective envelope (a turbulent layer in which convection carries a significant fraction of the outward energy flow) and a mass $\lesssim 1.3 \textup{M}_\odot$, have an interior magnetic dynamo powered by rotation which drives a magnetized wind. Ejected stellar material travels along magnetic field lines, effectively co-rotating with the star out to several stellar radii and carrying away much more angular momentum (AM) than if the material was lost at the stellar surface. 
+Cool stars, which are those classified as having a convective envelope (a turbulent layer in which convection carries a significant fraction of the outward energy flow) and a mass $\lesssim 1.3 \textup{M}_\odot$, have an interior magnetic dynamo powered by rotation which drives a magnetized wind. Ejected stellar material travels along magnetic field lines, effectively co-rotating with the star out to several stellar radii and carrying away much more AM than if the material was lost at the stellar surface. 
 
-The rate at which a star rotates drives the stellar stength of this magnetic breaking, the faster a star rotates, the stronger its magnetic dynamo and therefore the more prominant the winds that slow the star.
-The resulting change in stellar rotation rate can in principle be used to estimate the age of cool stars, a technique called "gyrochronology".
-The self-regulating magnetic breaking mechanism was expected to cause all the stars in an evolving population to converge together and is why gyrochronology works for older stars: they have had time to converge to the regime one can model.
+The rate at which a star rotates drives the stellar strength of this magnetic breaking, the faster a star rotates, the stronger its magnetic dynamo and therefore the more prominent the winds that slow the star.
+This self-regulating magnetic breaking mechanism was expected to cause all the stars in an evolving population to converge to a unique relationship between rotation period and age that depends on mass.
+This is the basis for Gyrochronology, a technique that can be used to estimate the age of cool stars.
 However, when observing groups of coeval stars in open clusters (OC) with ages $< 1Gyrs$, a branch of fast rotating stars is also observed, see Figure \ref{fig:slow_fast_transition}.
 This fast rotators branch is a mystery and is not encompassed by current gyrochronological models, leaving a gap in their predictive capabilities.
+There is a model that attempts to explain spin-down using core-envelope decoupling in \cite{core_env}, but fully convective stars have challenged this by showing the same spin-down (\cite{2016ApJ...821...93N}; \cite{2017ApJ...842...83D}.)
 This work hopes to fill this gap.
 
 % Cool stars are classified as having a convective envelope, meaning the outer-most layer of the star is moving.
@@ -127,7 +128,7 @@ This work hopes to fill this gap.
 % Ejected stellar material travels along these lines, forming large arms which effectively co-rotate with the star.
 % When material at the end of these arms breaks free, the loss in angular momentum (AM) is much grater than if the same material was lost at the stars surface.
 % This loss in AM causes the star to lessen its rotation period and spin down.
-% This is called \textit{magnetic breaking} and is a very effecient way for a star to spin down. (CITE HERE ALSO??? WHO?)
+% This is called \textit{magnetic breaking} and is a very efficient way for a star to spin down. (CITE HERE ALSO??? WHO?)
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{slow_fast_transition.png}
@@ -135,52 +136,51 @@ This work hopes to fill this gap.
 	\label{fig:slow_fast_transition}
 \end{figure}
 
-Understanding the evolution of stellar rotation is crucial for understanding stellar magnetic activity as the magnetic dynamo generated by stellar rotation is responsible for many observed stellar characteristics such as star spots, UV/X-ray chromospheric and coronal emission, and the aforementioned magnetised winds driving stellar spin down.
-So far our understanding of these magnetised winds is purely derived from studies of our own Sun so our understanding of their origin is therefore incomplete; stellar spin-down provides a powerful probe of the physics of these winds.
-Stellar activity and wind create an energetic photon and particle radiation environment that has significant impact on the formation of planets and their subsequent atmospheric evolution: which is important for close-in planets, that constitute the vast majority of detected rocky planets orbiting in the "habitable zone".
+Understanding the evolution of stellar rotation is crucial for understanding stellar magnetic activity.
+The magnetic dynamo generated by stellar rotation is responsible for many observed stellar characteristics such as star spots, UV/X-ray chromospheric and coronal emission, and the aforementioned magnetised winds driving stellar spin down.
+
+So far our understanding of these magnetised winds is purely from the Sun.
+Stellar activity and wind create an energetic photon and particle radiation environment that has significant impact on the formation of planets and their subsequent atmospheric evolution.
+This is important for planets orbiting close to their host star which constitute the vast majority of detected rocky planets orbiting in the "habitable zone".
 Understanding this will be crucial to the development of the rising field of exoplanet habitability.
 
 It was shown in \cite{Garraffo_2018} that, when accounting for the effects of surface magnetic field complexity on AM loss, the bimodal rotation population could be reproduced in simulations of stellar spin down.
-This was an analytical approach to the problem, however, with a wealth of new data from Kepler, K2 and TESS, this has provided the opportunity to approach gyrochronology from a more data-driven approach and form an even greater understanding of the parameters that constrain such systems.
+This was an analytical approach to the problem, however, a wealth of new data from Kepler, K2 and TESS, has provided the opportunity to approach gyrochronology from a more data-driven approach and form an even greater understanding of the parameters that constrain such systems.
+
 The aim of this project is to utilize this growing database of observed stellar rotation periods and new numerical methods of machine learning to make a model capable of predicting a star's period, for a given mass and age.
 
 \section{Observations}
 \subsection{Data Reduction}
-OC are coeval groups of stars and, when observed in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this time, stars are thought to be magnetically coupled with their stellar discs which modulate stellar rotation through a process known as "disc locking". 
-In addition there are  transitional stars between these two populations, which are less numerous, showing that the time to move between the populations must be rapid.
-This can be seen in Figure \ref{fig:slow_fast_transition}.
-
 Though there are lots of field stars with known masses and periods, the difficulty lies in having a correct value for their ages.
-This makes OC with known ages, observed by Kepler, K2 and TESS, ideal for collecting data on period and mass.
+OC are coeval groups of stars, making them ideal for collecting data on period and mass when their ages are known.
+When observed in period and mass space, two distinct populations of fast and slow rotators can be seen after $\approx 10$Myrs; before this time, stars are magnetically coupled with their stellar discs which modulate stellar rotation through "disc locking". 
+In addition there are transitional stars between these two populations, which are less numerous, showing that the time to move between the populations must be rapid, shown in Figure \ref{fig:slow_fast_transition}.
 
 Stellar rotation periods for OC were gathered from \cite{beuther2014protostars} and combined with our new additions to already existing OC measurements, such as for the M37 cluster \cite{chang}.
 Although all these catalogs contained values for period, mass was not often provided.
 Stellar masses were derived from catalogued multi-band photometry converted using stellar model photometric predictions. 
-
 I used the Modules for Experiments in Stellar Astrophysics (MESA) Isochrones and Stellar Tracks (MIST) tables from \cite{Choi_2016}, which are simulations that provide information on the properties of stars, for a range of masses, evolved through time.
 I have obtained masses for all OC stars in our master catalogue and display them in Figure \ref{fig:allclusters}.
 
 \begin{figure}
 	\centering
 	\includegraphics[width = 0.5\textwidth]{allclusters.png}
-	\caption[]{Plot showing all converted OC and their respective ages}
+	\caption[]{Plot of period versus mass of all converted OC and their respective ages}
 	\label{fig:allclusters}
 \end{figure}
 
-\sout{These tracks start at discrete mass steps (e.g 0.1, 0.15...1.35, 1.40~$\textup{M}_\odot$ etc).
-These masses, evolving at different rates, are very likely to have a degeneracy in their photometry, meaning one star can have the same photometry value as another at a different age and mass, and as a consequence the conversion was not as simple as choosing the two closest photometries and interpolating.
-Instead I restricted the values of the various mass tracks to the closest ages of that star and from this pool, interpolated between the two closest photometries for that given age.
-The discontinuity of the tracks, due to discrete time steps, means there will be an inherent error in choosing the pool of ages, this has not currently been addressed, however may be implemented into error propagation in a future model if a Bayesian network approach is used.} TOO MUCH DETAIL?!?!?!
+% \sout{These tracks start at discrete mass steps (e.g 0.1, 0.15...1.35, 1.40~$\textup{M}_\odot$ etc).
+% These masses, evolving at different rates, are very likely to have a degeneracy in their photometry, meaning one star can have the same photometry value as another at a different age and mass, and as a consequence the conversion was not as simple as choosing the two closest photometries and interpolating.
+% Instead I restricted the values of the various mass tracks to the closest ages of that star and from this pool, interpolated between the two closest photometries for that given age.
+% The discontinuity of the tracks, due to discrete time steps, means there will be an inherent error in choosing the pool of ages, this has not currently been addressed, however may be implemented into error propagation in a future model if a Bayesian network approach is used.} TOO MUCH DETAIL?!?!?!
 
 \section{Analysis Methods}
-The methods laid out in this section are aimed at attaining a predicted period as a function of mass and age.
 \subsection{Unsupervised Clustering}
-Our initial approach to the problem was to use \textit{Unsupervised Clustering}.
+Our initial approach was to model the two branches (fast and slow rotators) as different populations. In order to separate them we use \textit{Unsupervised Clustering}.
 Clustering is the process of grouping data of similar properties together such as stars on one or the other rotation branch.
 The process being unsupervised means the data did not have a "correct" label telling us which group it belongs to, which one can use to reinforce and encourage certain clustering.
-
-This clustering would split the data into "fast" and "slow" rotators and I could then fit a polynomial regression to each of these groups.
-A polynomial regression is like linear regression, where you fit a straight line is fitted to the data $\hat{y} = b_0 + b_1x$, but with a polynomial you allow $n$ more higher order terms such as $...+ b_2x^2 + b_3x^3+b_4x^4+...+b_nx^n $ to be considered such that
+This method would split the data into clusters that could then be fit with a polynomial regression.
+A polynomial regression is similar to linear regression, where you fit a straight line is fitted to the data $\hat{y} = b_0 + b_1x$, but with a polynomial you allow $j$ more higher order terms such as $...+ b_2x^2 + b_3x^3+b_4x^4+...+b_jx^j $ to be considered such that
 \begin{equation}
 	\label{eq:poly}
 	\hat{y} = b_0 + \sum_{j = 1}^p b_jx^j
@@ -188,9 +188,8 @@ A polynomial regression is like linear regression, where you fit a straight line
 This allows, $\hat{y}$, to be a closer approximation to the true value, $y$, because the higher order terms allow the regression to change more rapidly, fitting the data more closely.
 
 After a polynomial regression of the two groups, I cycle through each star in a cluster and assign it one or the other of the groups.
-After each star was assessed, a new polynomial fit was generated for each cluster and the process repeated until stars no longer changed groups.
-To measure the score, the mean squared error(MSE), Equation \ref{eq:mse}, was minimised and reduced.
-% \begin{align}a
+After each star was assessed, a new polynomial fit was generated for each clustered group and the process repeated until stars no longer changed groups.
+The performance of this clustering is scored using the mean squared error (MSE), Equation \ref{eq:mse}, was minimised and reduced.
 \begin{gather}
 	\begin{aligned}
 		\label{eq:mse}
@@ -225,19 +224,21 @@ Minimising this MSE rewards the model that fits closer to the true data.
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{unsupervised_clustering.png}
-	\caption{The results of unsupervised clustering of Praesepe in which stars are assigned to either the fast or slow rotating groups. The "fast" rotators are shown in orange, "slow" rotators are shown in orange and their respective polynomial fits.}
+	\caption{The results of unsupervised clustering on period versus mass data on the Praesepe cluster in which stars are assigned to either the fast or slow rotating groups. The fast rotators are shown in orange, slow rotators are shown in orange and their respective polynomial fits.}
 	\label{fig:unsupervised_clustering}
 \end{figure}
 
 Figure \ref{fig:unsupervised_clustering} shows the results of this approach.
-The fits generated were a polynomial $\mathcal{O}(x^3)$ for the blue "slow" rotators, and $\mathcal{O}(x)$ for the orange "fast" rotators.
-As can be seen, this approach does not generate an accurate representation of the two groups.
-This is because this modelling technique splits the data into two groups, which will have an instantaneous transition between them, however, in reality this is not the case, as can be seen from the large transitional region in \ref{fig:slow_fast_transition}.
+The fits generated were a polynomial $\mathcal{O}(x^3)$ for the slow rotators, and $\mathcal{O}(x)$ for the fast rotators.
+As shown, this approach does not generate an accurate representation of the two groups.
+This is because this modelling technique splits the data into two groups, that has an abrupt transition between them, however, in reality this is not the case and shown in the large transitional region in \ref{fig:slow_fast_transition}.
 % This is because the modelled transition between these two clusters is effectively instantaneous, however, in reality this is not the case.
-We also wanted to try to understand how these stars transitioned and since this approach would not extract this kind of information clustering was deemed an insufficient method.
+% We also wanted to try to understand how these stars transitioned and since this approach would not extract this kind of information clustering was deemed an insufficient method.
+As a result, this method neglects all the information concerning the transition of the stars from one regime to the other.
+For that reason, we decided to explore methods that would capture that.
 
 \subsection{Polynomial Ridge Regression}
-Our next approach was to fit a polynomial to a portion of the "slow" rotators and combine this polynomial with a sigmoid function($\Phi\left(x\right)$), shown in Equation \ref{eq:sigmoid} below, to represent the transition between the fast and slow rotators.
+Our next approach was to fit a polynomial to a portion of the slow rotators and combine this polynomial with a sigmoid function, $\Phi\left(x\right)$ shown in Equation \ref{eq:sigmoid} below, to represent the transition between the fast and slow rotators.
 The sigmoid function maps any value of $x$ to the range $ 0 \leq \Phi\left(x\right) \leq 1$, and can be thought of as switching between the two lines in Figure \ref{fig:slow_fast_transition}.
 
 The method consisted of isolating just the slow rotators population for each cluster.
@@ -250,7 +251,7 @@ This regularisation coefficient, $\lambda$, and the degree of polynomial, $p$, w
 	\textup{MSE} = \frac{1}{n}\sum_{i = 1}^n \left(y_i - b_0 - \sum_{j = 1}^p b_jx_i^j \right)^2 + \lambda \sum_{j = 1}^p b^2_j
 \end{equation}
 
-Cross validation is a method to choose the best model from a selection, such as we have here with varying polynomial degree and regularisation term.
+Cross validation is a method to choose the best model from a selection of models with varied parameters, such as we have here with varying polynomial degree and regularisation term.
 For each model, the data is split into a number of random subsets which maintain the original data distribution.
 One of these subsets is chosen as the validation set, and used to score the current model.
 The remaining subsets are then used to train the model on.
@@ -269,38 +270,41 @@ Figure \ref{fig:cross_validation} shows this for 5 subsets.
 
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{polyfit_twoclusters}
-	\caption{The rotation period as a function of stellar mass for stars in  M37 in blue and NGC6811 in orange with their respective minimised polynomial fits.}
+	\caption{The rotation period as a function of stellar mass for stars in M37 in blue and NGC6811 in orange with their respective minimised polynomial fits.}
 	\label{fig:polyfit_twoclusters}
 \end{figure}
 
 In Figure \ref{fig:polyfit_twoclusters} I show the results of only the polynomial ridge regression for two clusters of different ages.
-It can be seen from the data and fits that the 450Myr difference has allowed the stars on the "slow" branch to reduce their spin further.
-A lack of the "fast" rotator population for NGC6811 can be seen in the region $0.5~\textup{M}_\odot \leq m \leq 1.3~\textup{M}_\odot$.
+It can be seen from the data and fits that the 450Myr difference has allowed the stars on the slow branch to reduce their spin further.
+A lack of the fast rotator population for NGC6811 can be seen in the region $0.5~\textup{M}_\odot \leq m \leq 1.3~\textup{M}_\odot$.
 This is because the higher mass stars transition first and have had time to transition.
-
 This optimised polynomial can then be combined with the sigmoid function($\Phi\left(x\right)$), as seen in Equation \ref{eq:poly+sigmoid}, and minimised to produce our current model shown in Figure \ref{fig:model_fit}
+
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{model_fit.png}
-	\caption{The result of polynomial ridge regression minimised on Praesepe.}
+	\caption{The period versus mass data of Praesepe and the resulting minimised polynomial ridge regression.}
 	\label{fig:model_fit}
 \end{figure}
 \begin{align}
 	\label{eq:poly+sigmoid}
-	\textup{Period} = \left(b_0 + b_1m + b_2m^2...b_im^j\right)*\Phi\left(x\right) 
+	\textup{Period} = \left(b_0 + b_1m + b_2m^2+\dots+b_im^j\right)*\Phi\left(x\right)
 \end{align}
 \begin{align}
 	\label{eq:sigmoid}
-	\Phi\left(x\right) = \frac{1}{1 + \exp^{-x}}
+	\Phi\left(x\right) = \frac{1}{1 + \exp^{-(\beta x + \alpha)}}
 \end{align}
-The coefficients of these polynomials were thought to be the key to understanding the progression of the system.
-However, it was found that there was no obvious trend to these coefficients through time.
-The fit in Figure \ref{fig:model_fit} is able to predict the majority of the "slow" and "fast" rotator branch, however, it becomes problematic for the region in which they overlap, which varies in size for different OC.
+where $\beta$ is the slope of the sigmoid and $\alpha$ is the displacement along the $x$-axis.
+
+Originally, we aimed to interpret the time evolution of these polynomials as the evolution of spin.
+However, we found that the shape of the slow rotators changed in a way that required to change the order of the functional dependence (\cite{2019ApJ...879...49C}).
+
+The fit in Figure \ref{fig:model_fit} is able to predict the majority of the slow and fast rotator branch, however, it becomes problematic for the region in which they overlap, which varies in size for different OC.
 We think this degeneracy is caused by a spread of initial periods and is discussed further in Section \ref{sec:initial_period}.
 
 \subsection{The Importance of Initial Period, $P_i$} \label{sec:initial_period}
 \begin{figure}
 	\includegraphics[width = 0.5\textwidth]{../AAS Poster Stuff/chiswitch_model.png}
-	\caption{Theoretical lines that Praesepe data would follow if it was born with an initial period equal to a constant e.g. Constant1/Constant2/Constant3}
+	\caption{Theoretical lines that Praesepe's period versus mass data would follow if it was born with an initial period equal to a constant e.g. Constant1/Constant2/Constant3}
 	\label{fig:spread_initial_period}
 \end{figure}
 We think the difficulty in these predictions of period, for a given age and mass, stem from the lack of information on the initial period distribution.
@@ -311,14 +315,35 @@ When taking an average of all these initial periods, we will get a distribution 
 
 To try and address this, an estimate for initial period distribution can be made from the youngest cluster's distribution, that is no longer under the influence of disc effects, such as H Persei (h\_per) in Figure \ref{fig:allclusters}.
 
-\section{Future Work?}
-This paragraph goes here somewhere.
-A potential solution to the degree would be to calculate an error associated with each point of the fit.
-A region of uncertainty around the prediction would be produced, which would be low if the data spread was minimal and high when approaching the overlapped area.
+\section{Future Work}
+So far models have been driven heuristically.
+Future attempts will be derived from first principles, meaning they will be drawn from fundamental distributions rooted in a physical understanding of the system, and, using inference, will give us confidence intervals on a prediction: directly addressing the degeneracy present in earlier models.
+This will provide us with a probabilistic graphical model, displayed in Figure \ref{fig:graphical_model}.
 
-The degeneracy discussed in previous sections is a large motivator to approach this model probabilistically.
-Instead of generating a polynomial regression and modelling its evolution as a function of cluster age, a heat map of the likelihood of a star being in that spot for a given age and mass could be generated.
-One could then sample stars of random masses for a given age to generate a synthetic population of stars, whos distribution looks like that of an observed OC.
+\begin{figure}
+	\includegraphics[width = 0.5\textwidth]{graphical_model.png}
+	\caption{An illustration of how distributions of $\protect\vec{b}~(= (b_0, b_1, b_2...b_j)$, $\beta$ and static values will be combined to give a predicted period}
+	\label{fig:graphical_model}
+\end{figure}
+
+By $03/02/2020$, the aim is to solidifying my understanding of the graphical model, how it applies to the problem and if it is an appropriate modeling technique.
+Days until $17/02/2020$ will be spent understanding Markov Chain Monte Carlo (MCMC) methods and probabilistic coding modules "Pyro" and "PyTorch".
+By the end of March, a determined model will be obtained and test its viability.
+From April onwards time will be used to write the paper presenting the finding.
+
+Ultimately we hope to obtain a paper that lays out a model that can accurately recreate and predict period of a star with a known age and mass.
+However, if an adequate model is not found there are many approaches with Neural Networks that can predict with a quantified error.
+
+% \subsection{temporary jargon}
+% A potential solution to the degeneracy would be to guide the model to a more probabilistically solution.
+% This would consist of drawing the values from distributions and generating 
+ 
+% A potential solution to the degeneracy would be to calculate an error associated with each point of the fit.
+% A region of uncertainty around the prediction would be produced, which would be low if the data spread was minimal and high when approaching the overlapped area.
+
+% The degeneracy discussed in previous sections is a large motivator to approach this model probabilistically.
+% Instead of generating a polynomial regression and modelling its evolution as a function of cluster age, a heat map of the likelihood of a star being in that spot for a given age and mass could be generated.
+% One could then sample stars of random masses for a given age to generate a synthetic population of stars, whos distribution looks like that of an observed OC.
 % \section*{Acknowledgements}
 % My amazing supervisors $<3$
 
