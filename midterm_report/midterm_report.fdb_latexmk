@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex midterm_report"] 1580087725 "midterm_report.aux" "midterm_report.bbl" "midterm_report" 1580090378
+["bibtex midterm_report"] 1580093901 "midterm_report.aux" "midterm_report.bbl" "midterm_report" 1580093907
   "c:/texlive/2019/texmf-dist/bibtex/bst/mnras/mnras.bst" 1579031537 43377 4db2f843e4986670b152898ac35c448e ""
-  "midterm_report.aux" 1580090377 5342 2ff887d78e814e0151f243b1819990db "pdflatex"
+  "midterm_report.aux" 1580093906 5342 7dd7fb8f3ef5d45d14a6aad9f3263c18 "pdflatex"
   "references.bib" 1580087718 2411 6750fa5a9afda384b13e137ced5bf77a ""
   (generated)
-  "midterm_report.bbl"
   "midterm_report.blg"
-["pdflatex"] 1580090372 "c:/dev/spin_down/midterm_report/midterm_report.tex" "c:\dev\spin_down\midterm_report/midterm_report.pdf" "midterm_report" 1580090378
+  "midterm_report.bbl"
+["pdflatex"] 1580093902 "c:/dev/spin_down/midterm_report/midterm_report.tex" "c:\dev\spin_down\midterm_report/midterm_report.pdf" "midterm_report" 1580093907
   "c:/Users/elydo/Documents/Harvard/Midterm_report_images/../AAS Poster Stuff/chiswitch_model.png" 1580087146 279857 990cda8565eae0398dc0dd4989b49618 ""
   "c:/Users/elydo/Documents/Harvard/Midterm_report_images/allclusters.png" 1580080840 363945 23c4faa870ce5d9c9e108b093f5fdb32 ""
   "c:/Users/elydo/Documents/Harvard/Midterm_report_images/kfold_crossval.png" 1579633834 130575 e046450ee20a62ba3d99adcaf99a7a30 ""
@@ -14,7 +14,7 @@
   "c:/Users/elydo/Documents/Harvard/Midterm_report_images/polyfit_twoclusters.png" 1580080874 427157 f618b0b30c22ffdace2f417176d91baf ""
   "c:/Users/elydo/Documents/Harvard/Midterm_report_images/slow_fast_transition.png" 1579294850 734890 b43c61474ff13f725b8ea259c8ae471d ""
   "c:/Users/elydo/Documents/Harvard/Midterm_report_images/unsupervised_clustering.png" 1579388341 94268 ce4556d0266c7467272788d8478ef7c2 ""
-  "c:/dev/spin_down/midterm_report/midterm_report.tex" 1580090371 23245 5d85760a80096c2c08986b8db9a531a3 ""
+  "c:/dev/spin_down/midterm_report/midterm_report.tex" 1580093895 23722 d39fc7b09883d9dad7797f09484efe26 ""
   "c:/texlive/2019/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1579029242 2971 def0b6c1f0b107b3b936def894055589 ""
   "c:/texlive/2019/texmf-dist/fonts/map/fontname/texfonts.map" 1579030182 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2019/texmf-dist/fonts/tfm/jknappen/ec/ecbx0800.tfm" 1579029795 3584 269b66e921ba58750c12f7f1c8ea3ebd ""
@@ -150,15 +150,15 @@
   "c:/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1579034185 4776304 79a2a030cd18a4df42241ddd0f5befde ""
   "c:/texlive/2019/texmf-var/web2c/pdftex/pdflatex.fmt" 1579034271 4290737 293b768c1fe2ca88b47ea325b953408c ""
   "c:/texlive/2019/texmf.cnf" 1579034163 673 4ae7b2f49cee444c5343a45b5d0f169c ""
-  "c:\dev\spin_down\midterm_report/midterm_report.aux" 1580090377 5342 2ff887d78e814e0151f243b1819990db ""
-  "midterm_report.aux" 1580090377 5342 2ff887d78e814e0151f243b1819990db "pdflatex"
-  "midterm_report.bbl" 1580087725 2162 11fc80d25392a0e34f769c812a1852ea "bibtex midterm_report"
-  "midterm_report.out" 1580090377 488 c8e42a4b7e1a8f2980d3802a93dc4063 "pdflatex"
-  "midterm_report.tex" 1580090371 23245 5d85760a80096c2c08986b8db9a531a3 ""
+  "c:\dev\spin_down\midterm_report/midterm_report.aux" 1580093906 5342 7dd7fb8f3ef5d45d14a6aad9f3263c18 ""
+  "midterm_report.aux" 1580093906 5342 7dd7fb8f3ef5d45d14a6aad9f3263c18 "pdflatex"
+  "midterm_report.bbl" 1580093902 2162 11fc80d25392a0e34f769c812a1852ea "bibtex midterm_report"
+  "midterm_report.out" 1580093906 488 c8e42a4b7e1a8f2980d3802a93dc4063 "pdflatex"
+  "midterm_report.tex" 1580093895 23722 d39fc7b09883d9dad7797f09484efe26 ""
   (generated)
-  "midterm_report.log"
+  "c:\dev\spin_down\midterm_report/midterm_report.pdf"
+  "midterm_report.aux"
+  "midterm_report.pdf"
   "c:\dev\spin_down\midterm_report/midterm_report.log"
   "midterm_report.out"
-  "c:\dev\spin_down\midterm_report/midterm_report.pdf"
-  "midterm_report.pdf"
-  "midterm_report.aux"
+  "midterm_report.log"
