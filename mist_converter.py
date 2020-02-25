@@ -102,7 +102,7 @@ def draw_boxplot(data, edge_color, fill_color):
 filename1 = "new_MIST_data/MIST_V1.2_feh0_afe0.fits"
 data1 = Table.read(filename1, format="fits")
 features = data1.to_pandas()
-features_with_tau = pd.read_csv("D:/dev/spin_down/new_MIST_data/tau_mist.csv", sep="\t")
+features_with_tau = pd.read_csv("c:/dev/spin_down/new_MIST_data/tau_mist.csv", sep="\t")
 # features_with_tau = features_with_tau.sort_values(by = "star_mass")
 # features.describe()
 # list(features.columns.values)
@@ -119,7 +119,7 @@ features = features[features["star_mass"] <= 2.0]
 # features.describe()
 
 #%%
-path = "D:/dev/spin_down/new_data/"
+path = "c:/dev/spin_down/new_data/"
 cluster_list = os.listdir(path)
 files = [os.listdir(path + str(cluster)) for cluster in cluster_list]
 cluster_dict = {}
@@ -130,7 +130,7 @@ age = 70 * 10 ** 6
 age_err = 50 * 10 ** 6
 dist = 165
 reddening = 0.11  # B-v
-path = "D:/dev/spin_down/new_data/" + "alpha_per/prosser_1997.tsv"
+path = "c:/dev/spin_down/new_data/" + "alpha_per/prosser_1997.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -168,7 +168,7 @@ age = 600 * 10 ** 6
 age_err = 150 * 10 ** 6
 dist = 47
 reddening = 0.0
-path = "D:/dev/spin_down/new_data/hyades/douglas_2016.tsv"
+path = "c:/dev/spin_down/new_data/hyades/douglas_2016.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -203,7 +203,7 @@ age = 13e6
 age_err = 3 * 10 ** 6
 dist = 2291  # 11.8 dist mod
 reddening = 0
-path = "D:/dev/spin_down/new_data/" + "h_per/moraux_2013.tsv"
+path = "c:/dev/spin_down/new_data/" + "h_per/moraux_2013.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -242,7 +242,7 @@ age = 220 * 10 ** 6
 age_err = 150 * 10 ** 6
 dist = 470
 reddening = 0.07  # b-v
-path = "D:/dev/spin_down/new_data/" + "m34/meibom_2011.tsv"
+path = "c:/dev/spin_down/new_data/" + "m34/meibom_2011.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -281,7 +281,7 @@ age = 148e6
 age_err = 150 * 10 ** 6
 dist = 850
 reddening = 0
-path = "D:/dev/spin_down/new_data/" + "m35/meibom_2009.tsv"
+path = "c:/dev/spin_down/new_data/" + "m35/meibom_2009.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -321,7 +321,7 @@ age = 550e6
 age_err = 15 * 10 ** 6
 dist = 1400
 reddening = 0.227
-path = "D:/dev/spin_down/new_data/" + "m37/chang_2015.tsv"
+path = "c:/dev/spin_down/new_data/" + "m37/chang_2015.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -372,7 +372,7 @@ age = 130e6
 age_err = 30 * 10 ** 6
 dist = 1000
 reddening = 0.22  # b-v
-path = "D:/dev/spin_down/new_data/" + "m50/irwin_2009.tsv"
+path = "c:/dev/spin_down/new_data/" + "m50/irwin_2009.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -413,7 +413,7 @@ age = 210e6
 age_err = 30 * 10 ** 6
 dist = 872
 reddening = 0.028  # b-v
-path = "D:/dev/spin_down/new_data/" + "ngc2301/sukhbold_2009.tsv"
+path = "c:/dev/spin_down/new_data/" + "ngc2301/sukhbold_2009.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -452,7 +452,7 @@ age = 150e6
 age_err = 20 * 10 ** 6
 dist = 407.4  # 8.05 distance mod
 reddening = 0.12  # b-v
-path = "D:/dev/spin_down/new_data/" + "ngc2516/irwin_2007.tsv"
+path = "c:/dev/spin_down/new_data/" + "ngc2516/irwin_2007.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -505,7 +505,7 @@ age = 38.5e6
 age_err = 6 * 10 ** 6
 dist = 361.4
 reddening = 0.186  # Av
-path = "D:/dev/spin_down/new_data/" + "ngc2547/irwin_2008.tsv"
+path = "c:/dev/spin_down/new_data/" + "ngc2547/irwin_2008.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -544,7 +544,7 @@ age = 1000e6
 age_err = 150 * 10 ** 6
 dist = 1096
 reddening = 0.15  # Av
-path = "D:/dev/spin_down/new_data/" + "ngc6811/curtis_2019.csv"
+path = "c:/dev/spin_down/new_data/" + "ngc6811/curtis_2019.csv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -589,7 +589,7 @@ age = 125e6
 age_err = 20 * 10 ** 6
 dist = 136
 reddening = 0.12  # Av = 0.12, AK = 0.01, E(B-V) = 0.04
-path = "D:/dev/spin_down/new_data/" + "pleiades/rebull_2016.tsv"
+path = "c:/dev/spin_down/new_data/" + "pleiades/rebull_2016.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -628,7 +628,7 @@ age = 790 * 10 ** 6
 age_err = 150 * 10 ** 6
 dist = 184
 reddening = 0.027
-path = "D:/dev/spin_down/new_data/praesepe/rebull_2017.tsv"
+path = "c:/dev/spin_down/new_data/praesepe/rebull_2017.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -676,7 +676,7 @@ age = 8e6
 age_err = 3 * 10 ** 6
 dist = 170  # estimate
 reddening = 0
-path = "D:/dev/spin_down/new_data/" + "usco/rebull_2018.tsv"
+path = "c:/dev/spin_down/new_data/" + "usco/rebull_2018.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -719,7 +719,7 @@ age = 2500e6
 age_err = 600 * 10 ** 6
 dist = 2208
 reddening = 0.006  #  0.41 to 0.89 mag
-path = "D:/dev/spin_down/new_data/" + "ngc6819/meibom_2015.tsv"
+path = "c:/dev/spin_down/new_data/" + "ngc6819/meibom_2015.tsv"
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
@@ -759,9 +759,9 @@ age = 4200e6
 age_err = 1000 * 10 ** 6
 dist = 816
 reddening = 0.047  # taylor 2007
-path1 = "D:/dev/spin_down/new_data/" + "m67/barnes_2016.csv"
-path2 = "D:/dev/spin_down/new_data/" + "m67/gonzalez_2016.tsv"
-path3 = "D:/dev/spin_down/new_data/" + "m67/gonzalez2_2016.tsv"
+path1 = "c:/dev/spin_down/new_data/" + "m67/barnes_2016.csv"
+path2 = "c:/dev/spin_down/new_data/" + "m67/gonzalez_2016.tsv"
+path3 = "c:/dev/spin_down/new_data/" + "m67/gonzalez2_2016.tsv"
 
 
 data = pd.read_csv(path1, comment="#", delimiter="\t", skipinitialspace=True)
@@ -883,9 +883,13 @@ ax.scatter(
 )
 ax.legend()
 
+#%%
+# testy = pd.DataFrame.from_dict(cluster_dict)
+# print(testy)
+pd.DataFrame.from_dict(cluster_dict).to_csv("c:/dev/spin_down/all_cluster_data.csv", index = False, sep = "\t")
 #%% Create CSV Files
 for name in cluster_list:
-    path = "D:/dev/spin_down/mistmade_data/{}_pm_{:e}.csv".format(
+    path = "c:/dev/spin_down/mistmade_data/{}_pm_{:e}.csv".format(
         name, cluster_dict[name]["age"] / 1e6
     )
     cluster_dict[name]["data_frame"].to_csv(path_or_buf=path, index=False, sep="\t")
@@ -939,7 +943,7 @@ age = ..........
 age_err = 150*10**6
 dist = ............
 reddening = ...........
-path = "D:/dev/spin_down/new_data/" + ...............
+path = "c:/dev/spin_down/new_data/" + ...............
 
 
 data = pd.read_csv(path, comment="#", delimiter="\t", skipinitialspace=True)
