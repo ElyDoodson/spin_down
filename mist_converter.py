@@ -886,7 +886,17 @@ ax.legend()
 #%%
 # testy = pd.DataFrame.from_dict(cluster_dict)
 # print(testy)
-pd.DataFrame.from_dict(cluster_dict).to_csv("c:/dev/spin_down/all_cluster_data.csv", index = False, sep = "\t")
+alt_cluster_dict = cluster_dict
+for key in alt_cluster_dict.keys():
+    lst=[]
+    for pmt in alt_cluster_dict[key]["data_frame"].keys():
+        alt_cluster_dict[key].update({str(pmt): alt_cluster_dict[key]["data_frame"][pmt] })
+
+pd.DataFrame.from_dict(alt_cluster_dict).to_csv("c:/dev/spin_down/all_cluster_data.csv", sep = ",")
+# alt_cluster_dict[key]["Per"]
+#%%
+foo = pd.read_csv("c:/dev/spin_down/all_cluster_data.csv", sep = ",")
+foo.alpha_per
 #%% Create CSV Files
 for name in cluster_list:
     path = "c:/dev/spin_down/mistmade_data/{}_pm_{:e}.csv".format(
