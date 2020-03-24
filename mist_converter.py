@@ -884,19 +884,30 @@ ax.scatter(
 ax.legend()
 
 #%%
-# testy = pd.DataFrame.from_dict(cluster_dict)
-# print(testy)
-alt_cluster_dict = cluster_dict
+from copy import deepcopy
+import pickle
+
+alt_cluster_dict = deepcopy(cluster_dict)
+
 for key in alt_cluster_dict.keys():
     lst=[]
     for pmt in alt_cluster_dict[key]["data_frame"].keys():
-        alt_cluster_dict[key].update({str(pmt): alt_cluster_dict[key]["data_frame"][pmt] })
+        alt_cluster_dict[key].update({str(pmt): alt_cluster_dict[key]["data_frame"][pmt].to_numpy() })
 
-pd.DataFrame.from_dict(alt_cluster_dict).to_csv("c:/dev/spin_down/all_cluster_data.csv", sep = ",")
-# alt_cluster_dict[key]["Per"]
+    del alt_cluster_dict[key]["data_frame"]
+
+with open('c:/dev/spin_down/all_cluster_data.pickle', 'wb') as handle:
+    pickle.dump(alt_cluster_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+# pd.DataFrame.from_dict(alt_cluster_dict).to_csv("c:/dev/spin_down/all_cluster_data.csv", sep = ",")
+# alt_cluster_dict[key]
 #%%
-foo = pd.read_csv("c:/dev/spin_down/all_cluster_data.csv", sep = ",")
-foo.alpha_per
+# foo = pd.read_csv("c:/dev/spin_down/all_cluster_data.csv", sep = ",", index_col=0)
+# foo.alpha_per.Per
+
+with open('c:/dev/spin_down/all_cluster_data.pickle', 'rb') as handle:
+    foo = pd.DataFrame.from_dict(pd.read_pickle(handle, compression=None))
+    print(foo.m50.Per)
 #%% Create CSV Files
 for name in cluster_list:
     path = "c:/dev/spin_down/mistmade_data/{}_pm_{:e}.csv".format(
