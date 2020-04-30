@@ -194,7 +194,7 @@ def gm_clusterer(data, gm_model):
     cluster_list = [[] for _ in range(number_of_clusters)]
     check_array(data)
 
-    reshaped_data = data[:, 1][:, np.newaxis] if data.shape[1] > 1 else data
+    reshaped_data = data[:, 1][:, np.newaxis] if len(data.shape) == 1 else data
     predicted_cluster = gm_model.predict(reshaped_data)
 
     for pred_cluster, datum in zip(predicted_cluster, data):
@@ -207,63 +207,21 @@ def gm_clusterer(data, gm_model):
     return np.array([np.array(cluster) for cluster in cluster_list])
 
 
-def gm_clusterer_2d(data, gm_model):
-    """ Groups the data according to the fitted Gaussian Mixture model provided
+def gaussian_probability(real_data, grid_data, gauss_model):
 
-    Parameters
-    ----------
-    data : array-like, shape (n_samples, n_features)
-        The data which you want to bin using the model passed
-    gm_model : obj
-        A fitted gaussian mixture model(gmm).
-
-    Returns
-    -------
-    _ : array-like, shape (number_of_clusters, )
-        A list of the data in their clusters predicted by the gmm.
-    """
-
-    check_is_fitted(gm_model)
-    number_of_clusters = len(gm_model.means_)
-
-    cluster_list = [[] for _ in range(number_of_clusters)]
-    check_array(data)
-
-    # reshaped_data = data[:,1][:,np.newaxis] if data.shape[1] > 1 else data
-    predicted_cluster = gm_model.predict(data)
-
-    for pred_cluster, datum in zip(predicted_cluster, data):
-        cluster_list[pred_cluster].append(np.array(datum))
-
-    length_array = np.array([len(item) for item in cluster_list])
-    if (length_array == 0).any():
-        print("Index of bins with 0 elements: ", *
-              ["{},".format(idx) for idx, item in enumerate(length_array) if item == 0])
-    return np.array([np.array(cluster) for cluster in cluster_list])
-
-
-def gaussian_probability(real_data, grid_data, gauss_model, multi_dim=False):
-    if multi_dim:
-        # Checks arrays to be 2d
-        check_array(real_data)
-        check_array(grid_data)
-        real_data_ = real_data
-        grid_data_ = grid_data
-    else:
-        real_data_ = real_data[:, 1][:, np.newaxis]
-        grid_data_ = grid_data[:, np.newaxis]
+    real_data_ = real_data[:, 1][:, np.newaxis]
+    grid_data_ = grid_data[:, np.newaxis]
 
     gmm = gauss_model.fit(real_data_)
     cluster_probabilities = gmm.predict_proba(grid_data_)
-    data_clusters = gm_clusterer_2d(
-        real_data_, gmm) if multi_dim else gm_clusterer(real_data_, gmm)
+    data_clusters = gm_clusterer(real_data_, gmm)
 
     bin_probas = []
     for index, cluster in enumerate(data_clusters):
         cluster_prob = cluster_probabilities[:, index]
+        summed_proba = np.sum(cluster_prob)
         normalised_prob = cluster_prob / \
-            sum(cluster_prob) if len(cluster) > 2 else np.array(
-                [0]*len(cluster_prob))
+            summed_proba if summed_proba != 0.0 else cluster_prob / 1.0
         length_normalised_proba = normalised_prob * \
             (len(cluster)/len(grid_data))
         bin_probas.append(length_normalised_proba)
