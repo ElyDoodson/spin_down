@@ -69,14 +69,17 @@ def transform_data(cluster_name, data_frame):
     return X
 
 
-def get_uniform_grid(x_lower, x_upper, y_lower, y_upper, x_num, y_num):
+# x_lower, x_upper, y_lower, y_upper, x_num, y_num):
+def get_uniform_grid(linspace_x, linspace_y, transform=True):
 
-    uniform_xdata = np.linspace(x_lower, x_upper, x_num)
-    uniform_ydata = np.linspace(y_lower, y_upper, y_num)
+    # uniform_xdata = np.linspace(x_lower, x_upper, x_num)
+    # uniform_ydata = np.linspace(y_lower, y_upper, y_num)
+    uniform_xdata = linspace_x
+    uniform_ydata = linspace_y
     mesh_x, mesh_y = np.meshgrid(uniform_xdata, uniform_ydata)
     uniform_grid = np.concatenate((np.concatenate(mesh_x)[:, np.newaxis],
                                    np.concatenate(mesh_y)[:, np.newaxis]), axis=1)
-    return uniform_grid
+    return (uniform_grid) if transform else (mesh_x, mesh_y)
 
 
 def get_binned_grid(bin_brackets, num_x=20, num_y=25, y_value=25):

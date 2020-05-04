@@ -1,6 +1,5 @@
 import pickle
 import datetime
-# from datetime import date, time
 from time import time
 from gmm_methods import *
 
@@ -12,7 +11,6 @@ all_clusters = get_data(data_path, remove_old=True)
 
 width_and_steps = [(0.1, 0.03), (0.15, 0.04), (0.2, 0.04),
                    (0.1, 0.03), (0.2, 0.02), (0.1, 0.02)]
-# cluster_title = "ngc6811"
 training_data_dict = {key: {} for key in all_clusters.keys()}
 
 fig = plt.figure(1, figsize=(16, 9))
@@ -25,7 +23,7 @@ for i, ((bin_width, bin_step), cluster_title) in enumerate(zip(width_and_steps, 
     kernal_bins = kernal_bin_bounds(X, bin_width=bin_width, bin_step=bin_step)
 
     # Transforms boundaries from [1,n] -> [2,n/2]
-    X_bins = pd.IntervalIndex.from_arrays(*kernal_bins.T)
+    X_bins = pd.IntervalIndex.from_arrays(*(kernal_bins.T))
 
     # Binned Data
     X_kernaled = kernal_binner(X, X_bins)
@@ -62,7 +60,10 @@ for i, ((bin_width, bin_step), cluster_title) in enumerate(zip(width_and_steps, 
     training_data_dict[cluster_title].update(
         {"grid_period": np.concatenate(contour_mesh_y)})
     training_data_dict[cluster_title].update(
+        {"age": all_clusters[cluster_title]["age"]})
+    training_data_dict[cluster_title].update(
         {"grid_proba": np.concatenate(final_curve_list.T)})
+
 plt.show()
 
 pickle_file = "C:/dev/spin_down/nn_training_file.pickle"
