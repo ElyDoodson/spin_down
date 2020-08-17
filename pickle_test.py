@@ -130,7 +130,7 @@ def fwd_pass(X, y, train=False):
     return loss
 
 
-def test(size=len(x_test)):
+def test():
     with torch.no_grad():
         val_loss = fwd_pass(x_test.to(device), y_test.to(device))
     return val_loss
